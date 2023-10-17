@@ -1,0 +1,14 @@
+body{
+ background-color:#0F2237;
+}
+ /* Modify the background color */
+    .navbar-custom,
+     .admin-box{
+        background-color: #21446B;
+    }
+    /* Modify brand and text color */
+    .navbar-custom .navbar-brand,
+    .navbar-custom .navbar-text ,
+    .admin-card{
+        color: #FFD800;
+    }
