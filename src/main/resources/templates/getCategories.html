@@ -39,8 +39,21 @@
 </nav>
 <div class="container">
 
+
+
+
+
+
   <a th:href="@{/admin/addCategories}" style="margin: 20px 0" class="btn btn-success">Add Category</a>
   <table class="table text-warning">
+
+    <div id="successMessage" th:if="${successMessage}" class="alert alert-success">
+      <p th:text="${successMessage}"></p>
+    </div>
+
+
+
+
     <thead class="thead navbar-custom">
     <tr >
       <th scope="col">SN</th>
@@ -55,16 +68,47 @@
       <th scope="row" th:text="${iStat.index + 1}">1</th>
       <td th:text="${category.name}">Larry</td>
 
-      <td><a href="" th:href="@{/admin/categories/delete/{id}(id=${category.id})}" class="btn btn-danger">Delete</a></td>
-      <td><a href="" th:href="@{/admin/categories/update/{id}(id=${category.id})}" class="btn btn-warning">Update</a></td>
+      <td>
+        <a href="#" th:href="@{/admin/deleteCategories/{id}(id=${category.id})}"
+           class="btn btn-danger"
+           onclick="showConfirmDialog(event, this.href)">Delete</a>
+      </td>
+      <td><a href="" th:href="@{/admin/updateCategories/{id}(id=${category.id})}" class="btn btn-warning">Update</a></td>
 
     </tr>
     </tbody>
   </table>
 </div>
 
+<script>
+  setTimeout(function() {
+      document.getElementById('successMessage').style.display = 'none';
+  }, 700);
+</script>
+
+<script>
+  function showConfirmDialog(event, href) {
+  event.preventDefault();
+  swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this category!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+  })
+  .then((willDelete) => {
+      if (willDelete) {
+          window.location.href = href;
+      }
+  });
+}
+</script>
 
 
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
