@@ -9,6 +9,7 @@ body{
     /* Modify brand and text color */
     .navbar-custom .navbar-brand,
     .navbar-custom .navbar-text ,
-    .admin-card{
+    .admin-card,
+    .product-add{
         color: #FFD800;
     }

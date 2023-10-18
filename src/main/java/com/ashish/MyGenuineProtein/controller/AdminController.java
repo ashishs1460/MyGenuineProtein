@@ -28,13 +28,13 @@ public class AdminController {
         String successMessage = (String) model.getAttribute("successMessage");
         model.addAttribute("successMessage", successMessage);
         model.addAttribute("categories",categoryService.getAllCategory());
-        return "getCategories";
+        return "/category/getCategories";
     }
 
     @GetMapping("/admin/addCategories")
     public String addCategory(Model model){
         model.addAttribute("category",new Category());
-        return "addCategories";
+        return "/category/addCategories";
     }
 
     @PostMapping("/admin/addCategories")
@@ -56,7 +56,7 @@ public class AdminController {
         Optional<Category> category=categoryService.getCategoryById(id);
         if (category.isPresent()){
             model.addAttribute("category",category.get());
-            return "addCategories";
+            return "/category/addCategories";
         }else {
             return "404";
         }
