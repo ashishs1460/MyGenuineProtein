@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <title>Document</title>
 </head>
 <body>
@@ -39,11 +41,19 @@
 
     <a th:href="@{/admin/addProducts}" style="margin: 20px 0" class="btn btn-success">Add Product</a>
     <table class="table text-warning">
+        <div id="successMessage" th:if="${successMessage}" class="alert alert-success">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+
         <thead class="thead navbar-custom">
         <tr>
             <th scope="col">SN</th>
             <th scope="col">Product Name</th>
             <th scope="col">Category</th>
+            <th scope="col">Flavour</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
             <th scope="col">Preview</th>
             <th scope="col">Delete</th>
             <th scope="col">Update</th>
@@ -55,15 +65,55 @@
             <th scope="row" th:text="${iStat.index + 1}">1</th>
             <td th:text="${product.name}">Larry</td>
             <td th:text="${product.category.name}">Larry</td>
+            <td th:text="${product.flavour.flavourName}">Larry</td>
+            <td th:text="${product.weight.weight} + ' kg'">Larry</td>
+            <td th:text="'Rs ' + ${product.price}">Larry</td>
             <td><img src="" height="100px" width="100px"  th:src="@{${'/productImages/' + product.imageName}}"></td>
 
-            <td><a href="" th:href="@{/admin/product/delete/{id}(id=${product.id})}" class="btn btn-danger">Delete</a></td>
-            <td><a href="" th:href="@{/admin/product/update/{id}(id=${product.id})}" class="btn btn-warning">Update</a></td>
+
+            <td>
+                <a href="#" th:href="@{/admin/deleteProduct/{id}(id=${product.id})}"
+                   class="btn btn-danger"
+                   onclick="showConfirmDialog(event)">Delete</a>
+            </td>
+            <td><a href="" th:href="@{/admin/updateProduct/{id}(id=${product.id})}" class="btn btn-warning">Update</a></td>
 
         </tr>
         </tbody>
     </table>
+
 </div>
+
+<script>
+    setTimeout(function() {
+        document.getElementById('successMessage').style.display = 'none';
+    }, 700);
+</script>
+<script>
+    function showConfirmDialog(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this product!', // Add your message here
+            icon: 'warning',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'custom-popup',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed with the delete action
+                window.location.href = event.target.getAttribute('href');
+            }
+        });
+    }
+</script>
+
+
 
 
 
