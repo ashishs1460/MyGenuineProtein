@@ -38,7 +38,16 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public Optional<Product> getAllProductsByCategoryId(UUID id) {
-        return productRepository.findByCategoryId(id);
+    public List<Product> getAllProductsByCategoryId(UUID id) {
+        return productRepository.findAllProductsByCategory_Id(id);
+    }
+
+    @Override
+    public boolean getProductsByCategoryId(UUID id) {
+        if(productRepository.findAllProductsByCategory_Id(id).isEmpty()){
+            return  false;
+        }
+        return  true;
+
     }
 }

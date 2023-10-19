@@ -2,6 +2,7 @@ package com.ashish.MyGenuineProtein.controller;
 
 import com.ashish.MyGenuineProtein.model.Category;
 import com.ashish.MyGenuineProtein.service.CategoryService;
+import com.ashish.MyGenuineProtein.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,9 @@ public class AdminController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    ProductService productService;
 
     @GetMapping("/admin")
     public String getAdminHome(){
@@ -39,15 +43,27 @@ public class AdminController {
 
     @PostMapping("/admin/addCategories")
     public String postCategory(@ModelAttribute("category") Category category, RedirectAttributes redirectAttributes){
+       boolean isPresent=categoryService.getCategoryByName(category.getName());
+        if(isPresent){
+            redirectAttributes.addFlashAttribute("CategoryPresent","Category is already available , try to add another category");
+            return "redirect:/admin/getCategories";
+        }
         categoryService.addCategory(category);
         redirectAttributes.addFlashAttribute("successMessage", " successfully!");
         return "redirect:/admin/getCategories";
     }
 
     @GetMapping("/admin/deleteCategories/{id}")
-    public String deleteCategory(@PathVariable UUID id){
-        categoryService.deleteCategoryById(id);
-        return "redirect:/admin/getCategories";
+    public String deleteCategory(@PathVariable UUID id ,Model model ,RedirectAttributes redirectAttributes){
+        boolean isPresent = productService.getProductsByCategoryId(id);
+        if(isPresent){
+            redirectAttributes.addFlashAttribute("categoryInUse","Products are available in this category,try to delete product first");
+            return "redirect:/admin/getCategories";
+        }else {
+            categoryService.deleteCategoryById(id);
+            return "redirect:/admin/getCategories";
+        }
+
 
     }
 

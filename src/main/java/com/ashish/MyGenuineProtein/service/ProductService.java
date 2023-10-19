@@ -16,6 +16,10 @@ public interface ProductService {
 
     Optional<Product> findProductById(UUID id);
 
-    Optional<Product> getAllProductsByCategoryId(UUID id);
+    List<Product> getAllProductsByCategoryId(UUID id);
+
+    boolean getProductsByCategoryId(UUID id);
+
+
 
 }

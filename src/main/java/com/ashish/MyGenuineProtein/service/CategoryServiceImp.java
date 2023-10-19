@@ -34,5 +34,13 @@ public class CategoryServiceImp implements  CategoryService{
        return categoryRepository.findById(id);
     }
 
+    @Override
+   public boolean getCategoryByName(String name) {
+        if(categoryRepository.getCategoryByName(name).isPresent()){
+            return true;
+        };
+        return false;
+    }
+
 
 }

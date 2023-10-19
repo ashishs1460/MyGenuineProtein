@@ -16,6 +16,8 @@ public interface CategoryService {
     Optional<Category> getCategoryById(UUID id);
 
 
+    boolean getCategoryByName(String name);
+
 
 
 }
