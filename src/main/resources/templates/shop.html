@@ -70,23 +70,55 @@
     <!-- Product Listings -->
     <div class="col-lg-9 col-md-8 col-sm-12 mt-4">
       <div class="row">
-        <div class="col-md-4" th:each="product : ${products}">
-          <div class="card mb-4">
-            <img class="card-img-top"  th:src="@{${'/productImages/' + product.imageName}}" th:alt="${product.name}">
-            <div class="card-body ">
-              <h5 class="card-title" th:text="${product.name}"></h5>
-              <p class="card-text"><b>Price:</b> ₹<span class="card-content" th:text="${product.price}"></span></p>
-              <p class="card-text"><b>Weight:</b> <span class="card-content" th:text="${product.weight.weight}"></span> kg</p>
-              <p class="card-text"><b>Flavour:</b> <span class="card-content" th:text="${product.flavour.flavourName}"></span></p>
-              <p class="card-text"><b>Description:</b> <span class="card-content" th:text="${product.description}"></span></p>
+        <div class="col-lg-4 col-md-6 col-sm-12 my-2" th:each="product :${products}">
+          <div style="color: #FFD800; background-color: #21446B;" class="card   w-30">
+            <img class="card-img" height="300px" width="300px" src="" th:src="@{${'/productImages/' + product.imageName}}"/>
+            <div class="card-title text-center"><h3 th:text="${product.name}">tasty and healthy</h3></div>
+
+            <div class="card-body text-center">
+              <h6 style="color:#D3D3D3;"><span th:text="${product.weight.weight}"></span> kg</h6>
+              <h6 style="color:#D3D3D3;"><span th:text="${product.flavour.flavourName}"></span></h6>
+              <h4 style="color:#D3D3D3;">₹ <span th:text="${product.price}"></span></h4>
+              <p style="color:#D3D3D3;" th:text="${product.description}" >Suresh Dasari is a founder and technical lead developer in tutlane.</p>
               <a href="#" th:href="@{/shop/viewProduct/{id}(id=${product.id})}" class="btn btn-warning">View Product</a>
+              
             </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Customized Footer -->
+<footer class="text-center ">
+  <div class="container">
+    <section class="mb-3">
+      <!-- Social Media Links -->
+      <a class="btn btn-outline-warning btn-floating m-1" href="#" role="button">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a class="btn btn-outline-warning btn-floating m-1" href="#" role="button">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a class="btn btn-outline-warning btn-floating m-1" href="#" role="button">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+      <a class="btn btn-outline-warning btn-floating m-1" href="https://github.com/RawanSayedd" target="_blank" role="button">
+        <i class="fab fa-github"></i>
+      </a>
+    </section>
+
+    <!-- Copyright Notice -->
+    <div class="text-center" style="color: #FFD800;">
+      <p>&copy; 2023 All rights reserved ashish</p>
+
+    </div>
+  </div>
+</footer>
+<!-- Customized Footer Ends -->
+
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

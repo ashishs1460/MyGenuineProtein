@@ -54,7 +54,7 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-sm-5 d-flex justify-content-center">
-      <img class="mt-5" height="300px" width="300px" src="" th:src="@{${'/productImages/' + product.imageName}}"
+      <img class="mt-5" style="object-fit: contain;" src="" th:src="@{${'/productImages/' + product.imageName}}"
            alt="">
     </div>
     <div class="col-sm-7 mt-5">
@@ -74,6 +74,34 @@
     </div>
   </div>
 </div>
+
+<!-- Customized Footer -->
+<footer class="text-center ">
+  <div class="container">
+    <section class="mb-3">
+      <!-- Social Media Links -->
+      <a class="btn btn-outline-warning btn-floating m-1" href="#" role="button">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a class="btn btn-outline-warning btn-floating m-1" href="#" role="button">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a class="btn btn-outline-warning btn-floating m-1" href="#" role="button">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+      <a class="btn btn-outline-warning btn-floating m-1" href="https://github.com/RawanSayedd" target="_blank" role="button">
+        <i class="fab fa-github"></i>
+      </a>
+    </section>
+
+    <!-- Copyright Notice -->
+    <div class="text-center" style="color: #FFD800;">
+      <p>&copy; 2023 All rights reserved ashish</p>
+
+    </div>
+  </div>
+</footer>
+<!-- Customized Footer Ends -->
 
 <!-- Add scripts here -->
 

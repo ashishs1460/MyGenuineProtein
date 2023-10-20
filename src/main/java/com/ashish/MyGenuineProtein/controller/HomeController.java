@@ -29,6 +29,9 @@ public class HomeController {
 
     @GetMapping({"/","/home"})
     public String homePage(Model model){
+        model.addAttribute("products",productService.getAllProducts());
+        model.addAttribute("categories",categoryService.getAllCategory());
+
         return "index";
     }
 
