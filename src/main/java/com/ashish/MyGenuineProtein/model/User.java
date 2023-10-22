@@ -1,12 +1,14 @@
 package com.ashish.MyGenuineProtein.model;
 
 
+import com.ashish.MyGenuineProtein.otp.model.Otp;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +39,12 @@ public class User {
 
     @NotEmpty
     private String password;
+
+    private boolean isActive;
+
+    private boolean verified;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Otp otp;
 
     @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinTable(

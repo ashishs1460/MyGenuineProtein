@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+ <form method="post" th:action="@{/getOtpPage}">
+
+   <input type="text" placeholder="Enter your otp" name="otp">
+   <input type="hidden" th:value="${user.email}" name="email">
+   <input type="submit">
+     <p th:text="${message}"></p>
+
+ </form>
+
+</body>
+</html>

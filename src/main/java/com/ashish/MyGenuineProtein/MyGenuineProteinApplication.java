@@ -10,4 +10,6 @@ public class MyGenuineProteinApplication {
 		SpringApplication.run(MyGenuineProteinApplication.class, args);
 	}
 
+
+
 }

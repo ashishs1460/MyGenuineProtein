@@ -6,6 +6,8 @@ import com.ashish.MyGenuineProtein.service.FlavourService;
 import com.ashish.MyGenuineProtein.service.ProductService;
 import com.ashish.MyGenuineProtein.service.WeightService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +31,15 @@ public class HomeController {
 
     @GetMapping({"/","/home"})
     public String homePage(Model model){
-        model.addAttribute("products",productService.getAllProducts());
-        model.addAttribute("categories",categoryService.getAllCategory());
-
-        return "index";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String str = authentication.getAuthorities().toString();
+        if (str.equals("[ROLE_ANONYMOUS]") || str.equals("[ROLE_USER]")) {
+            model.addAttribute("products",productService.getAllProducts());
+            model.addAttribute("categories",categoryService.getAllCategory());
+            return "index";
+        } else {
+            return "redirect:/admin";
+        }
     }
 
     @GetMapping("/shop")
