@@ -66,8 +66,18 @@ label {
 a {
     color: #FFD800;
 }
-
+.alert{
+  color:red;
+    }
   </style>
+  <script th:inline="javascript">
+    setTimeout(function() {
+        var alertElement = document.querySelector('.alert');
+        if (alertElement) {
+            alertElement.style.display = 'none';
+        }
+    }, 1000); // 30 seconds
+  </script>
 </head>
 <body>
 
@@ -103,6 +113,9 @@ a {
   <div class="col-sm-6 navbar-text">
     <h3 style="margin-top: 10px">Sign Up Now</h3>
     <p>Please fill out this to register</p>
+    <div th:if="${param.userExist != null}">
+      <p class="alert">User already exists!</p>
+    </div>
     <form th:action="@{/register}" th:object="${user}" method="post">
       <div class="form-group">
         <label for="firstName">First Name</label>
@@ -128,9 +141,11 @@ a {
       <input type="submit" value="Register" class="btn btn-primary btn-block">
       <span style="margin-top: 10px">Already have an account <a class="linkControl" href="./login.html"
                                                                 th:href="@{/login}">Login here</a></span>
+
     </form>
   </div>
 </div>
+
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

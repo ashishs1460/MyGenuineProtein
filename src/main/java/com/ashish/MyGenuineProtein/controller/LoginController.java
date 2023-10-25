@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +53,10 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String postRegister(@ModelAttribute("User") User user, Model model){
+    public String postRegister(@ModelAttribute("User") User user, Model model, RedirectAttributes redirectAttributes){
         if(userRepository.findUserByEmail(user.getEmail()).isPresent()){
             if(userRepository.findUserByEmail(user.getEmail()).get().isVerified()){
+                redirectAttributes.addAttribute("userExist", "true");
                 return "redirect:/register";
             }else {
                 otpRepository.delete(otpRepository.findByUser(userRepository.findUserByEmail(user.getEmail()).get()).get());

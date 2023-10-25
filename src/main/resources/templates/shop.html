@@ -79,7 +79,9 @@
               <h6 style="color:#D3D3D3;"><span th:text="${product.weight.weight}"></span> kg</h6>
               <h6 style="color:#D3D3D3;"><span th:text="${product.flavour.flavourName}"></span></h6>
               <h4 style="color:#D3D3D3;">₹ <span th:text="${product.price}"></span></h4>
-              <p style="color:#D3D3D3;" th:text="${product.description}" >Suresh Dasari is a founder and technical lead developer in tutlane.</p>
+              <div class="description" style="color:#D3D3D3; max-height: 100px; overflow: hidden;">
+                <p th:text="${product.description}">Suresh Dasari is a founder and technical lead developer in tutlane.</p>
+              </div>
               <a href="#" th:href="@{/shop/viewProduct/{id}(id=${product.id})}" class="btn btn-warning">View Product</a>
 
             </div>

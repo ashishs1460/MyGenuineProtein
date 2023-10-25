@@ -61,14 +61,15 @@
             <td th:text="${user.firstName}">Larry</td>
             <td th:text="${user.LastName}">Larry</td>
             <td th:text="${user.email}">Larry</td>
-            <td th:each="role:${user.roles}" th:text="${role.name}">Larry</td>
-
             <td th:if="${user.isActive}">
-                <a th:href="@{/admin/block/{id} (id = ${user.getId()})}"
-                   class="btn btn-danger"
-                   >Block</a>
+                <a th:href="@{/admin/block/{id}(id=${user.getId()})}"
+                   class="btn btn-danger" th:if="${#lists.contains(user.roles.![name], 'ROLE_ADMIN') == false}">Block</a>
             </td>
-            <td th:unless="${user.isActive}" ><a th:href="@{/admin/unblock/{id} (id = ${user.getId()})}" class="btn btn-success">Unblock</a></td>
+            <td th:if="${!user.isActive}">
+                <a th:href="@{/admin/unblock/{id}(id=${user.getId()})}"
+                   class="btn btn-success" th:if="${#lists.contains(user.roles.![name], 'ROLE_ADMIN') == false}">Unblock</a>
+            </td>
+
 
         </tr>
         </tbody>
