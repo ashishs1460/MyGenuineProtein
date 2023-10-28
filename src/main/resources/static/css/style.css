@@ -68,4 +68,8 @@ footer .style-name:hover {
   border-bottom: 0.1rem solid #d3ad7f;
   padding-bottom: 0.2rem;
 }
+#categorySelect,#categorySelect1 {
+  background-color: #21446B;
+  color: #FFD800;
+}
 

@@ -12,6 +12,21 @@
         integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
   <title>Document</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
+
+  <style>
+    .card-title h3 {
+    font-size: 16px; /* Adjust the font size to fit the card */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide any overflow */
+    text-overflow: ellipsis; /* Display an ellipsis for overflow text */
+}
+    .form-control option {
+    color: red;
+}
+
+
+
+  </style>
 </head>
 <body>
 
@@ -52,40 +67,52 @@
     </div>
   </div>
 </nav>
+<body>
 <div class="container" style="margin-top: 30px">
   <div class="row">
     <!-- Sidebar with Categories -->
     <div class="col-lg-3 col-md-4 col-sm-12">
-      <h4 style="color:#FFD800">Categories</h4>
-      <ul class="list-group">
-        <a th:href="@{/shop}">
-          <li style="color:#FFD800" class="list-group-item navbar-custom navbar-text ">All Products</li>
-        </a>
-        <a th:each="category, iStat : ${categories}" th:href="@{/shop/category/{id}(id=${category.id})}">
-          <li style="color:#FFD800" class="list-group-item navbar-custom  " th:text="${category.name}"></li>
-        </a>
-      </ul>
+      <h4 style="color:#FFD800">filters</h4>
+
+      <section class="price mt-4">
+
+        <select id="categorySelect" class="form-control">
+          <option>Categories</option>
+          <option value="/shop">All Products</option>
+          <option th:each="category, iStat : ${categories}" th:value="'/shop/category/' + ${category.id}" th:text="${category.name}"></option>
+        </select>
+
+<!--        <select id="categorySelect1" class="form-control">-->
+<!--          <option>Flavours</option>-->
+<!--          <option th:each="variant, iStat : ${flavours}" th:value="'/shop/variant/' + ${variant.id}" th:text="${variant.flavourName}"></option>-->
+<!--        </select>-->
+        <!-- Add your filter options here if needed -->
+
+        <section class="price mt-4">
+
+
+
+
+
+
     </div>
 
     <!-- Product Listings -->
     <div class="col-lg-9 col-md-8 col-sm-12 mt-4">
       <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-12 my-2" th:each="product :${products}">
-          <div style="color: #FFD800; background-color: #21446B;" class="card  w-30">
+        <!-- Add your product listings here using th:each -->
+        <div class="col-lg-4 col-md-6 col-sm-12" th:each="product : ${products}">
+          <div style="color: #FFD800; background-color: #21446B;" class="card mt-4">
             <img class="card-img" height="300px" width="300px" src="" th:src="@{${'/productImages/' + product.imageName}}"/>
-            <div class="card-title text-center"><h3 th:text="${product.name}">tasty and healthy</h3></div>
-
-            <div class="card-body text-center">
-              <h6 style="color:#D3D3D3;"><span th:text="${product.weight.weight}"></span> kg</h6>
-              <h6 style="color:#D3D3D3;"><span th:text="${product.flavour.flavourName}"></span></h6>
-              <h4 style="color:#D3D3D3;">₹ <span th:text="${product.price}"></span></h4>
-              <div class="description" style="color:#D3D3D3; max-height: 100px; overflow: hidden;">
-                <p th:text="${product.description}">Suresh Dasari is a founder and technical lead developer in tutlane.</p>
-              </div>
-              <a href="#" th:href="@{/shop/viewProduct/{id}(id=${product.id})}" class="btn btn-warning">View Product</a>
-
+            <div class="card-title text-center">
+              <h3 th:text="${product.name}">tasty and healthy</h3>
             </div>
-
+            <div class="card-body text-center">
+<!--              <h6 style="color:#D3D3D3;"><span th:text="${product.weight.weight}"></span> kg</h6>-->
+<!--              <h6 style="color:#D3D3D3;"><span th:text="${product.variant.flavourName}"></span></h6>-->
+<!--              <h4 style="color:#D3D3D3;">₹ <span th:text="${product.price}"></span></h4>-->
+              <a href="#" th:href="@{/shop/viewProduct/{id}(id=${product.id})}" class="btn btn-warning">View Product</a>
+            </div>
           </div>
         </div>
       </div>
@@ -93,6 +120,28 @@
   </div>
 </div>
 
+
+<!--&lt;!&ndash; Pagination Links &ndash;&gt;-->
+<!--<div th:if="${products != null and products.totalPages > 1}">-->
+<!--  <div class="d-flex justify-content-center">-->
+<!--    <ul class="pagination">-->
+<!--      <li class="page-item" th:if="${products.hasPrevious()}">-->
+<!--        <a class="page-link" th:href="@{/shop(page=${products.number - 1}, pageSize=${products.size})}">Previous</a>-->
+<!--      </li>-->
+<!--      <li th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"-->
+<!--          th:class="${products.number == i ? 'page-item active' : 'page-item'}">-->
+<!--        <a class=" page-link" th:href="@{/shop(page=${i}, pageSize=${products.size})}" th:text="${i + 1}"></a>-->
+<!--      </li>-->
+<!--      <li class="page-item" th:if="${products.hasNext()}">-->
+<!--        <a class="page-link" th:href="@{/shop(page=${products.number + 1}, pageSize=${products.size})}">Next</a>-->
+<!--      </li>-->
+<!--    </ul>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+
+</body>
 <!-- Customized Footer -->
 <footer class="text-center ">
   <div class="container">
@@ -119,7 +168,15 @@
     </div>
   </div>
 </footer>
-<!-- Customized Footer Ends -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+      $('#categorySelect, #categorySelect1').change(function(){
+          var selectedOptionValue = $(this).val();
+          window.location.href = selectedOptionValue;
+      });
+  });
+</script>
 
 
 

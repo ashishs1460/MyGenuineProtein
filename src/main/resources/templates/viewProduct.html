@@ -54,7 +54,7 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-sm-5 d-flex justify-content-center">
-      <img class="mt-5" height="300px" width="300px" src="" th:src="@{${'/productImages/' + product.imageName}}"
+       <img class="mt-5" height="300px" width="300px" src="" th:src="@{${'/productImages/' + product.imageName}}"
            alt="">
     </div>
     <div class="col-sm-7 mt-5">
@@ -62,11 +62,22 @@
         <div class="card-body">
           <h2 class="card-title" style="color: #FFD800" th:text="${product.name}"></h2>
           <h3 class="card-subtitle" style="color: #D3D3D3" th:text="${product.category.name}"></h3>
-          <h2 class="card-text" style="color: #D3D3D3">₹ <span th:text="${product.price}"></span></h2>
-          <h4 class="card-text" style="color: #D3D3D3">
-            <span th:text="${product.weight.weight}"></span> kg
-          </h4>
-          <p class="card-text" style="color: #D3D3D3" th:text="${product.flavour.flavourName}"></p>
+          <h4 id="variantName" th:text="${variants[0].variantName}" style="color:white"></h4>
+          <h4 id="variantPrice" th:text="${variants[0].price}" style="color:white"></h4>
+
+          <!--          <h2 class="card-text" style="color: #D3D3D3">₹ <span th:text="${product.price}"></span></h2>-->
+<!--          <h4 class="card-text" style="color: #D3D3D3">-->
+<!--            <span th:text="${product.weight.weight}"></span> kg-->
+<!--          </h4>-->
+<!--          <p class="card-text" style="color: #D3D3D3" th:text="${product.variant.flavourName}"></p>-->
+          <select id="variantSelect" class="form-control" name="variant" onchange="fetchVariantDetails()">
+                 <option value="0">Select</option>
+                 <option th:each="variant : ${variants}"
+                         th:value="${variant.id}"
+                         th:text="${variant.variantName}">
+
+                 </option>
+          </select>
           <p class="card-text" style="color: #D3D3D3" th:text="${product.description}"></p>
           <a href="" th:href="@{/addToCart/{id}(id = ${product.id})}" class="btn btn-success">Add to cart</a>
         </div>
@@ -104,6 +115,29 @@
 <!-- Customized Footer Ends -->
 
 <!-- Add scripts here -->
+<script>
+  function fetchVariantDetails() {
+    const variantSelect = document.getElementById('variantSelect');
+        const selectedVariantId = variantSelect.value;
+
+        console.log(selectedVariantId)
+        if (+selectedVariantId != 0) {
+
+            fetch(`/variant/get-variant/`+selectedVariantId)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('variantName').innerText = data.variantName;
+                    document.getElementById('variantPrice').innerText = data.price;
+
+                })
+                .catch(error => {
+                    console.error('Error fetching variant details:', error.message);
+                });
+        } else {
+            alert("select variant");
+        }
+    }
+</script>
 
 </body>
 </html>

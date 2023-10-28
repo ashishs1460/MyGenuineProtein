@@ -39,48 +39,37 @@
 </nav>
 <div class="container-fluid">
 
-    <a th:href="@{/admin/addProducts}" style="margin: 20px 0" class="btn btn-success">Add Product</a>
+    <a th:href="@{/admin/addVariant}" style="margin: 20px 0" class="btn btn-success">Add Variant</a>
     <table class="table text-warning">
-        <div id="successMessage" th:if="${successMessage}" class="alert alert-success">
-            <p th:text="${successMessage}"></p>
+        <div id="message" th:if="${message}" class="alert alert-success">
+            <p th:text="${message}"></p>
         </div>
 
 
         <thead class="thead navbar-custom">
         <tr>
             <th scope="col">SN</th>
-            <th scope="col">Product Name</th>
-            <th scope="col">Category</th>
-            <th scope="col">Variant</th>
-
+            <th scope="col">Variant Name</th>
             <th scope="col">Price</th>
-            <th scope="col">Preview</th>
+            <th scope="col">Stock</th>
             <th scope="col">Delete</th>
             <th scope="col">Update</th>
         </tr>
         </thead>
         <tbody>
 
-        <tr th:each="product, iStat : ${products}">
+        <tr th:each="variant, iStat : ${variants}">
             <th scope="row" th:text="${iStat.index + 1}">1</th>
-            <td th:text="${product.name}">Larry</td>
-            <td th:text="${product.category.name}">Larry</td>
-            <td>
-                <span th:each="variants: ${product.variants}">
-                    <P th:text="${variants.variantName}"></P>
+            <td th:text="${variant.variantName}">Larry</td>
+            <td th:text="${variant.price}">Larry</td>
+            <td th:text="${variant.stock}">Larry</td>
 
-                </span>
-            </td>
-
-            <td><img src="" height="100px" width="100px"  th:src="@{${'/productImages/' + product.imageName}}"></td>
-
-
-            <td>
-                <a href="#" th:href="@{/admin/deleteProduct/{id}(id=${product.id})}"
-                   class="btn btn-danger"
-                   onclick="showConfirmDialog(event)">Delete</a>
-            </td>
-            <td><a href="" th:href="@{/admin/updateProduct/{id}(id=${product.id})}" class="btn btn-warning">Update</a></td>
+<!--            <td>-->
+<!--                <a href="#" th:href="@{/admin/deleteProduct/{id}(id=${product.id})}"-->
+<!--                   class="btn btn-danger"-->
+<!--                   onclick="showConfirmDialog(event)">Delete</a>-->
+<!--            </td>-->
+<!--            <td><a href="" th:href="@{/admin/updateProduct/{id}(id=${product.id})}" class="btn btn-warning">Update</a></td>-->
 
         </tr>
         </tbody>
@@ -88,34 +77,7 @@
 
 </div>
 
-<script>
-    setTimeout(function() {
-        document.getElementById('successMessage').style.display = 'none';
-    }, 700);
-</script>
-<script>
-    function showConfirmDialog(event) {
-        event.preventDefault();
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'Once deleted, you will not be able to recover this product!', // Add your message here
-            icon: 'warning',
-            showConfirmButton: true,
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it',
-            cancelButtonText: 'Cancel',
-            customClass: {
-                popup: 'custom-popup',
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Proceed with the delete action
-                window.location.href = event.target.getAttribute('href');
-            }
-        });
-    }
-</script>
 
 
 

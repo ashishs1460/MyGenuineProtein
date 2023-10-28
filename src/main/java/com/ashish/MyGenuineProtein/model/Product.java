@@ -1,10 +1,12 @@
 package com.ashish.MyGenuineProtein.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -27,16 +29,12 @@ public class Product {
     @JoinColumn(name = "category_id",referencedColumnName = "category_id")
     private Category category;
 
-    private double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flavour_id",referencedColumnName = "flavour_id")
-    private Flavour flavour;
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+     private List<Variant> variants;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "weight_id",referencedColumnName = "weight_id")
-    private Weight weight;
 
     private String description;
 

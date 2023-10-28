@@ -8,6 +8,7 @@ import com.ashish.MyGenuineProtein.repository.UserRepository;
 import com.ashish.MyGenuineProtein.service.UserService;
 import com.ashish.MyGenuineProtein.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -96,6 +97,8 @@ public class LoginController {
         return "otpPage";
 
     }
+
+
 
 
 }

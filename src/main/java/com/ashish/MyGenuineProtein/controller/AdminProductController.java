@@ -4,10 +4,10 @@ package com.ashish.MyGenuineProtein.controller;
 import com.ashish.MyGenuineProtein.dto.ProductDto;
 import com.ashish.MyGenuineProtein.model.Product;
 import com.ashish.MyGenuineProtein.service.CategoryService;
-import com.ashish.MyGenuineProtein.service.FlavourService;
+import com.ashish.MyGenuineProtein.service.VariantService;
 import com.ashish.MyGenuineProtein.service.ProductService;
-import com.ashish.MyGenuineProtein.service.WeightService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,16 +32,16 @@ public class AdminProductController {
     CategoryService categoryService;
 
     @Autowired
-    FlavourService flavourService;
+    VariantService variantService;
 
-    @Autowired
-    WeightService weightService;
+
 
     @GetMapping("/admin/getProducts")
-    public String getProducts(Model model){
+    public String getProducts(Model model, Pageable pageable){
         String successMessage = (String) model.getAttribute("successMessage");
         model.addAttribute("successMessage", successMessage);
-        model.addAttribute("products",productService.getAllProducts());
+        model.addAttribute("products",productService.getAllProducts(pageable));
+        model.addAttribute("variants",variantService.getAllVariants());
         return "/product/getProducts";
     }
 
@@ -49,8 +49,8 @@ public class AdminProductController {
     public String addProduct(Model model){
         model.addAttribute("productDto",new ProductDto());
         model.addAttribute("categories",categoryService.getAllCategory());
-        model.addAttribute("flavours",flavourService.getAllFlavours());
-        model.addAttribute("weights",weightService.getAllWeights());
+        model.addAttribute("flavours", variantService.getAllVariants());
+
         return "/product/addProducts";
 
     }
@@ -65,9 +65,9 @@ public class AdminProductController {
         product.setId(productDto.getId());
         product.setName(productDto.getName());
         product.setCategory(categoryService.getCategoryById(productDto.getCategoryId()).get());
-        product.setPrice(productDto.getPrice());
-        product.setFlavour(flavourService.getFlavourById(productDto.getFlavourId()).get());
-        product.setWeight(weightService.getweightById(productDto.getWeightId()).get());
+
+//        product.setVariant(variantService.getFlavourById(productDto.getFlavourId()).get());
+//        product.setWeight(weightService.getweightById(productDto.getWeightId()).get());
         product.setDescription(productDto.getDescription());
         String imageUUID;
         if(!file.isEmpty()){
@@ -100,15 +100,15 @@ public class AdminProductController {
         productDto.setId(product.getId());
         productDto.setName(product.getName());
         productDto.setCategoryId((product.getCategory().getId()));
-        productDto.setFlavourId((product.getFlavour().getId()));
-        productDto.setWeightId((product.getWeight().getId()));
-        productDto.setPrice(product.getPrice());
+//        productDto.setFlavourId((product.getVariant().getId()));
+//        productDto.setWeightId((product.getWeight().getId()));
+//        productDto.setPrice(product.getPrice());
         productDto.setDescription(product.getDescription());
         productDto.setImageName(product.getImageName());
 
         model.addAttribute("categories",categoryService.getAllCategory());
-        model.addAttribute("flavours",flavourService.getAllFlavours());
-        model.addAttribute("weights",weightService.getAllWeights());
+        model.addAttribute("flavours", variantService.getAllVariants());
+
         model.addAttribute("productDto",productDto);
         return "/product/addProducts";
 

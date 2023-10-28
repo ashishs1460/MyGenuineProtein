@@ -55,7 +55,7 @@ public class AdminController {
 
     @GetMapping("/admin/deleteCategories/{id}")
     public String deleteCategory(@PathVariable UUID id ,Model model ,RedirectAttributes redirectAttributes){
-        boolean isPresent = productService.getProductsByCategoryId(id);
+        boolean isPresent = productService.existsByCategoryId(id);
         if(isPresent){
             redirectAttributes.addFlashAttribute("categoryInUse","Products are available in this category,try to delete product first");
             return "redirect:/admin/getCategories";

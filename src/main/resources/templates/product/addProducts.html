@@ -62,29 +62,29 @@
             >
           </select>
         </div>
-        <div class="form-group">
-          <label class="product-add"  for="flavour">Select Flavour</label>
-          <select class="form-control" th:field="*{flavourId}" id="flavour" name="flavour">
-            <option th:each="flavour :${flavours}"
-                    th:value="${flavour.id}"
-                    th:text="${flavour.flavourName}"
-            >
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="product-add"  for="price">Price</label>
-          <input  type="number" min="1000" class="form-control" required th:field="*{price}" name="price" id="price"
-                 placeholder="Price">
-        </div>
-        <div class="form-group">
-          <label class="product-add"  for="weight">Select weight</label>
-          <select class="form-control" th:field="*{weightId}" id="weight" name="weight">
-            <option th:each="weight :${weights}"
-                    th:value="${weight.id}"
-                    th:text="${weight.weight} + ' kg'"
-            >
-          </select>
-        </div>
+<!--        <div class="form-group">-->
+<!--          <label class="product-add"  for="variant">Select Flavour</label>-->
+<!--          <select class="form-control" th:field="*{flavourId}" id="variant" name="variant">-->
+<!--            <option th:each="variant :${flavours}"-->
+<!--                    th:value="${variant.id}"-->
+<!--                    th:text="${variant.flavourName}"-->
+<!--            >-->
+<!--          </select>-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--          <label class="product-add"  for="price">Price</label>-->
+<!--          <input  type="number" min="1000" class="form-control" required th:field="*{price}" name="price" id="price"-->
+<!--                 placeholder="Price">-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--          <label class="product-add"  for="weight">Select weight</label>-->
+<!--          <select class="form-control" th:field="*{weightId}" id="weight" name="weight">-->
+<!--            <option th:each="weight :${weights}"-->
+<!--                    th:value="${weight.id}"-->
+<!--                    th:text="${weight.weight} + ' kg'"-->
+<!--            >-->
+<!--          </select>-->
+<!--        </div>-->
         <div class="form-group">
           <label class="product-add"  for="description">Product Description</label>
           <textarea class="form-control " rows="5" th:field="*{description}" name="description" id="description"></textarea>

@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface CategoryService {
 
+
     List<Category> getAllCategory();
     void addCategory (Category category);
 
