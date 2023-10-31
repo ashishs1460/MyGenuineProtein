@@ -11,7 +11,8 @@ body{
     .navbar-custom .navbar-brand,
     .navbar-custom .navbar-text ,
     .admin-card,
-    .product-add{
+    .product-add,
+    .cart-table{
         color: #FFD800;
     }
 
@@ -19,6 +20,7 @@ body{
   background-color: #010103;
   border-radius: 30px;
   overflow: hidden;
+  word-wrap: normal!important;
 }
 .card-img {
   height: 30vh;

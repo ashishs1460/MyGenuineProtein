@@ -40,7 +40,7 @@
           <a class="nav-link navbar-text" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link navbar-text" th:href="@{/cart}" href="#">Cart</a>
+          <a class="nav-link navbar-text" th:href="@{/cart/goToCart}" href="#">Cart</a>
         </li>
         <li class="nav-item active">
           <span class="nav-link navbar-text" th:text="${cartCount}">0</span>
@@ -60,16 +60,13 @@
     <div class="col-sm-7 mt-5">
       <div class="card">
         <div class="card-body">
-          <h2 class="card-title" style="color: #FFD800" th:text="${product.name}"></h2>
+          <h2 class="card-title" style="color: #FFD800" th:text="${product.name}"></h2><br>
           <h3 class="card-subtitle" style="color: #D3D3D3" th:text="${product.category.name}"></h3>
           <h4 id="variantName" th:text="${variants[0].variantName}" style="color:white"></h4>
-          <h4 id="variantPrice" th:text="${variants[0].price}" style="color:white"></h4>
+          <h4 id="variantPrice" style="color:white">
+            ₹ <span th:text="${variants[0].price}"></span>
+          </h4>
 
-          <!--          <h2 class="card-text" style="color: #D3D3D3">₹ <span th:text="${product.price}"></span></h2>-->
-<!--          <h4 class="card-text" style="color: #D3D3D3">-->
-<!--            <span th:text="${product.weight.weight}"></span> kg-->
-<!--          </h4>-->
-<!--          <p class="card-text" style="color: #D3D3D3" th:text="${product.variant.flavourName}"></p>-->
           <select id="variantSelect" class="form-control" name="variant" onchange="fetchVariantDetails()">
                  <option value="0">Select</option>
                  <option th:each="variant : ${variants}"
@@ -78,8 +75,16 @@
 
                  </option>
           </select>
-          <p class="card-text" style="color: #D3D3D3" th:text="${product.description}"></p>
-          <a href="" th:href="@{/addToCart/{id}(id = ${product.id})}" class="btn btn-success">Add to cart</a>
+
+          <p class="card-text mt-4" style="color: #D3D3D3" th:text="${product.description}"></p>
+
+          <div>
+            <button class="btn btn-warning" id="addCart" type="button" onclick="addToCart()">Add to cart</button>
+            <a class="btn btn-warning" id="goToCart" th:href="@{/cart/goToCart}" style="display: none;">Go to Cart</a>
+          </div>
+
+          <div id="message" class="alert alert-success" role="alert" style="display: none;"></div>
+
         </div>
       </div>
     </div>
@@ -137,6 +142,57 @@
             alert("select variant");
         }
     }
+
+
+
+  function showMessage(message, isSuccess) {
+        const messageElement = document.getElementById('message');
+        messageElement.innerHTML = message;
+        messageElement.classList.toggle('alert-success', isSuccess);
+        //messageElement.classList.toggle('alert-danger', !isSuccess);
+
+
+        messageElement.style.display = 'block';
+
+
+
+</script>
+<script>
+  function addToCart() {
+  const addCart = document.getElementById('variantSelect').value;
+  console.log(addCart)
+
+  fetch('/add/' + addCart)
+      .then(response => {
+          if (response.ok) {
+              return response.text();
+          }
+          throw new Error('Failed to add to cart');
+      })
+      .then(data => {
+      console.log(data)
+          const messageElement = document.getElementById('message');
+          messageElement.style.display = 'block';
+
+          if (data === 'Added to cart') {
+              messageElement.innerText = data;
+
+              document.getElementById('addCart').style.display = 'none';
+              document.getElementById('goToCart').style.display = 'inline';
+
+          } else if (data === 'Out of Stock') {
+              messageElement.innerText = data;
+              messageElement.style.backgroundColor = "red";
+          }
+          setTimeout(function () {
+              messageElement.style.display = 'none';
+          },2000);
+      })
+      .catch(error => {
+          console.error('Error fetching to cart', error.message);
+      });
+}
+
 </script>
 
 </body>

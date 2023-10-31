@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 public class CartItem {
 
@@ -25,8 +24,8 @@ public class CartItem {
 
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "variant_id")
+    private Variant variant;
 
-    private Long Quantity;
+    private int Quantity;
 }

@@ -1,5 +1,6 @@
 package com.ashish.MyGenuineProtein.service;
 
+import com.ashish.MyGenuineProtein.model.Product;
 import com.ashish.MyGenuineProtein.model.Variant;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface VariantService {
    Optional<Variant> getVariantById(Long id);
 
 
+   List<Variant>getVariantForProduct(Product product);
 }

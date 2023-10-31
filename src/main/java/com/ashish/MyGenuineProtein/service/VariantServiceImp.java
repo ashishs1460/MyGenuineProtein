@@ -47,4 +47,9 @@ public class VariantServiceImp implements VariantService {
     public Optional<Variant> getVariantById(Long id) {
         return variantRepository.findById(id);
     }
+
+    @Override
+    public List<Variant> getVariantForProduct(Product product) {
+        return variantRepository.findByProduct(product);
+    }
 }

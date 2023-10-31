@@ -31,6 +31,12 @@ public class UserServiceImp implements UserService{
     @Autowired
     UserRepository userRepository;
 
+
+    @Override
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
     @Override
     public List<User> findAllUsers() {
 
