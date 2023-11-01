@@ -143,51 +143,51 @@
     <form enctype="multipart/form-data" th:action="@{/cart/placeOrder}" class="checkout" method="post" name="checkout">
         <div class="container">
             <div class="row" id="checkout-container">
-                <div class="col-md-8 price-details">
+                <div class="col-md-8 price-details ">
                     <h4 style="color:#FFD800">Select Address</h4>
-                    <th:block th:if="${#lists.isEmpty(addresses)}">
+                    <th:block th:if="${#lists.isEmpty(Addresses)}">
                         <p style="color:grey">No addresses found. Please add a new address:</p>
                         <a class="btn btn-warning" th:href="@{'/user/addAddress'+'?editSource=checkout'}">Add Address</a>
 
                     </th:block>
                     <!-- Display existing addresses -->
-                    <th:block th:unless="${#lists.isEmpty(addresses)}">
-                        <ul>
-                            <li th:each="address, iterStat : ${addresses}" style="list-style:none;">
-                                <label>
-                                    <div>
-                                        <input type="radio" th:id="'address_' + ${iterStat.index}"
-                                               th:name="selectedAddressId" th:value="${address.id}"/>
-                                        <span th:text="${user.firstName}"></span>
-                                        <span><a class="add_address"
-                                                 th:href="@{'/user/editAddress'+${address.id} +'?editSource=checkout'}">Edit</a>
-                                            </span>
+                    <th:block th:unless="${#lists.isEmpty(Addresses)}">
+                        <ul th:if="${Addresses}" style="list-style:none;">
+                            <li th:each="address, iterStat : ${Addresses}">
+                                <div class="address-card" style="background-color: #21446B; color: grey; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                                    <input type="radio" th:id="'address_' + ${iterStat.index}"
+                                           th:name="selectedAddressId" th:value="${address.id}"/>
+                                    <strong th:text="${user.firstName}"></strong>
+
+                                    <div style="margin-top: 10px;">
+                                        <span th:text="${user.email}"></span>
                                     </div>
-                                    <div style="margin-left: 15px">
-                                        <span th:text="${user.email}"></span></div>
-                                    <div style="margin-left: 15px">
-                                        <span th:text="${address.streetAddress +','+ address.area}"></span>
+                                    <div style="margin-top: 10px;">
+                                        <span th:text="${address.streetAddress}"></span>
                                     </div>
-                                    <div style="margin-left: 15px">
-                                        <span th:text="${address.city +',' + address.state}"></span>
+                                    <div style="margin-top: 10px;">
+                                        <span th:text="${address.city + ', ' + address.state}"></span>
                                     </div>
-                                    <div style="margin-left: 15px">
+                                    <div style="margin-top: 10px;">
                                         <span th:text="${address.pinCode}"></span>
                                     </div>
-                                    <div style="margin-left: 15px">
+                                    <div style="margin-top: 10px;">
                                         <span th:text="${address.landmark}"></span>
+                                        <a class="btn btn-warning ml-4"
+                                           th:href="@{'/user/editAddress/'+${address.id} +'?editSource=checkout'}">Edit</a>
                                     </div>
-                                </label>
+                                </div>
                             </li>
                         </ul>
-                        <a class="btn btn-warning" th:href="@{'/user/addAddress/'+'?editSource=checkout'}">Add New Address</a>
+
+                        <a class="btn btn-success" th:href="@{'/user/addAddress'+'?editSource=checkout'}">Add New Address</a>
 
                     </th:block>
                 </div>
                 <div th:if="${message}" class="alert alert-danger">
                     <p th:text="${message}"></p>
                 </div>
-                <div class="col-md-4 delivery admin-box">
+                <div class="col-md-4 delivery admin-box ">
                     <div class="head">
                         <h3>Price details</h3>
                         <hr>
@@ -209,6 +209,7 @@
                             <div>
                                 <h4>Total Price : <strong th:text="${totalPrice}"></strong></h4>
                             </div>
+
                             <!--                            &lt;!&ndash; Display the discounted total price if the coupon was applied &ndash;&gt;-->
                             <!--                            <div th:if="${couponApplied}">-->
                             <!--                                <h4>Total Price: <span th:text="${discountedTotalPrice}"></span></h4>-->
@@ -220,6 +221,10 @@
                             <!--                                <h4>Total Price: <span th:text="${totalPrice}"></span></h4>-->
                             <!--                                &lt;!&ndash; Other checkout details &ndash;&gt;-->
                             <!--                            </div>-->
+                        </div>
+                        <div class="col-md-4" style="margin-top: 2rem">
+                            <input class="btn btn-warning" type="submit" data-value="Place order" value="Place order"
+                                   id="place_order" name="woocommerce_checkout_place_order">
                         </div>
                         <!--                        <div>-->
                         <!--                            <div class="coupon"><h5>Available Coupons</h5></div>-->
@@ -244,6 +249,7 @@
                 </div>
             </div>
         </div>
+
         <!-------------------------------------Payments---------------------------------->
         <div class="container">
             <div class="row">
@@ -255,23 +261,21 @@
                             <label for="paymentMethodCOD"><strong>Cash on Delivery</strong> </label>
                         </li>
 
-                        <li class="payment_method_razorpay">
-                            <input type="radio" data-order_button_text="Proceed to RazorPay" value="RAZORPAY"
-                                   name="paymentMethod" class="input-radio" id="payment_method_razorpay">
-                            <label for="payment_method_razorpay"><strong>RazorPay</strong></label>
-                        </li>
-                        <li class="payment_method_razorpay">
-                            <input type="radio" data-order_button_text="Proceed to RazorPay" value="WALLET"
-                                   name="paymentMethod" class="input-radio" id="payment_method_wallet">
-                            <label for="payment_method_razorpay"><strong>Wallet</strong></label>
-                        </li>
+<!--                        <li class="payment_method_razorpay">-->
+<!--                            <input type="radio" data-order_button_text="Proceed to RazorPay" value="RAZORPAY"-->
+<!--                                   name="paymentMethod" class="input-radio" id="payment_method_razorpay">-->
+<!--                            <label for="payment_method_razorpay"><strong>RazorPay</strong></label>-->
+<!--                        </li>-->
+<!--                        <li class="payment_method_razorpay">-->
+<!--                            <input type="radio" data-order_button_text="Proceed to RazorPay" value="WALLET"-->
+<!--                                   name="paymentMethod" class="input-radio" id="payment_method_wallet">-->
+<!--                            <label for="payment_method_razorpay"><strong>Wallet</strong></label>-->
+<!--                        </li>-->
                     </ul>
                 </div>
                 <input type="hidden" name="discountedTotalPrice" th:value="${discountedTotalPrice}"/>
-                <div class="col-md-4" style="margin-top: 2rem">
-                    <input type="submit" data-value="Place order" value="Place order"
-                           id="place_order" name="woocommerce_checkout_place_order">
-                </div>
+
+
             </div>
         </div><!-------payment end------------>
     </form>

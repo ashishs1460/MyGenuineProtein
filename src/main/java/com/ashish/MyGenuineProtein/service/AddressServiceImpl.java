@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AddressServiceImpl implements AddressService{
@@ -34,4 +35,16 @@ public class AddressServiceImpl implements AddressService{
     public List<Address> findAllUserAddresses(User user) {
         return addressRepository.findAllByUser(user);
     }
+
+    @Override
+    public Optional<Address> findById(Long id) {
+        return addressRepository.findById(id);
+    }
+
+    @Override
+    public void editAddress( Address updatedaddress) {
+        addressRepository.save(updatedaddress);
+    }
+
+
 }

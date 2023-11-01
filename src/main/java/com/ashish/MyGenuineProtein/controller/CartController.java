@@ -1,6 +1,7 @@
 package com.ashish.MyGenuineProtein.controller;
 
 
+import com.ashish.MyGenuineProtein.enums.PaymentMode;
 import com.ashish.MyGenuineProtein.model.*;
 import com.ashish.MyGenuineProtein.repository.CartItemRepository;
 import com.ashish.MyGenuineProtein.service.*;
@@ -149,6 +150,26 @@ public class CartController {
         return "checkout";
 
 
+    }
+
+//    @PostMapping("/cart/placeOrder")
+//    public  String placeOrder(@RequestParam(name = "selectedAddressId",required = false) Long addressId,
+//                              @RequestParam(name = "paymentMethod",required = false) PaymentMode selectedPaymentModePaymentMode,
+//                              Model model,
+//                              RedirectAttributes redirectAttributes,
+//                              Principal principal
+//                              ){
+//
+//        if(addressId == null){
+//            redirectAttributes.addFlashAttribute("error", "Please select an address");
+//            return "redirect:/cart/chekout";
+//        }
+//
+//
+//    }
+
+    private static boolean isCod(PaymentMode selectedPaymentMode) {
+        return selectedPaymentMode == PaymentMode.COD;
     }
 
 
