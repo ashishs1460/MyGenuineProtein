@@ -1,5 +1,6 @@
 package com.ashish.MyGenuineProtein.service;
 
+import com.ashish.MyGenuineProtein.model.CartItems;
 import com.ashish.MyGenuineProtein.model.Product;
 import com.ashish.MyGenuineProtein.model.Variant;
 
@@ -21,4 +22,6 @@ public interface VariantService {
 
 
    List<Variant>getVariantForProduct(Product product);
+
+    void reduceVariantStock(List<CartItems> cartItems);
 }

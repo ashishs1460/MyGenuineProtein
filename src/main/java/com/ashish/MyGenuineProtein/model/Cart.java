@@ -3,15 +3,14 @@ package com.ashish.MyGenuineProtein.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
-import java.util.UUID;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 public class Cart {
 
@@ -26,9 +25,9 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,orphanRemoval = true)
     @ToString.Exclude
-    private List<CartItem> cartItems;
+    private List<CartItems> cartItems;
 
-    private Long total;
+
 
 
 

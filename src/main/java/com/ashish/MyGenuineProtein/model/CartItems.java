@@ -4,14 +4,12 @@ package com.ashish.MyGenuineProtein.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class CartItem {
+public class CartItems {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

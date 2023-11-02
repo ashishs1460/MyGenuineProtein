@@ -75,33 +75,31 @@
 <div class="container" style="margin-top: 30px">
   <div class="row">
     <!-- Sidebar with Categories -->
-    <div class="col-lg-3 col-md-4 col-sm-12">
-      <h4 style="color:#FFD800">filters</h4>
+    <h4 style="color:#FFD800">filters</h4>
+
+    <section class="price mt-4">
+
+      <select id="categorySelect" class="form-control">
+        <option>Categories</option>
+        <option value="/shop">All Products</option>
+        <option th:each="category, iStat : ${categories}" th:value="'/shop/category/' + ${category.id}" th:text="${category.name}"></option>
+      </select>
+
+      <!--        <select id="categorySelect1" class="form-control">-->
+      <!--          <option>Flavours</option>-->
+      <!--          <option th:each="variant, iStat : ${flavours}" th:value="'/shop/variant/' + ${variant.id}" th:text="${variant.flavourName}"></option>-->
+      <!--        </select>-->
+      <!-- Add your filter options here if needed -->
 
       <section class="price mt-4">
 
-        <select id="categorySelect" class="form-control">
-          <option>Categories</option>
-          <option value="/shop">All Products</option>
-          <option th:each="category, iStat : ${categories}" th:value="'/shop/category/' + ${category.id}" th:text="${category.name}"></option>
-        </select>
-
-<!--        <select id="categorySelect1" class="form-control">-->
-<!--          <option>Flavours</option>-->
-<!--          <option th:each="variant, iStat : ${flavours}" th:value="'/shop/variant/' + ${variant.id}" th:text="${variant.flavourName}"></option>-->
-<!--        </select>-->
-        <!-- Add your filter options here if needed -->
-
-        <section class="price mt-4">
 
 
 
 
 
 
-    </div>
-
-    <!-- Product Listings -->
+      <!-- Product Listings -->
     <div class="col-lg-9 col-md-8 col-sm-12 mt-4">
       <div class="row">
         <!-- Add your product listings here using th:each -->

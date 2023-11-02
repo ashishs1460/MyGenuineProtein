@@ -1,5 +1,6 @@
 package com.ashish.MyGenuineProtein.service;
 
+import com.ashish.MyGenuineProtein.model.CartItems;
 import com.ashish.MyGenuineProtein.model.Product;
 import com.ashish.MyGenuineProtein.model.Variant;
 import com.ashish.MyGenuineProtein.repository.VariantRepository;
@@ -52,4 +53,21 @@ public class VariantServiceImp implements VariantService {
     public List<Variant> getVariantForProduct(Product product) {
         return variantRepository.findByProduct(product);
     }
+
+    @Override
+    public void reduceVariantStock(List<CartItems> cartItems) {
+        for (CartItems cartItem: cartItems) {
+            Variant variant = cartItem.getVariant();
+            int orderQuantity = cartItem.getQuantity();
+            int currentStock = variant.getStock();
+            if(currentStock >= orderQuantity){
+                variant.setStock(currentStock-orderQuantity);
+            }else {
+                new RuntimeException("out of stock");
+            }
+            variantRepository.save(variant);
+
+        }
+    }
 }
+

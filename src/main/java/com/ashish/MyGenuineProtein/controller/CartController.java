@@ -3,20 +3,18 @@ package com.ashish.MyGenuineProtein.controller;
 
 import com.ashish.MyGenuineProtein.enums.PaymentMode;
 import com.ashish.MyGenuineProtein.model.*;
-import com.ashish.MyGenuineProtein.repository.CartItemRepository;
 import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -34,22 +32,18 @@ public class CartController {
 
     @Autowired
     AddressService addressService;
+    @Autowired
+    OrderService orderService;
 
     @GetMapping("/add/{id}")
     @ResponseBody
     public ResponseEntity<String> addCart(@PathVariable("id") Long id, Principal principal) {
-        if (principal == null){
 
-        }
-
-        System.out.println(principal.getName());
         try {
             Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
             if (optionalUser.isPresent()) {
                 User user =optionalUser.get();
                 Variant variant = variantService.getVariantById(id).orElseThrow();
-                System.out.println(variant.getVariantName());
-                System.out.println(user.getFirstName());
 
                 if (variant.getStock() <= 0) {
                     return ResponseEntity.ok("Out of Stock");
@@ -77,7 +71,7 @@ public class CartController {
         else {
             User user=userService.findUserByEmail(principal.getName()).orElseThrow();
             Cart cart = user.getCart();
-            List<CartItem > cartItems = cart.getCartItems();
+            List<CartItems> cartItems = cart.getCartItems();
             int Quantity =   cartItems
                     .stream()
                     .map(item -> item.getQuantity())
@@ -133,12 +127,14 @@ public class CartController {
                     .stream()
                     .filter(address -> !address.isDelete())
                     .sorted(Comparator.comparing(Address::getCreatedAt).reversed()).toList();
+
+
             model.addAttribute("Addresses",addressList);
             model.addAttribute("user",user);
 
             Cart cart = user.getCart();
 
-            List<CartItem> cartItems = cart.getCartItems();
+            List<CartItems> cartItems = cart.getCartItems();
             model.addAttribute("cartItems",cartItems);
 
             double totalPrice = cartItems.stream()
@@ -152,21 +148,69 @@ public class CartController {
 
     }
 
-//    @PostMapping("/cart/placeOrder")
-//    public  String placeOrder(@RequestParam(name = "selectedAddressId",required = false) Long addressId,
-//                              @RequestParam(name = "paymentMethod",required = false) PaymentMode selectedPaymentModePaymentMode,
-//                              Model model,
-//                              RedirectAttributes redirectAttributes,
-//                              Principal principal
-//                              ){
-//
-//        if(addressId == null){
-//            redirectAttributes.addFlashAttribute("error", "Please select an address");
-//            return "redirect:/cart/chekout";
-//        }
-//
-//
-//    }
+    @PostMapping("/cart/placeOrder")
+    public String placeOrder(Model model,
+                             @RequestParam(value = "selectedAddressId", required = false) Long addressId,
+                             @RequestParam(value = "paymentMethod", required = false) PaymentMode selectedPaymentMode,
+                             Principal principal, RedirectAttributes redirectAttributes) {
+
+        if (addressId == null) {
+            model.addAttribute("error", "Please select an address.");
+            return "redirect:/cart/checkout";
+        }
+
+        if (principal != null) {
+            Optional<User> optionalUser= userService.findUserByEmail(principal.getName());
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                Cart userCart = user.getCart();
+                List<CartItems> cartItems = userCart.getCartItems();
+
+
+                System.out.println( "CartItems"+cartItems);
+
+
+                double totalPrice = cartService.calculateTotalPrice(cartItems);
+
+
+                Optional<Address> optionalUserAddress = addressService.findById(addressId);
+                if (optionalUserAddress.isPresent()) {
+                    Address userAddress = optionalUserAddress.get();
+                    try {
+                        Order order = orderService.saveOrder(user, cartItems, totalPrice, selectedPaymentMode, userAddress);
+                        LocalDate expectedDeliveryDate = order.getOrderDate().plusDays(7);
+
+                        if (isCod(selectedPaymentMode)) {
+                            handleCodPayment(model, userCart, cartItems, order, expectedDeliveryDate);
+                            return "orderConfirmation";
+                        } else {
+                            model.addAttribute("message", "payment method not selected");
+                            return "redirect:/cart/checkout";
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }
+        return "redirect:/login";
+    }
+
+    private void handleCodPayment(Model model,
+                                  Cart userCart,
+                                  List<CartItems> cartItems,
+                                  Order order,
+                                  LocalDate expectedDeliveryDate) {
+        variantService.reduceVariantStock(cartItems);
+        userService.deleteCart(userCart);
+        cartService.deleteCart(userCart);
+        model.addAttribute("order", order);
+        model.addAttribute("expectedDeliveryDate", expectedDeliveryDate);
+
+
+    }
 
     private static boolean isCod(PaymentMode selectedPaymentMode) {
         return selectedPaymentMode == PaymentMode.COD;

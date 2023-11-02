@@ -1,9 +1,12 @@
 package com.ashish.MyGenuineProtein.service;
 
+import com.ashish.MyGenuineProtein.model.Cart;
 import com.ashish.MyGenuineProtein.model.User;
 import com.ashish.MyGenuineProtein.otp.model.Otp;
 import com.ashish.MyGenuineProtein.otp.repository.OtpRepository;
 import com.ashish.MyGenuineProtein.otp.utils.SendEmail;
+import com.ashish.MyGenuineProtein.repository.CartItemRepository;
+import com.ashish.MyGenuineProtein.repository.CartRepository;
 import com.ashish.MyGenuineProtein.repository.UserRepository;
 import com.ashish.MyGenuineProtein.otp.utils.OtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImp implements UserService{
@@ -30,6 +34,13 @@ public class UserServiceImp implements UserService{
 
     @Autowired
     UserRepository userRepository;
+
+
+    @Autowired
+    CartRepository cartRepository;
+
+    @Autowired
+    CartItemRepository cartItemRepository;
 
 
     @Override
@@ -82,6 +93,24 @@ public class UserServiceImp implements UserService{
 
         return 0;
     }
+
+    @Override
+    public void deleteCart(Cart cart) {
+        User user = userRepository.findById(cart.getUser().getId()).orElse(null);
+        assert user != null;
+        user.setCart(null);
+        userRepository.save(user);
+
+    }
+
+    public void deleteCartItemById(Long id) {
+        cartItemRepository.deleteById(id);
+    }
+
+
+
+
+
 
 
 }

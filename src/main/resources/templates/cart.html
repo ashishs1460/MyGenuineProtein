@@ -116,11 +116,11 @@
 
               <h5 class="mb-4" style="color: #FFD800">Cart (<span th:text="${quantity}">2</span> items)</h5>
 
-              <div class="row mb-4" th:each="cartItem, iStat : ${cartItems}">
+              <div class="row mb-4" th:each="cartItems, iStat : ${cartItems}">
                 <div class="col-md-5 col-lg-3 col-xl-3">
                   <div class="mb-3 mb-md-0">
                     <img class="img-fluid w-100"
-                         th:src="@{/productImages/{fileName}(fileName=${cartItem.variant.product.imageName})}"
+                         th:src="@{/productImages/{fileName}(fileName=${cartItems.variant.product.imageName})}"
                          src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12a.jpg" alt="Sample">
 
                   </div>
@@ -129,15 +129,15 @@
                   <div>
                     <div class="d-flex justify-content-between">
                       <div>
-                        <h3  style="color:white"  th:text="${cartItem.variant.product.name}">>Blue denim shirt</h3>
-                        <h5 style="color:grey"  th:text="${cartItem.variant.variantName}"></h5>
-                        <p style="color:grey"   class="mb-0"><span><strong>₹<span th:text="${cartItem.variant.price * cartItem.quantity}"></span></strong></span></p>
+                        <h3  style="color:white"  th:text="${cartItems.variant.product.name}">>Blue denim shirt</h3>
+                        <h5 style="color:grey"  th:text="${cartItems.variant.variantName}"></h5>
+                        <p style="color:grey"   class="mb-0"><span><strong>₹<span th:text="${cartItems.variant.price * cartItems.quantity}"></span></strong></span></p>
                         <div class="mt-2 quantity-input">
                           <form th:action="@{/cart/update-cart}" method="post">
-                            <input type="hidden" name="id" th:value="${cartItem.variant.id}">
-                            <button class="quantity-button decrease" type="submit" name="newQuantity" th:value="${cartItem.quantity - 1}" data-item-id="1">-</button>
-                            <input type="number" id="quantityItem1" class="item-quantity" th:value="${cartItem.quantity}" data-item-id="1">
-                            <button class="quantity-button increase" type="submit" name="newQuantity" th:value="${cartItem.quantity + 1}" data-item-id="1">+</button>
+                            <input type="hidden" name="id" th:value="${cartItems.variant.id}">
+                            <button class="quantity-button decrease" type="submit" name="newQuantity" th:value="${cartItems.quantity - 1}" data-item-id="1">-</button>
+                            <input type="number" id="quantityItem1" class="item-quantity" th:value="${cartItems.quantity}" data-item-id="1">
+                            <button class="quantity-button increase" type="submit" name="newQuantity" th:value="${cartItems.quantity + 1}" data-item-id="1">+</button>
                           </form>
                         </div>
 
@@ -150,7 +150,7 @@
                     <div class="mt-3 ">
                       <div>
 
-                        <a href="#" th:href="@{/cart/remove/{id}(id=${cartItem.id})}"
+                        <a href="#" th:href="@{/cart/remove/{id}(id=${cartItems.id})}"
                            class="btn btn-danger"
                            >Delete</a>
 

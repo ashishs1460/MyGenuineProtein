@@ -1,19 +1,16 @@
 package com.ashish.MyGenuineProtein.service;
 
 import com.ashish.MyGenuineProtein.model.Cart;
-import com.ashish.MyGenuineProtein.model.CartItem;
+import com.ashish.MyGenuineProtein.model.CartItems;
 import com.ashish.MyGenuineProtein.model.User;
 import com.ashish.MyGenuineProtein.model.Variant;
 import com.ashish.MyGenuineProtein.repository.CartItemRepository;
 import com.ashish.MyGenuineProtein.repository.CartRepository;
-import com.ashish.MyGenuineProtein.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CartServiceImp implements CartService{
@@ -38,22 +35,22 @@ public class CartServiceImp implements CartService{
         Cart cart =cartRepository.findByUser(user).orElseGet(()->createCart(user));
 
 
-         Optional<CartItem> optionalCartItem = cartItemRepository.findByCartAndVariant(cart,variant);
+         Optional<CartItems> optionalCartItem = cartItemRepository.findByCartAndVariant(cart,variant);
 
 
 
 
         if (optionalCartItem.isPresent()) {
-            CartItem existingCartItem = optionalCartItem.get();
-            existingCartItem.setQuantity(existingCartItem.getQuantity() + 1);
-            cartItemRepository.save(existingCartItem);
+            CartItems existingCartItems = optionalCartItem.get();
+            existingCartItems.setQuantity(existingCartItems.getQuantity() + 1);
+            cartItemRepository.save(existingCartItems);
 
         } else {
-            CartItem cartItem = new CartItem();
-            cartItem.setQuantity(1);
-            cartItem.setVariant(variant);
-            cartItem.setCart(cart);
-            cart.getCartItems().add(cartItem);
+            CartItems cartItems = new CartItems();
+            cartItems.setQuantity(1);
+            cartItems.setVariant(variant);
+            cartItems.setCart(cart);
+            cart.getCartItems().add(cartItems);
             cartRepository.save(cart);
         }
 
@@ -77,8 +74,8 @@ public class CartServiceImp implements CartService{
             if(optionalUser.isPresent()){
                 User user1 = optionalUser.get();
                 Cart cart = user1.getCart();
-                List<CartItem> cartItems =cart.getCartItems();
-                for (CartItem cartItem: cartItems) {
+                List<CartItems> cartItems =cart.getCartItems();
+                for (CartItems cartItem: cartItems) {
                     if(cartItem.getVariant().getId().equals(variantId)){
                         cartItem.setQuantity(newQuantity);
                         cartItemRepository.save(cartItem);
@@ -90,6 +87,17 @@ public class CartServiceImp implements CartService{
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public double calculateTotalPrice(List<CartItems> cartItems) {
+        return cartItems.stream().mapToDouble(cartItem ->
+                cartItem.getVariant().getPrice() * cartItem.getQuantity()).sum();
+    }
+
+    @Override
+    public void deleteCart(Cart cart) {
+        cartRepository.delete(cart);
     }
 
     public Cart createCart(User user) {

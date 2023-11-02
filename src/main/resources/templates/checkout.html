@@ -194,14 +194,14 @@
                     </div>
                     <div>
                         <ul class="product_details">
-                            <th:block th:each="cartItem : ${cartItems}">
+                            <th:block th:each="cartItems : ${cartItems}">
                                 <li class="list-details">
                                     <div class="price-quantity">
-                                        <span th:text="${cartItem.variant.product.name}"></span>(<span
-                                            th:text="${cartItem.quantity}"></span>
+                                        <span th:text="${cartItems.variant.product.name}"></span>(<span
+                                            th:text="${cartItems.quantity}"></span>
                                         )
                                     </div>
-                                    <span th:text="${cartItem.variant.price}"></span>
+                                    <span th:text="${cartItems.variant.price}"></span>
                                 </li>
                             </th:block>
                         </ul>
@@ -210,41 +210,12 @@
                                 <h4>Total Price : <strong th:text="${totalPrice}"></strong></h4>
                             </div>
 
-                            <!--                            &lt;!&ndash; Display the discounted total price if the coupon was applied &ndash;&gt;-->
-                            <!--                            <div th:if="${couponApplied}">-->
-                            <!--                                <h4>Total Price: <span th:text="${discountedTotalPrice}"></span></h4>-->
-                            <!--                                &lt;!&ndash; Other checkout details &ndash;&gt;-->
-                            <!--                            </div>-->
 
-                            <!--                            &lt;!&ndash; Display the original total price if the coupon was not applied &ndash;&gt;-->
-                            <!--                            <div th:unless="${couponApplied}">-->
-                            <!--                                <h4>Total Price: <span th:text="${totalPrice}"></span></h4>-->
-                            <!--                                &lt;!&ndash; Other checkout details &ndash;&gt;-->
-                            <!--                            </div>-->
                         </div>
                         <div class="col-md-4" style="margin-top: 2rem">
                             <input class="btn btn-warning" type="submit" data-value="Place order" value="Place order"
-                                   id="place_order" name="woocommerce_checkout_place_order">
+                                   id="place_order" name="place_order">
                         </div>
-                        <!--                        <div>-->
-                        <!--                            <div class="coupon"><h5>Available Coupons</h5></div>-->
-                        <!--                            <div th:each="coupon:${coupons}">-->
-                        <!--                                <h6 th:text="${coupon.couponCode}"></h6>-->
-                        <!--                            </div>-->
-                        <!--                            <button type="button" class="btn btn-primary" data-toggle="modal"-->
-                        <!--                                    data-target="#applyCouponModal">-->
-                        <!--                                Apply Coupon-->
-                        <!--                            </button>-->
-                        <!--                        </div>-->
-                        <!--                        <div th:if="${error}" class="message">-->
-                        <!--                            <p th:text="${error}"></p>-->
-                        <!--                        </div>-->
-                        <!--                        <div th:if="${couponApplied}" class="message-success">-->
-                        <!--                            <p th:text="${couponMessage}"></p>-->
-                        <!--                        </div>-->
-                        <!--                        <div th:if="${couponError}" class="message">-->
-                        <!--                            <p th:text="${couponError}"></p>-->
-                        <!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -260,20 +231,9 @@
                                    class="input-radio" id="paymentMethodCOD">
                             <label for="paymentMethodCOD"><strong>Cash on Delivery</strong> </label>
                         </li>
-
-<!--                        <li class="payment_method_razorpay">-->
-<!--                            <input type="radio" data-order_button_text="Proceed to RazorPay" value="RAZORPAY"-->
-<!--                                   name="paymentMethod" class="input-radio" id="payment_method_razorpay">-->
-<!--                            <label for="payment_method_razorpay"><strong>RazorPay</strong></label>-->
-<!--                        </li>-->
-<!--                        <li class="payment_method_razorpay">-->
-<!--                            <input type="radio" data-order_button_text="Proceed to RazorPay" value="WALLET"-->
-<!--                                   name="paymentMethod" class="input-radio" id="payment_method_wallet">-->
-<!--                            <label for="payment_method_razorpay"><strong>Wallet</strong></label>-->
-<!--                        </li>-->
                     </ul>
                 </div>
-                <input type="hidden" name="discountedTotalPrice" th:value="${discountedTotalPrice}"/>
+<!--                <input type="hidden" name="discountedTotalPrice" th:value="${discountedTotalPrice}"/>-->
 
 
             </div>

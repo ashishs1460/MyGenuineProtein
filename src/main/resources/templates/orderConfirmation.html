@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.fontawesome.com/light/6.0.0-beta2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body{
+           font-family: 'Poppins', sans-serif;
+           font-family: 'Ubuntu', sans-serif;
+        }
+        .main_div{
+            margin-bottom: 10rem
+        }
+        .tag_a{
+             color:blue;
+        }
+    </style>
+</head>
+<body>
+
+<body>
+<div class="maincontent-area">
+    <div class="container my-5 py-5">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-12 main_div">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <span style="color: green;font-size:5rem;">&#10004;</span>
+                        <h3 class="text-success" >Order Placed Successfully!</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Thank you for your order. We have received your order and it will be processed soon.</p>
+                        <p>Your order number is:<a class="tag_a"><strong th:text="${order.orderId}"></strong></a></p>
+                        <p>You will receive an email confirmation shortly.</p>
+                        <p>Expected Delivery Date <span th:text="${expectedDeliveryDate}" style="color:green;"></span></p>
+                    </div>
+                    <div class="card-footer">
+                        <a th:href="@{/shop}" class="btn btn-warning">Continue Shopping</a><br>
+                        <a class="btn btn-sm btn-success" style="margin-top:1rem;" th:href="@{/user/my-orders}"> View My Order </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
