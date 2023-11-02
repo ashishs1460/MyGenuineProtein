@@ -98,4 +98,34 @@ public class AddressController {
         }
     }
 
+    @GetMapping("/address")
+    public String userAddressList(Model model,Principal principal){
+      Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
+      if (optionalUser.isPresent()){
+          User user = optionalUser.get();
+          List<Address> userAddress =addressService.findAllUserAddresses(user).stream().
+                  filter(address -> !address.isDelete()).toList();
+          String username = user.getFirstName();
+          model.addAttribute("username", username);
+          model.addAttribute("user",user);
+          model.addAttribute("userAddress",userAddress);
+          return "userAddress";
+
+      }else {
+          return "404";
+      }
+
+    }
+
+    @GetMapping("/delete/address/{id}")
+    public String deleteAddress(@PathVariable("id") Long id){
+        Optional<Address> optionalAddress = addressService.findById(id);
+        if (optionalAddress.isPresent()){
+            Address address = optionalAddress.get();
+            address.setDelete(true);
+            addressService.saveAddress(address);
+        }
+        return "redirect:/user/address";
+    }
+
 }

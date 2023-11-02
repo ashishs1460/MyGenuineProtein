@@ -15,6 +15,8 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
     />
+    <link rel="stylesheet" href="https://cdn.fontawesome.com/light/6.0.0-beta2/css/all.min.css">
+
     <title>Coffee Shop Website</title>
 </head>
 <body>
@@ -30,7 +32,8 @@
         <a class="nav-link navbar-text" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
         <a class="nav-link navbar-text" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
         <a href="#contact">Contact</a>
-        <a class="nav-link navbar-text" th:href="@{/cart}" href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a href="#contact" th:href="@{/user/userDashboard}"><i class="fa-solid fa-user" style="color: #ffd800;"></i></a>
+        <a class="nav-link navbar-text" th:href="@{/cart/goToCart}" href="#"><i class="fa-solid fa-cart-shopping"></i></a>
     </nav>
 
 </header>

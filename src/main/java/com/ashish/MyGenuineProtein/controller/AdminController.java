@@ -1,20 +1,25 @@
 package com.ashish.MyGenuineProtein.controller;
 
 import com.ashish.MyGenuineProtein.model.Category;
+import com.ashish.MyGenuineProtein.model.User;
 import com.ashish.MyGenuineProtein.service.CategoryService;
 import com.ashish.MyGenuineProtein.service.ProductService;
+import com.ashish.MyGenuineProtein.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.Optional;
 import java.util.UUID;
 
 @Controller
 public class AdminController {
 
+    @Autowired
+    UserService userService;
 
     @Autowired
     CategoryService categoryService;
@@ -23,7 +28,12 @@ public class AdminController {
     ProductService productService;
 
     @GetMapping("/admin")
-    public String getAdminHome(){
+    public String getAdminHome(Model model, Principal principal){
+        User user = userService.findUserByEmail(principal.getName()).get();
+        String username = user.getFirstName();
+
+        model.addAttribute("username",username);
+
         return "getAdminHome";
     }
 

@@ -46,5 +46,10 @@ public class AddressServiceImpl implements AddressService{
         addressRepository.save(updatedaddress);
     }
 
+    @Override
+    public void saveAddress(Address address) {
+        addressRepository.save(address);
+    }
+
 
 }

@@ -14,4 +14,7 @@ public interface AddressService {
     Optional<Address> findById(Long id);
 
     void editAddress(Address address);
+
+
+    void saveAddress(Address address);
 }

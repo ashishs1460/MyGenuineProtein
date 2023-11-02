@@ -2,7 +2,9 @@ package com.ashish.MyGenuineProtein.controller;
 
 
 import com.ashish.MyGenuineProtein.model.Product;
+import com.ashish.MyGenuineProtein.model.User;
 import com.ashish.MyGenuineProtein.service.CategoryService;
+import com.ashish.MyGenuineProtein.service.UserService;
 import com.ashish.MyGenuineProtein.service.VariantService;
 import com.ashish.MyGenuineProtein.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.security.Principal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,6 +33,8 @@ public class HomeController {
 
     @Autowired
     VariantService variantService;
+    @Autowired
+    UserService userService;
 
     @GetMapping({"/","/home"})
     public String homePage(Model model ,Pageable pageable){
@@ -82,5 +87,10 @@ public class HomeController {
         return productService.findProductsWithPagination(offset,pageSize);
     }
 
-
+    @GetMapping("/user/userDashboard")
+    public String userDashboard (Model model, Principal principal){
+        User user = userService.findUserByEmail(principal.getName()).get();
+        model.addAttribute("userProfile",user);
+        return "userDashboard";
+    }
 }
