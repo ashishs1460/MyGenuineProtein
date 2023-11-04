@@ -13,7 +13,7 @@ public interface ProductService {
 
 
     void addProducts(Product product);
-    Page<Product> getAllProducts(Pageable pageable);
+    List<Product> getAllProducts();
 
     List<Product> findAllProducts();
 
@@ -30,4 +30,5 @@ public interface ProductService {
     Page<Product> findProductsWithPagination(int offset,int pageSize);
 
 
+    boolean existsById(UUID id);
 }

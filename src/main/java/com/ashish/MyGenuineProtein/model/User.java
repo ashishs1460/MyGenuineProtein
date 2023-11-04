@@ -5,6 +5,7 @@ import com.ashish.MyGenuineProtein.otp.model.Otp;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,7 +18,6 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @Entity
-@ToString
 @Table(name = "users")
 public class User {
 
@@ -27,15 +27,17 @@ public class User {
     @Column(name = "user_id")
     private UUID id;
 
-    @NotEmpty
-    @Column(nullable = false)
+    @NotEmpty(message = "is required")
+//    @Column(nullable = false)
     private String firstName;
 
+    @NotEmpty(message = "is required")
     private String lastName;
 
-    @Column(nullable = false,unique = true)
-    @NotEmpty
-    @Email(message = "{errors.invalid_email}")
+//    @Column(nullable = false,unique = true)
+    @NotEmpty(message = "is required")
+    @Pattern(regexp="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "is not valid")
+//    @Email(message = "{errors.invalid_email}")
     private String email;
 
     @NotEmpty
@@ -54,11 +56,19 @@ public class User {
     inverseJoinColumns = {@JoinColumn(name = "ROLE_ID",referencedColumnName = "ROLE_ID")})
     private List<Role> roles;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne( cascade = CascadeType.ALL)
+    @JoinColumn(name ="cart_id")
     private Cart cart;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "wishList_id")
+    private WishList wishList;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Wallet wallet ;
     public User(User user) {
 
         this.firstName = user.getFirstName();

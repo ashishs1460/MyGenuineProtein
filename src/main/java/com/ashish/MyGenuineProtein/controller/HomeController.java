@@ -1,12 +1,10 @@
 package com.ashish.MyGenuineProtein.controller;
 
 
+import com.ashish.MyGenuineProtein.model.Order;
 import com.ashish.MyGenuineProtein.model.Product;
 import com.ashish.MyGenuineProtein.model.User;
-import com.ashish.MyGenuineProtein.service.CategoryService;
-import com.ashish.MyGenuineProtein.service.UserService;
-import com.ashish.MyGenuineProtein.service.VariantService;
-import com.ashish.MyGenuineProtein.service.ProductService;
+import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -35,13 +36,15 @@ public class HomeController {
     VariantService variantService;
     @Autowired
     UserService userService;
+    @Autowired
+    OrderService orderService;
 
     @GetMapping({"/","/home"})
     public String homePage(Model model ,Pageable pageable){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String str = authentication.getAuthorities().toString();
         if (str.equals("[ROLE_ANONYMOUS]") || str.equals("[ROLE_USER]")) {
-            model.addAttribute("products",productService.getAllProducts(pageable));
+            model.addAttribute("products",productService.getAllProducts());
             model.addAttribute("categories",categoryService.getAllCategory());
             return "index";
         } else {
@@ -55,7 +58,7 @@ public class HomeController {
         Pageable pageable = PageRequest.of(0, 10);
 
         model.addAttribute("categories", categoryService.getAllCategory());
-        Page<Product> products = productService.getAllProducts(pageable);
+        List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
         model.addAttribute("flavours", variantService.getAllVariants());
 
@@ -92,5 +95,20 @@ public class HomeController {
         User user = userService.findUserByEmail(principal.getName()).get();
         model.addAttribute("userProfile",user);
         return "userDashboard";
+    }
+
+    @GetMapping("/user/myOrders")
+    public String showAllOrders(Model model, Principal principal){
+
+        Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            List<Order> orders = orderService.findByUser(user);
+            List<Order> userOrders = orders.stream()
+                    .sorted(Comparator.comparing(Order::getOrderDate).reversed())
+                    .collect(Collectors.toList());
+            model.addAttribute("userOrders",userOrders);
+        }
+        return "order-list";
     }
 }

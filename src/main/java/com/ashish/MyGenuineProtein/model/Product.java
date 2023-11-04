@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@ToString
 public class Product {
 
     @Id
@@ -38,6 +38,7 @@ public class Product {
 
     private String description;
 
-    private String imageName;
+    @OneToMany( mappedBy = "product", cascade = CascadeType.ALL)
+    List<ProductImage> productImages = new ArrayList<>();
 
 }

@@ -95,18 +95,18 @@
 </nav>
 
 <div class="container">
-    <div class="row">
+    <div class="row d-flex align-items-center justify-content-center">
         <div class="col-sm-6">
             <h2>Login</h2>
             <p>Please fill out this form to login</p>
             <form th:action="@{/login}" method="post">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Your Email" class="form-control form-control-lg">
+                    <input type="email" name="email" id="email" placeholder="Your Email" class="form-control form-control-lg" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control form-control-lg" placeholder="Password" name="password" id="password">
+                    <input type="password" class="form-control form-control-lg" placeholder="Password" name="password" id="password" required>
                 </div>
                 <div th:if="${param.error}" class="alert alert-error text-warning">
                     <span th:if="${session.SPRING_SECURITY_LAST_EXCEPTION.message}=='Bad credentials'">Invalid password</span>

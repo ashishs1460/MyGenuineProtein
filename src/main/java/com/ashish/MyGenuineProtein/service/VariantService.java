@@ -24,4 +24,10 @@ public interface VariantService {
    List<Variant>getVariantForProduct(Product product);
 
     void reduceVariantStock(List<CartItems> cartItems);
+
+    void deleteById(long id);
+
+    void save(Variant existingVariant);
+
+
 }

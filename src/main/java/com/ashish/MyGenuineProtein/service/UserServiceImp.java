@@ -1,6 +1,7 @@
 package com.ashish.MyGenuineProtein.service;
 
 import com.ashish.MyGenuineProtein.model.Cart;
+import com.ashish.MyGenuineProtein.model.CartItems;
 import com.ashish.MyGenuineProtein.model.User;
 import com.ashish.MyGenuineProtein.otp.model.Otp;
 import com.ashish.MyGenuineProtein.otp.repository.OtpRepository;
@@ -96,10 +97,16 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void deleteCart(Cart cart) {
+
         User user = userRepository.findById(cart.getUser().getId()).orElse(null);
         assert user != null;
         user.setCart(null);
         userRepository.save(user);
+
+    }
+
+    public void  deleteCartItem(CartItems cartItems){
+        Optional<CartItems> cartId=cartItemRepository.findById(cartItems.getId());
 
     }
 

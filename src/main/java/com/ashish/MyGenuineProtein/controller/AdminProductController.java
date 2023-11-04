@@ -3,7 +3,11 @@ package com.ashish.MyGenuineProtein.controller;
 
 import com.ashish.MyGenuineProtein.dto.ProductDto;
 import com.ashish.MyGenuineProtein.model.Product;
+import com.ashish.MyGenuineProtein.model.ProductImage;
+import com.ashish.MyGenuineProtein.repository.ProductImageRepository;
+import com.ashish.MyGenuineProtein.repository.ProductRepository;
 import com.ashish.MyGenuineProtein.service.CategoryService;
+import com.ashish.MyGenuineProtein.service.ProductImageService;
 import com.ashish.MyGenuineProtein.service.VariantService;
 import com.ashish.MyGenuineProtein.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -33,14 +39,16 @@ public class AdminProductController {
 
     @Autowired
     VariantService variantService;
+    @Autowired
+    ProductImageService productImageService;
 
 
 
     @GetMapping("/admin/getProducts")
-    public String getProducts(Model model, Pageable pageable){
+    public String getProducts(Model model){
         String successMessage = (String) model.getAttribute("successMessage");
         model.addAttribute("successMessage", successMessage);
-        model.addAttribute("products",productService.getAllProducts(pageable));
+        model.addAttribute("products",productService.getAllProducts());
         model.addAttribute("variants",variantService.getAllVariants());
         return "/product/getProducts";
     }
@@ -57,27 +65,40 @@ public class AdminProductController {
 
     @PostMapping("/admin/addProducts")
     public String postProduct(@ModelAttribute("productDto") ProductDto productDto,
-                              @RequestParam("productImage")MultipartFile file,
-                              @RequestParam("imgName")String imgName,
+                              @RequestParam("productImage") List<MultipartFile >files,
                               RedirectAttributes redirectAttributes)throws IOException {
+        boolean update = false;
+        Product product;
+        if (productDto.getId()!=null){
+             product = productService.findProductById(productDto.getId()).get();
+             update=true;
 
-        Product product = new Product();
+        }else {
+            product = new Product();
+        }
+
+
         product.setId(productDto.getId());
         product.setName(productDto.getName());
         product.setCategory(categoryService.getCategoryById(productDto.getCategoryId()).get());
-
-//        product.setVariant(variantService.getFlavourById(productDto.getFlavourId()).get());
-//        product.setWeight(weightService.getweightById(productDto.getWeightId()).get());
         product.setDescription(productDto.getDescription());
-        String imageUUID;
-        if(!file.isEmpty()){
-            imageUUID=file.getOriginalFilename();
-            Path fileNameAndPath = Paths.get(uploadDir,imageUUID);
-            Files.write(fileNameAndPath,file.getBytes());
-        }else {
-            imageUUID = imgName;
+
+        if (!files.get(0).isEmpty()){
+            if (update)
+                productImageService.deleteAllByProduct(product);
+            List<ProductImage> productImages = new ArrayList<>();
+            for (MultipartFile file :files) {
+                String imageUUID = file.getOriginalFilename();
+                Path fileNameAndPath = Paths.get(uploadDir,imageUUID);
+                Files.write(fileNameAndPath,file.getBytes());
+                ProductImage productImage = new ProductImage();
+                productImage.setImageName(imageUUID);
+                productImage.setProduct(product);
+                productImages.add(productImage);
+            }
+            product.setProductImages(productImages);
         }
-        product.setImageName(imageUUID);
+
         productService.addProducts(product);
         redirectAttributes.addFlashAttribute("successMessage", " successfully!");
 
@@ -100,11 +121,7 @@ public class AdminProductController {
         productDto.setId(product.getId());
         productDto.setName(product.getName());
         productDto.setCategoryId((product.getCategory().getId()));
-//        productDto.setFlavourId((product.getVariant().getId()));
-//        productDto.setWeightId((product.getWeight().getId()));
-//        productDto.setPrice(product.getPrice());
         productDto.setDescription(product.getDescription());
-        productDto.setImageName(product.getImageName());
 
         model.addAttribute("categories",categoryService.getAllCategory());
         model.addAttribute("flavours", variantService.getAllVariants());

@@ -25,10 +25,15 @@ public class VariantController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    VariantRepository variantRepository;
+
     @GetMapping("/admin/getVariant")
-    public String getVariantPage(Model model){
+    public String getVariantPage(Model model
+            , RedirectAttributes redirectAttributes){
 
         model.addAttribute("variants",variantService.getAllVariants());
+//        redirectAttributes.addFlashAttribute("msg"," successful!");
         return "/product/getVariant";
     }
 
@@ -42,17 +47,27 @@ public class VariantController {
     }
 
     @PostMapping("/admin/postVariant")
-    public String postAddVariant(@ModelAttribute("variants") Variant variant, RedirectAttributes redirectAttributes){
+    public String postAddVariant(@ModelAttribute("variants") Variant variant,RedirectAttributes redirectAttributes){
 
-        Product product =variant.getProduct();
-        UUID id=product.getId();
-        variantService.addVariantToProduct(id,variant);
-        redirectAttributes.addFlashAttribute("message","Variant added successfully!");
+        if (variant.getId()==null) {
+            Product product = productService.findProductById(variant.getProduct().getId()).get();
+//            List<Variant> variantList = product.getVariants();
+//            for (Variant variant1 : variantList) {
+//                if (variant1.getVariantName().equals(variant.getVariantName())) {
+//                    redirectAttributes.addFlashAttribute("msg","Variant already exists");
+//                    return "redirect:/admin/getVariant";
+//                }
+//            }
+            if (variantRepository.existsByProductAndVariantName(product, variant.getVariantName())) {
+                redirectAttributes.addFlashAttribute("msg","Variant already exists");
+                    return "redirect:/admin/getVariant";
+            }
+        }
 
+        variantService.addVariantToProduct(variant.getProduct().getId(), variant);
+        redirectAttributes.addFlashAttribute("msg"," successful!");
 
         return "redirect:/admin/getVariant";
-
-
 
     }
 
@@ -76,5 +91,34 @@ public class VariantController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+
+    @GetMapping("/admin/deleteVariant/{id}")
+    public String deleteVariant(@PathVariable("id") long id,
+                                RedirectAttributes redirectAttributes){
+        try {
+            variantService.deleteById(id);
+        }catch (RuntimeException e){
+            redirectAttributes.addFlashAttribute("msg","Variant is associated with an order/wishlist and cannot be deleted.");
+            return "redirect:/admin/getVariant";
+        }
+        redirectAttributes.addFlashAttribute("msg","Variant deleted successfully");
+
+        return "redirect:/admin/getVariant";
+    }
+
+    @GetMapping("/admin/updateVariant/{id}")
+    public String updateVariant(@PathVariable("id") long id,
+                                Model model
+                                ){
+        List<Product> productList = productService.findAllProducts();
+        model.addAttribute("products",productList);
+        Variant variant = variantService.getVariantById(id).get();
+        model.addAttribute("variant", variant);
+        return "product/addVariant";
+
+    }
+
 
 }

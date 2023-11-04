@@ -69,5 +69,17 @@ public class VariantServiceImp implements VariantService {
 
         }
     }
+
+    @Override
+    public void deleteById(long id) {
+        variantRepository.deleteById(id);
+    }
+
+    @Override
+    public void save(Variant existingVariant) {
+        variantRepository.save(existingVariant);
+    }
+
+
 }
 

@@ -70,14 +70,14 @@ a {
   color:red;
     }
   </style>
-  <script th:inline="javascript">
-    setTimeout(function() {
-        var alertElement = document.querySelector('.alert');
-        if (alertElement) {
-            alertElement.style.display = 'none';
-        }
-    }, 1000); // 30 seconds
-  </script>
+<!--  <script th:inline="javascript">-->
+<!--    setTimeout(function() {-->
+<!--        var alertElement = document.querySelector('.alert');-->
+<!--        if (alertElement) {-->
+<!--            alertElement.style.display = 'none';-->
+<!--        }-->
+<!--    }, 1000); // 30 seconds-->
+<!--  </script>-->
 </head>
 <body>
 
@@ -116,31 +116,60 @@ a {
     <div th:if="${param.userExist != null}">
       <p class="alert">User already exists!</p>
     </div>
+
     <form th:action="@{/register}" th:object="${user}" method="post">
+
       <div class="form-group">
         <label for="firstName">First Name</label>
-        <input type="text" name="firstName" id="firstName" required placeholder="Your Firstname" class="form-control form-control-lg">
+        <input th:field="*{firstName}" type="text" name="firstName" id="firstName" placeholder="Your First Name" class="form-control form-control-lg">
       </div>
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" name="lastName" id="lastName" required placeholder="Your Lastname" class="form-control form-control-lg">
-      </div>
-      <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control form-control-lg" required minlength="6" placeholder="Email" name="email" id="email"
-               aria-describedby="emailHelp">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with
-          anyone else.</small>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control form-control-lg" required placeholder="Password" name="password"
-               id="password">
+      <div th:if="${#fields.hasErrors('firstName')}"
+           style="margin-bottom: 25px" class="text-danger">
+        <ul>
+          <li th:each="err : ${#fields.errors('firstName')}" th:text="'First name ' + ${err}"></li>
+        </ul>
       </div>
 
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input th:field="*{lastName}" type="text" name="lastName" id="lastName" placeholder="Your Last Name" class="form-control form-control-lg">
+      </div>
+      <div th:if="${#fields.hasErrors('lastName')}"
+           style="margin-bottom: 25px" class="text-danger">
+        <ul>
+          <li th:each="err : ${#fields.errors('lastName')}" th:text="'Last name ' + ${err}"></li>
+        </ul>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input th:field="*{email}" type="email" class="form-control form-control-lg" placeholder="Email" name="email" id="email"
+               aria-describedby="emailHelp">
+      </div>
+      <div th:if="${#fields.hasErrors('email')}"
+           style="margin-bottom: 25px" class="text-danger">
+        <ul>
+          <li th:each="err : ${#fields.errors('email')}" th:text="'Email ' + ${err}"></li>
+        </ul>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input th:field="*{password}" type="password" class="form-control form-control-lg" placeholder="Password" name="password"
+               id="password">
+      </div>
+      <div th:if="${#fields.hasErrors('password')}"
+           style="margin-bottom: 25px" class="text-danger">
+        <ul>
+          <li th:each="err : ${#fields.errors('password')}" th:text="'Password ' + ${err}"></li>
+        </ul>
+      </div>
+
+
       <input type="submit" value="Register" class="btn btn-primary btn-block">
-      <span style="margin-top: 10px">Already have an account <a class="linkControl" href="./login.html"
-                                                                th:href="@{/login}">Login here</a></span>
+
+      <span style="margin-top: 10px">Already have an account ? <a class="linkControl" href="./login.html"
+                                                                  th:href="@{/login}">Login here</a></span>
 
     </form>
   </div>

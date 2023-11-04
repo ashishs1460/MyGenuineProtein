@@ -20,16 +20,7 @@ public class ProductDto {
 
     private UUID categoryId;
 
-    private double price;
-
-
-    private UUID flavourId;
-
-
-
-    private UUID weightId;
 
     private String description;
 
-    private String imageName;
 }

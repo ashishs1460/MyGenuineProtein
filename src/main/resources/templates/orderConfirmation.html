@@ -39,14 +39,14 @@
                         <h3 class="text-success" >Order Placed Successfully!</h3>
                     </div>
                     <div class="card-body">
-                        <p>Thank you for your order. We have received your order and it will be processed soon.</p>
-                        <p>Your order number is:<a class="tag_a"><strong th:text="${order.orderId}"></strong></a></p>
-                        <p>You will receive an email confirmation shortly.</p>
-                        <p>Expected Delivery Date <span th:text="${expectedDeliveryDate}" style="color:green;"></span></p>
+                        <p style="color:grey">Thank you for your order. We have received your order and it will be processed soon.</p>
+                        <p style="color:grey">Your order number is:<a class="tag_a"><strong th:text="${order.orderId}"></strong></a></p>
+                        <p style="color:grey">You will receive an email confirmation shortly.</p>
+                        <p style="color:grey">Expected Delivery Date <span th:text="${expectedDeliveryDate}" style="color:green;"></span></p>
                     </div>
                     <div class="card-footer">
                         <a th:href="@{/shop}" class="btn btn-warning">Continue Shopping</a><br>
-                        <a class="btn btn-sm btn-success" style="margin-top:1rem;" th:href="@{/user/my-orders}"> View My Order </a>
+                        <a class="btn btn-sm btn-success" style="margin-top:1rem;" th:href="@{/user/myOrders}"> View My Order </a>
                     </div>
                 </div>
             </div>

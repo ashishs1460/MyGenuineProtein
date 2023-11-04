@@ -62,32 +62,34 @@ public class CartController {
 
 
     @GetMapping("cart/goToCart")
-    public  String  getCartPage(Model model , Authentication authentication,Principal principal){
-
-
-        if (principal==null){
+    public String getCartPage(Model model, Authentication authentication, Principal principal) {
+        if (principal == null) {
             return "login";
-        }
-        else {
-            User user=userService.findUserByEmail(principal.getName()).orElseThrow();
+        } else {
+            User user = userService.findUserByEmail(principal.getName()).orElseThrow();
             Cart cart = user.getCart();
-            List<CartItems> cartItems = cart.getCartItems();
-            int Quantity =   cartItems
-                    .stream()
-                    .map(item -> item.getQuantity())
-                    .reduce(0,(a,b)->a+b);
-            long totalAmount = cartItems.stream()
-                    .mapToLong(item -> (long) (item.getQuantity() * item.getVariant().getPrice()))
-                    .sum();
-            model.addAttribute("cartItems" ,cartItems);
-            model.addAttribute("quantity",Quantity);
-            model.addAttribute("total", totalAmount);
 
-
+            if (cart != null) {
+                List<CartItems> cartItems = cart.getCartItems();
+                int quantity = cartItems.stream()
+                        .map(item -> item.getQuantity())
+                        .reduce(0, (a, b) -> a + b);
+                long totalAmount = cartItems.stream()
+                        .mapToLong(item -> (long) (item.getQuantity() * item.getVariant().getPrice()))
+                        .sum();
+                model.addAttribute("cartItems", cartItems);
+                model.addAttribute("quantity", quantity);
+                model.addAttribute("total", totalAmount);
+            } else {
+                // Handle the case when the cart is empty or not initialized
+                model.addAttribute("cartItems", new ArrayList<CartItems>()); // Empty cart
+                model.addAttribute("quantity", 0); // No items
+                model.addAttribute("total", 0); // Total amount is zero
+            }
         }
         return "cart";
+    }
 
-        }
 
 
     @GetMapping ("/cart/remove/{id}")

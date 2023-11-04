@@ -55,11 +55,6 @@ public class CartServiceImp implements CartService{
         }
 
 
-
-
-
-
-
     }
 
     @Override
@@ -105,7 +100,6 @@ public class CartServiceImp implements CartService{
         cart.setUser(user);
         user.setCart(cart);
         cartRepository.save(cart);
-        userService.saveUser(user);
         return cart;
     }
 }

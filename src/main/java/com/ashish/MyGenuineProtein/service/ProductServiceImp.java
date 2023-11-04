@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImp implements ProductService{
@@ -28,8 +26,8 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     @Override
@@ -68,6 +66,11 @@ public class ProductServiceImp implements ProductService{
     public Page<Product> findProductsWithPagination(int offset,int pageSize){
         Page<Product> products = productRepository.findAll(PageRequest.of(offset, pageSize));
         return  products;
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return productRepository.existsById(id);
     }
 
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <title>Address Form</title>
+  <style>
+    .card {
+        width: 100%;
+        margin: 10px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #21446B; /* Background color for all cards */
+
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg  navbar-custom" >
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="80" class="d-inline-block align-top" alt=""/>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto"></ul>
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link navbar-text" th:href="@{/admin}" href="#">admin-home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link navbar-text" th:href="@{/logout}" href="#">logout</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+<h1>Update Order Status</h1>
+<form th:action="@{'/admin/updateOrderStatus/' + ${order.id}}" method="post">
+  <div class="form-group">
+    <label for="status">Update Status:</label>
+    <select id="status" name="status" class="form-control">
+      <option th:each="status : ${T(com.ashish.MyGenuineProtein.enums.Status).values()}"
+              th:value="${status}" th:text="${status}"></option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-warning">Update Status</button>
+</form>
+</body>
+</html>

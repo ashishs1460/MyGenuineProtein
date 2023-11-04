@@ -44,9 +44,10 @@
 
 
             <form th:action="@{/admin/postVariant}" method="post" th:object="${variant}">
+                <input type="hidden" th:field="*{id}">
                 <div class="form-group">
                     <label class="product-add" for="variantName">Variant Name</label>
-                    <input type="text" class="form-control" th:field="*{variantName}" name="variantName" id="variantName" placeholder="Enter variant name" />
+                    <input type="text" class="form-control" th:field="*{variantName}" name="variantName" id="variantName" placeholder="Enter variant name" required />
                 </div>
                 <div class="form-group">
                     <label class="product-add" for="productId">Select Product</label>
@@ -59,11 +60,11 @@
                 </div>
                 <div class="form-group">
                     <label class="product-add" for="price">Price</label>
-                    <input type="text" class="form-control" th:field="*{price}" name="price" id="price" placeholder="Enter price" />
+                    <input type="number" min="0" step="any" class="form-control" th:field="*{price}" name="price" id="price" placeholder="Enter price" required />
                 </div>
                 <div class="form-group">
                     <label class="product-add" for="stock">Stock</label>
-                    <input type="text" class="form-control" th:field="*{stock}" name="stock" id="stock" placeholder="Enter stock" />
+                    <input type="number" min="0" class="form-control" th:field="*{stock}" name="stock" id="stock" placeholder="Enter stock" required />
                 </div>
                 <button type="submit" class="btn btn-warning">Add Variant</button>
             </form>

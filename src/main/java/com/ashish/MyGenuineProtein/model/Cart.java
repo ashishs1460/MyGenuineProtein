@@ -3,6 +3,7 @@ package com.ashish.MyGenuineProtein.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,orphanRemoval = true)
     @ToString.Exclude
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<CartItems> cartItems;
 
 

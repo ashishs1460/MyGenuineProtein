@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -34,6 +35,26 @@ public class OrderServiceImp implements OrderService{
         order.setStatus(selectedPaymentMode == PaymentMode.COD || selectedPaymentMode == PaymentMode.WALLET ? Status.CONFIRMED : Status.PENDING);
         orderRepository.save(order);
         return order;
+    }
+
+    @Override
+    public List<Order> findByUser(User user) {
+        return orderRepository.findByUser(user);
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public Optional<Order> findByOrderId(Long orderId) {
+        return orderRepository.findById(orderId);
+    }
+
+    @Override
+    public void save(Order order) {
+        orderRepository.save(order);
     }
 
     @NotNull

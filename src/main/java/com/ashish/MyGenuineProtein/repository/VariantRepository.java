@@ -10,8 +10,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface VariantRepository extends JpaRepository<Variant, UUID> {
+public interface VariantRepository extends JpaRepository<Variant, Long> {
     Optional<Variant> findById(Long id);
 
     List<Variant> findByProduct(Product product);
+
+    boolean existsByProductAndVariantName(Product product, String variantName);
 }

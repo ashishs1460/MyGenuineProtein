@@ -52,8 +52,6 @@
             <th scope="col">Product Name</th>
             <th scope="col">Category</th>
             <th scope="col">Variant</th>
-
-            <th scope="col">Price</th>
             <th scope="col">Preview</th>
             <th scope="col">Delete</th>
             <th scope="col">Update</th>
@@ -72,7 +70,7 @@
                 </span>
             </td>
 
-            <td><img src="" height="100px" width="100px"  th:src="@{${'/productImages/' + product.imageName}}"></td>
+            <td><img src="" height="100px" width="100px"  th:src="@{${'/productImages/' + product.productImages.get(0).imageName}}"></td>
 
 
             <td>

@@ -40,16 +40,18 @@
 <div class="container-fluid">
 
     <a th:href="@{/admin/addVariant}" style="margin: 20px 0" class="btn btn-success">Add Variant</a>
-    <table class="table text-warning">
-        <div id="message" th:if="${message}" class="alert alert-success">
-            <p th:text="${message}"></p>
+    <table class="table text-secondary">
+        <div id="message" th:if="${msg}" class="alert alert-success">
+            <p th:text="${msg}"></p>
         </div>
 
 
         <thead class="thead navbar-custom">
-        <tr>
+        <tr style="color:white">
             <th scope="col">SN</th>
             <th scope="col">Variant Name</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Category Name</th>
             <th scope="col">Price</th>
             <th scope="col">Stock</th>
             <th scope="col">Delete</th>
@@ -60,22 +62,51 @@
 
         <tr th:each="variant, iStat : ${variants}">
             <th scope="row" th:text="${iStat.index + 1}">1</th>
-            <td th:text="${variant.variantName}">Larry</td>
-            <td th:text="${variant.price}">Larry</td>
-            <td th:text="${variant.stock}">Larry</td>
+            <td style="color:#FFD800" th:text="${variant.variantName}">Larry</td>
+            <td th:text="${variant.product.name}"></td>
+            <td th:text="${variant.product.category.name}"></td>
+            <td style="color:green" th:text="${variant.price}">Larry</td>
+            <td th:text="${variant.stock}" th:class="${variant.stock < 1} ? 'text-danger' : 'text-white'">1</td>
 
-<!--            <td>-->
-<!--                <a href="#" th:href="@{/admin/deleteProduct/{id}(id=${product.id})}"-->
-<!--                   class="btn btn-danger"-->
-<!--                   onclick="showConfirmDialog(event)">Delete</a>-->
-<!--            </td>-->
-<!--            <td><a href="" th:href="@{/admin/updateProduct/{id}(id=${product.id})}" class="btn btn-warning">Update</a></td>-->
+
+            <td>
+                <a href="#" th:href="@{/admin/deleteVariant/{id}(id=${variant.id})}"
+                   class="btn btn-danger" onclick="showConfirmDialog(event)">Delete</a>
+            </td>
+
+            <td><a href="" th:href="@{/admin/updateVariant/{id}(id=${variant.id})}"
+                   class="btn btn-warning">Update</a></td>
 
         </tr>
         </tbody>
     </table>
 
 </div>
+
+<script>
+    function showConfirmDialog(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to recover this variant!', // Add your message here
+            icon: 'warning',
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'custom-popup',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed with the delete action
+                window.location.href = event.target.getAttribute('href');
+            }
+        });
+    }
+</script>
+
 
 
 
