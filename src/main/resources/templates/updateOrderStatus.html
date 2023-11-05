@@ -57,16 +57,22 @@
     </div>
   </div>
 </nav>
-<h1>Update Order Status</h1>
-<form th:action="@{'/admin/updateOrderStatus/' + ${order.id}}" method="post">
-  <div class="form-group">
-    <label for="status">Update Status:</label>
-    <select id="status" name="status" class="form-control">
-      <option th:each="status : ${T(com.ashish.MyGenuineProtein.enums.Status).values()}"
-              th:value="${status}" th:text="${status}"></option>
-    </select>
+<h2 style="text-align: center;color:#FFD800">Update Order Status</h2></div>
+<div class="card mx-auto" style="max-width: 400px;">
+  <div class="card-body">
+    <form th:action="@{'/admin/updateOrderStatus/' + ${order.id}}" method="post">
+      <div class="form-group">
+        <label style="color:white" for="status">Update Status:</label>
+        <select id="status" name="status" class="form-control">
+          <option th:each="status : ${T(com.ashish.MyGenuineProtein.enums.Status).values()}"
+                  th:value="${status}" th:text="${status}"></option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-warning">Update Status</button>
+    </form>
   </div>
-  <button type="submit" class="btn btn-warning">Update Status</button>
-</form>
+</div>
+
+
 </body>
 </html>

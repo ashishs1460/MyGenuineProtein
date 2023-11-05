@@ -31,4 +31,6 @@ public interface ProductService {
 
 
     boolean existsById(UUID id);
+
+    void saveProduct(Product product);
 }

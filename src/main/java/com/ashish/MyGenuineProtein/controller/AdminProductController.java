@@ -2,6 +2,7 @@ package com.ashish.MyGenuineProtein.controller;
 
 
 import com.ashish.MyGenuineProtein.dto.ProductDto;
+import com.ashish.MyGenuineProtein.model.Address;
 import com.ashish.MyGenuineProtein.model.Product;
 import com.ashish.MyGenuineProtein.model.ProductImage;
 import com.ashish.MyGenuineProtein.repository.ProductImageRepository;
@@ -24,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -47,8 +49,11 @@ public class AdminProductController {
     @GetMapping("/admin/getProducts")
     public String getProducts(Model model){
         String successMessage = (String) model.getAttribute("successMessage");
+
+        List<Product> products =productService.getAllProducts().stream().
+                filter(product -> !product.isDelete()).toList();
         model.addAttribute("successMessage", successMessage);
-        model.addAttribute("products",productService.getAllProducts());
+        model.addAttribute("products",products);
         model.addAttribute("variants",variantService.getAllVariants());
         return "/product/getProducts";
     }
@@ -57,7 +62,6 @@ public class AdminProductController {
     public String addProduct(Model model){
         model.addAttribute("productDto",new ProductDto());
         model.addAttribute("categories",categoryService.getAllCategory());
-        model.addAttribute("flavours", variantService.getAllVariants());
 
         return "/product/addProducts";
 
@@ -81,6 +85,7 @@ public class AdminProductController {
         product.setId(productDto.getId());
         product.setName(productDto.getName());
         product.setCategory(categoryService.getCategoryById(productDto.getCategoryId()).get());
+        product.setDelete(false);
         product.setDescription(productDto.getDescription());
 
         if (!files.get(0).isEmpty()){
@@ -110,7 +115,13 @@ public class AdminProductController {
 
     @GetMapping ("/admin/deleteProduct/{id}")
     public String deleteProduct(@PathVariable("id") UUID id) {
-        productService.deleteProductById(id);
+   //implemented soft delete for products
+        Optional<Product> optionalProduct = productService.findProductById(id);
+        if (optionalProduct.isPresent()){
+            Product product = optionalProduct.get();
+            product.setDelete(true);
+            productService.saveProduct(product);
+        }
         return "redirect:/admin/getProducts"; // Redirect to the product list or another appropriate page
     }
 

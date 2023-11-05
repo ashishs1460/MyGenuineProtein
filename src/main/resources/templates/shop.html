@@ -75,9 +75,10 @@
 <div class="container" style="margin-top: 30px">
   <div class="row">
     <!-- Sidebar with Categories -->
-    <h4 style="color:#FFD800">filters</h4>
 
-    <section class="price mt-4">
+
+    <section class="price mt-4 ">
+      <h4 style="color:#FFD800">filters</h4>
 
       <select id="categorySelect" class="form-control">
         <option>Categories</option>
@@ -85,13 +86,20 @@
         <option th:each="category, iStat : ${categories}" th:value="'/shop/category/' + ${category.id}" th:text="${category.name}"></option>
       </select>
 
-      <!--        <select id="categorySelect1" class="form-control">-->
-      <!--          <option>Flavours</option>-->
-      <!--          <option th:each="variant, iStat : ${flavours}" th:value="'/shop/variant/' + ${variant.id}" th:text="${variant.flavourName}"></option>-->
-      <!--        </select>-->
-      <!-- Add your filter options here if needed -->
 
-</section>
+      <form method="post" th:action="@{/shop}">
+        <div class="input-group">
+          <input type="text" id="searchInput" class="form-control mt-2" name="keyword" placeholder="Search for products">
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-outline-secondary mt-2">Search</button>
+          </div>
+        </div>
+      </form>
+
+
+
+
+    </section>
 
 
 
@@ -100,7 +108,7 @@
 
 
       <!-- Product Listings -->
-    <div class="col-lg-9 col-md-8 col-sm-12 mt-4">
+    <div class="col-lg-8 col-md-8 col-sm-12 mt-4 ml-1">
       <div class="row">
         <!-- Add your product listings here using th:each -->
         <div class="col-lg-4 col-md-6 col-sm-12" th:each="product : ${products}">
@@ -121,25 +129,6 @@
     </div>
   </div>
 </div>
-
-
-<!--&lt;!&ndash; Pagination Links &ndash;&gt;-->
-<!--<div th:if="${products != null and products.totalPages > 1}">-->
-<!--  <div class="d-flex justify-content-center">-->
-<!--    <ul class="pagination">-->
-<!--      <li class="page-item" th:if="${products.hasPrevious()}">-->
-<!--        <a class="page-link" th:href="@{/shop(page=${products.number - 1}, pageSize=${products.size})}">Previous</a>-->
-<!--      </li>-->
-<!--      <li th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"-->
-<!--          th:class="${products.number == i ? 'page-item active' : 'page-item'}">-->
-<!--        <a class=" page-link" th:href="@{/shop(page=${i}, pageSize=${products.size})}" th:text="${i + 1}"></a>-->
-<!--      </li>-->
-<!--      <li class="page-item" th:if="${products.hasNext()}">-->
-<!--        <a class="page-link" th:href="@{/shop(page=${products.number + 1}, pageSize=${products.size})}">Next</a>-->
-<!--      </li>-->
-<!--    </ul>-->
-<!--  </div>-->
-<!--</div>-->
 
 
 

@@ -38,6 +38,8 @@ public class Product {
 
     private String description;
 
+    private boolean isDelete;
+
     @OneToMany( mappedBy = "product", cascade = CascadeType.ALL)
     List<ProductImage> productImages = new ArrayList<>();
 

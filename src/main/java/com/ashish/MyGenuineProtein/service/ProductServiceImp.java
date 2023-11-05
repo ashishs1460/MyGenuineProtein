@@ -73,4 +73,9 @@ public class ProductServiceImp implements ProductService{
         return productRepository.existsById(id);
     }
 
+    @Override
+    public void saveProduct(Product product) {
+        productRepository.save(product);
+    }
+
 }

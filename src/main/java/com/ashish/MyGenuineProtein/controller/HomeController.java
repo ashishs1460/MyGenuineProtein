@@ -13,8 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Comparator;
@@ -44,7 +43,9 @@ public class HomeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String str = authentication.getAuthorities().toString();
         if (str.equals("[ROLE_ANONYMOUS]") || str.equals("[ROLE_USER]")) {
-            model.addAttribute("products",productService.getAllProducts());
+            List<Product> products =productService.getAllProducts().stream().
+                    filter(product -> !product.isDelete()).toList();
+            model.addAttribute("products",products);
             model.addAttribute("categories",categoryService.getAllCategory());
             return "index";
         } else {
@@ -55,12 +56,13 @@ public class HomeController {
     @GetMapping("/shop")
     public String shopPage(Model model) {
         // Create a Pageable object
-        Pageable pageable = PageRequest.of(0, 10);
+//        Pageable pageable = PageRequest.of(0, 10);
 
         model.addAttribute("categories", categoryService.getAllCategory());
-        List<Product> products = productService.getAllProducts();
+        List<Product> products =productService.getAllProducts().stream().
+                filter(product -> !product.isDelete()).toList();
         model.addAttribute("products", products);
-        model.addAttribute("flavours", variantService.getAllVariants());
+
 
         return "shop";
     }
@@ -69,8 +71,10 @@ public class HomeController {
     @GetMapping("/shop/category/{id}")
     public String shopByCategory(@PathVariable UUID id, Model model){
         Pageable pageable = PageRequest.of(0, 10);
+        List<Product> products =productService.findProductById(id).stream().
+                filter(product -> !product.isDelete()).toList();
         model.addAttribute("categories",categoryService.getAllCategory());
-        model.addAttribute("products",productService.getAllProductsByCategoryId(id,pageable));
+        model.addAttribute("products",products);
         return "shop";
     }
 
@@ -85,6 +89,22 @@ public class HomeController {
         return "viewProduct";
 
     }
+
+    @PostMapping("/shop")
+    public String searchProducts(@ModelAttribute("keyword") String keyword,
+                                 Model model) {
+
+
+        List<Product> list = productService.getAllProducts();
+      List<Product> searchresult =  list.stream()
+                .filter(product -> product.getName().toLowerCase().contains(keyword.toLowerCase()))
+                .toList();
+
+        model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("products", searchresult);
+        return "shop";
+    }
+
     @GetMapping("/pagination/{offset}/{pageSize}")
     public Page<Product> getProductsWithPagination(@PathVariable int offset, @PathVariable int pageSize) {
         return productService.findProductsWithPagination(offset,pageSize);
