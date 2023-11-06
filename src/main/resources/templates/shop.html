@@ -129,6 +129,24 @@
     </div>
   </div>
 </div>
+<div class="d-flex justify-content-center mt-4">
+  <nav aria-label="Product pagination">
+    <ul class="pagination">
+      <li th:if="${productsPage.hasPrevious()}" class="page-item">
+        <a class="page-link" th:href="@{${'/shop?page=' + (productsPage.number - 1)}}">Previous</a>
+      </li>
+      <li th:each="pageNumber : ${#numbers.sequence(1, productsPage.totalPages)}"
+          th:classappend="${pageNumber} == ${productsPage.number + 1} ? 'page-item active' : 'page-item'">
+        <a class="page-link" th:href="@{${'/shop?page=' + (pageNumber - 1)}}">[[${pageNumber}]]</a>
+      </li>
+      <li th:if="${productsPage.hasNext()}" class="page-item">
+        <a class="page-link" th:href="@{${'/shop?page=' + (productsPage.number + 1)}}">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+
 
 
 

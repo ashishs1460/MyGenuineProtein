@@ -63,10 +63,10 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public Page<Product> findProductsWithPagination(int offset,int pageSize){
-        Page<Product> products = productRepository.findAll(PageRequest.of(offset, pageSize));
-        return  products;
+    public Page<Product> getProductsPage(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
+
 
     @Override
     public boolean existsById(UUID id) {
@@ -76,6 +76,11 @@ public class ProductServiceImp implements ProductService{
     @Override
     public void saveProduct(Product product) {
         productRepository.save(product);
+    }
+
+    @Override
+    public Page<Product> findProductById(UUID id, Pageable pageable) {
+        return productRepository.findByCategoryId(id,pageable);
     }
 
 }

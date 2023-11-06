@@ -18,4 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Page<Product> getAllProductsByVariants(Variant variant, Pageable pageable);
 
     boolean existsByCategoryId(UUID id);
+    
+
+    Page<Product> findByCategoryId(UUID id, Pageable pageable);
 }

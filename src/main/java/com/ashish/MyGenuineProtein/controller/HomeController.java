@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -54,14 +55,17 @@ public class HomeController {
     }
 
     @GetMapping("/shop")
-    public String shopPage(Model model) {
-        // Create a Pageable object
-//        Pageable pageable = PageRequest.of(0, 10);
+    public String shopPage(Model model,@PageableDefault(size = 7) Pageable pageable) {
 
         model.addAttribute("categories", categoryService.getAllCategory());
-        List<Product> products =productService.getAllProducts().stream().
-                filter(product -> !product.isDelete()).toList();
-        model.addAttribute("products", products);
+        Page<Product> productsPage = productService.getProductsPage(pageable);
+
+        List<Product> filteredProducts = productsPage.getContent().stream()
+                .filter(product -> !product.isDelete())
+                .collect(Collectors.toList());
+        model.addAttribute("productsPage", productsPage);
+        model.addAttribute("products", filteredProducts);
+
 
 
         return "shop";
@@ -69,14 +73,18 @@ public class HomeController {
 
 
     @GetMapping("/shop/category/{id}")
-    public String shopByCategory(@PathVariable UUID id, Model model){
-        Pageable pageable = PageRequest.of(0, 10);
-        List<Product> products =productService.findProductById(id).stream().
-                filter(product -> !product.isDelete()).toList();
-        model.addAttribute("categories",categoryService.getAllCategory());
-        model.addAttribute("products",products);
+    public String shopByCategory(@PathVariable UUID id, Model model, @PageableDefault(size = 7) Pageable pageable) {
+        Page<Product> productsPage = productService.findProductById(id, pageable);
+        List<Product> filteredProducts = productsPage.getContent().stream()
+                .filter(product -> !product.isDelete())
+                .collect(Collectors.toList());
+        model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("productsPage", productsPage);
+        model.addAttribute("products", filteredProducts);
+
         return "shop";
     }
+
 
 
     @GetMapping("/shop/viewProduct/{id}")
@@ -105,10 +113,6 @@ public class HomeController {
         return "shop";
     }
 
-    @GetMapping("/pagination/{offset}/{pageSize}")
-    public Page<Product> getProductsWithPagination(@PathVariable int offset, @PathVariable int pageSize) {
-        return productService.findProductsWithPagination(offset,pageSize);
-    }
 
     @GetMapping("/user/userDashboard")
     public String userDashboard (Model model, Principal principal){

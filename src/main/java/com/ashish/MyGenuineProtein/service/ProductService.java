@@ -27,10 +27,12 @@ public interface ProductService {
 
     Page<Product> getAllProductsByVariantsById(Variant variant, Pageable pageable);
 
-    Page<Product> findProductsWithPagination(int offset,int pageSize);
+    public Page<Product> getProductsPage(Pageable pageable);
 
 
     boolean existsById(UUID id);
 
     void saveProduct(Product product);
+
+    Page<Product> findProductById(UUID id, Pageable pageable);
 }
