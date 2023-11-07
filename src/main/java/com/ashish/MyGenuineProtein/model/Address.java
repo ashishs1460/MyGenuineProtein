@@ -24,6 +24,7 @@ public class Address {
     private String pinCode;
     private String landmark;
     private boolean isDelete;
+    private  boolean isDefault;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

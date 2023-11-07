@@ -128,4 +128,12 @@ public class AddressController {
         return "redirect:/user/address";
     }
 
+    @GetMapping("/setDefault/{id}")
+    public String setDefaultAddress(@PathVariable("id") Long addressId, Principal principal) {
+        User user = userService.findUserByEmail(principal.getName()).get();
+        addressService.setDefaultAddress(addressId, user);
+        return "redirect:/user/address"; // Redirect to the address management page
+    }
+
+
 }

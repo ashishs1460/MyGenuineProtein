@@ -17,4 +17,6 @@ public interface AddressService {
 
 
     void saveAddress(Address address);
+
+    void setDefaultAddress(Long addressId, User user);
 }

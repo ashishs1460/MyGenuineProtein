@@ -17,6 +17,9 @@ public class AddressServiceImpl implements AddressService{
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    UserService userService;
+
     @Override
     public void addNewAddress(Address incommingAddress, User user) {
         Address address = new Address();
@@ -50,6 +53,36 @@ public class AddressServiceImpl implements AddressService{
     public void saveAddress(Address address) {
         addressRepository.save(address);
     }
+
+    @Override
+    public void setDefaultAddress(Long addressId, User user) {
+        Optional<Address> selectedAddressOptional = addressRepository.findById(addressId);
+
+        if (selectedAddressOptional.isPresent()) {
+            Address selectedAddress = selectedAddressOptional.get();
+
+            List<Address> userAddresses = user.getAddresses();
+
+            // Find the current default address (if any)
+            Address currentDefaultAddress = userAddresses.stream()
+                    .filter(address -> address.isDefault())
+                    .findFirst()
+                    .orElse(null);
+
+            if (currentDefaultAddress != null) {
+                // Unset the current default address
+                currentDefaultAddress.setDefault(false);
+                addressRepository.save(currentDefaultAddress);
+            }
+
+            // Set the selected address as the new default
+            selectedAddress.setDefault(true);
+            addressRepository.save(selectedAddress);
+        }
+    }
+
+
+
 
 
 }

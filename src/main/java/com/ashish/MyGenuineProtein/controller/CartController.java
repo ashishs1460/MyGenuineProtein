@@ -106,7 +106,8 @@ public class CartController {
     }
 
     @PostMapping("/cart/update-cart")
-    public String updateCart(@RequestParam Long id, @RequestParam int newQuantity, Principal principal) {
+    public String updateCart(@RequestParam Long id, @RequestParam int newQuantity, Principal principal
+                            ) {
         if (principal == null) {
             return "redirect:/login";
         }
@@ -121,7 +122,8 @@ public class CartController {
     }
 
     @GetMapping("/cart/checkout")
-    public String showCheckOut(Model model,Principal principal){
+    public String showCheckOut(Model model,Principal principal,
+                               RedirectAttributes redirectAttributes){
         Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
         if(optionalUser.isPresent()){
             User user =optionalUser.get();
@@ -145,6 +147,8 @@ public class CartController {
             model.addAttribute("totalPrice",totalPrice);
 
         }
+       
+
         return "checkout";
 
 
@@ -157,7 +161,7 @@ public class CartController {
                              Principal principal, RedirectAttributes redirectAttributes) {
 
         if (addressId == null) {
-            model.addAttribute("error", "Please select an address.");
+            model.addAttribute("errorAddress", "Please select an address.");
             return "redirect:/cart/checkout";
         }
 
@@ -187,7 +191,7 @@ public class CartController {
                             handleCodPayment(model, userCart, cartItems, order, expectedDeliveryDate);
                             return "orderConfirmation";
                         } else {
-                            model.addAttribute("message", "payment method not selected");
+                            model.addAttribute("errorPayment", "payment method not selected");
                             return "redirect:/cart/checkout";
                         }
                     } catch (Exception e) {

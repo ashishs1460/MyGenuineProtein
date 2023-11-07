@@ -150,13 +150,22 @@
                         <a class="btn btn-warning" th:href="@{'/user/addAddress'+'?editSource=checkout'}">Add Address</a>
 
                     </th:block>
+                    <!-- Display the error message for address selection -->
+                    <div th:if="${errorAddress}" class="alert alert-danger">
+                        <p th:text="${errorAddress}"></p>
+                    </div>
+
+                    <!-- Display the error message for payment method selection -->
+                    <div th:if="${errorPayment}" class="alert alert-danger">
+                        <p th:text="${errorPayment}"></p>
+                    </div>
                     <!-- Display existing addresses -->
                     <th:block th:unless="${#lists.isEmpty(Addresses)}">
                         <ul th:if="${Addresses}" style="list-style:none;">
                             <li th:each="address, iterStat : ${Addresses}">
                                 <div class="address-card" style="background-color: #21446B; color: grey; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
                                     <input type="radio" th:id="'address_' + ${iterStat.index}"
-                                           th:name="selectedAddressId" th:value="${address.id}"/>
+                                           th:name="selectedAddressId" th:value="${address.id}" th:checked="${address.default}"/>
                                     <strong th:text="${user.firstName}"></strong>
 
                                     <div style="margin-top: 10px;">

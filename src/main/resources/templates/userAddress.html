@@ -23,7 +23,7 @@
         transition: transform 0.2s;
     }
 
-    .card:hover {
+    .design:hover {
         transform: scale(1.05);
     }
 
@@ -81,16 +81,16 @@
 
 
           <ul class="user-information pl-0">
-            <li class="card design-1">
+            <li class="card design">
               <a style=" color: #FFD800;text-decoration: none;" th:href="@{/user/userDashboard}">Profile</a>
             </li>
-            <li class="card design-2">
+            <li class="card design">
               <a  style=" color: #FFD800;text-decoration: none;"  th:href="@{/user/address}">Manage Address</a>
             </li>
-            <li class="card design-3">
+            <li class="card design">
               <a style=" color: #FFD800;text-decoration: none;"  th:href="@{/cart/goToCart}">My Cart</a>
             </li>
-            <li class="card design-4">
+            <li class="card design">
               <a style=" color: #FFD800;text-decoration: none;"  th:href="@{/user/my-orders}">My Orders</a>
             </li>
           </ul>
@@ -122,11 +122,19 @@
                     <strong class="address_field" th:text="${address.landmark}"></strong>
                   </div>
                 </div>
-                <div class="col-md-1">
+
+                <div class="col-md-1 mt-2">
                   <button class="btn btn-warning"><a style="text-decoration:none; color:grey;" class="edit_address" th:href="@{'/user/editAddress/'+${address.id} +'?editSource=profile'}">Edit</a></button>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1 mt-2">
                   <button class="btn btn-danger" data-toggle="modal" th:data-target="'#deleteAddressModal-' + ${address.id}">Delete</button>
+                </div>
+                <div class="mt-2 ">
+                  <!-- Display the "Set Default" button if the address is not the default -->
+                  <a th:if="${not address.default}" class="btn btn-primary" th:href="@{'/user/setDefault/' + ${address.id}}">Set Default</a>
+
+                  <!-- Display the "Default Address" message if the address is the default -->
+                  <span th:if="${address.default}">Default Address</span>
                 </div>
               </div>
             </div>
@@ -154,6 +162,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <a th:href="@{'/user/delete/address/' + ${address.id}}" class="btn btn-danger btn-sm">Delete</a>
+
       </div>
     </div>
   </div>
