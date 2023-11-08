@@ -2,6 +2,7 @@ package com.ashish.MyGenuineProtein.controller;
 
 
 import com.ashish.MyGenuineProtein.enums.PaymentMode;
+import com.ashish.MyGenuineProtein.enums.Status;
 import com.ashish.MyGenuineProtein.model.*;
 import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,13 +185,17 @@ public class CartController {
                 if (optionalUserAddress.isPresent()) {
                     Address userAddress = optionalUserAddress.get();
                     try {
-                        Order order = orderService.saveOrder(user, cartItems, totalPrice, selectedPaymentMode, userAddress);
-                        LocalDate expectedDeliveryDate = order.getOrderDate().plusDays(7);
+
 
                         if (isCod(selectedPaymentMode)) {
+                            Order order = orderService.saveOrder(user, cartItems, totalPrice, selectedPaymentMode, userAddress);
+                            LocalDate expectedDeliveryDate = order.getOrderDate().plusDays(7);
                             handleCodPayment(model, userCart, cartItems, order, expectedDeliveryDate);
                             return "orderConfirmation";
-                        } else {
+                        }else if (isRazorpay(selectedPaymentMode)) {
+                            return "redirect:/payment/" + totalPrice + "?addressId=" + addressId + "&selectedPaymentMode=" + selectedPaymentMode;
+                        }
+                        else {
                             model.addAttribute("errorPayment", "payment method not selected");
                             return "redirect:/cart/checkout";
                         }
@@ -209,6 +214,7 @@ public class CartController {
                                   List<CartItems> cartItems,
                                   Order order,
                                   LocalDate expectedDeliveryDate) {
+        order.setStatus(Status.CONFIRMED);
         variantService.reduceVariantStock(cartItems);
         userService.deleteCart(userCart);
         cartService.deleteCart(userCart);
@@ -222,6 +228,9 @@ public class CartController {
         return selectedPaymentMode == PaymentMode.COD;
     }
 
+    private  static  boolean isRazorpay(PaymentMode selectedPaymentMode){
+        return selectedPaymentMode == PaymentMode.RAZORPAY;
+    }
 
 
 

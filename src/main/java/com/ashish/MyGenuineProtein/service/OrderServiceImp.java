@@ -32,7 +32,7 @@ public class OrderServiceImp implements OrderService{
                 })
                 .toList();
         order.setOrderItems(orderItems);
-        order.setStatus(selectedPaymentMode == PaymentMode.COD || selectedPaymentMode == PaymentMode.WALLET ? Status.CONFIRMED : Status.PENDING);
+        order.setStatus(Status.CONFIRMED);
         orderRepository.save(order);
         return order;
     }

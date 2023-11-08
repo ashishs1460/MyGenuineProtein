@@ -9,6 +9,7 @@ import com.ashish.MyGenuineProtein.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +51,15 @@ public class CartServiceImp implements CartService{
             cartItems.setQuantity(1);
             cartItems.setVariant(variant);
             cartItems.setCart(cart);
-            cart.getCartItems().add(cartItems);
+
+            if (cart.getCartItems() == null) {
+                List<CartItems> cartItemsList = new ArrayList<>();
+                cartItemsList.add(cartItems);
+                cart.setCartItems(cartItemsList);
+            } else {
+                cart.getCartItems().add(cartItems);
+            }
+
             cartRepository.save(cart);
         }
 
