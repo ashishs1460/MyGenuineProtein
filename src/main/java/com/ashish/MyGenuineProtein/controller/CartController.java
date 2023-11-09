@@ -2,7 +2,6 @@ package com.ashish.MyGenuineProtein.controller;
 
 
 import com.ashish.MyGenuineProtein.enums.PaymentMode;
-import com.ashish.MyGenuineProtein.enums.Status;
 import com.ashish.MyGenuineProtein.model.*;
 import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +34,8 @@ public class CartController {
     AddressService addressService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    WalletService walletService;
 
     @GetMapping("/add/{id}")
     @ResponseBody
@@ -194,6 +195,22 @@ public class CartController {
                             return "orderConfirmation";
                         }else if (isRazorpay(selectedPaymentMode)) {
                             return "redirect:/payment/" + totalPrice + "?addressId=" + addressId + "&selectedPaymentMode=" + selectedPaymentMode;
+                        }else if (isWalletPay(selectedPaymentMode)){
+
+                            Optional<Wallet> optionalWallet = walletService.findByUser(user);
+                            if(optionalWallet.isPresent()){
+                                Wallet wallet = optionalWallet.get();
+                                if (totalPrice <= wallet.getAmount()){
+                                    Order order = orderService.saveOrder(user, cartItems, totalPrice, selectedPaymentMode, userAddress);
+                                    LocalDate expectedDeliveryDate = order.getOrderDate().plusDays(7);
+                                    handleWalletPayment(model,userCart,cartItems,order,expectedDeliveryDate,wallet,totalPrice);
+                                    return "orderConfirmation";
+                                }else {
+                                    redirectAttributes.addFlashAttribute("error", "Insufficient fund in the wallet , please try another payment methods!");
+                                    return "redirect:/cart/checkout";
+                                }
+
+                            }
                         }
                         else {
                             model.addAttribute("errorPayment", "payment method not selected");
@@ -209,12 +226,29 @@ public class CartController {
         return "redirect:/login";
     }
 
+    private void handleWalletPayment(Model model,
+                                     Cart userCart,
+                                     List<CartItems> cartItems,
+                                     Order order,
+                                     LocalDate expectedDeliveryDate,
+                                     Wallet wallet,
+                                     double totalPrice) {
+        wallet.setAmount(wallet.getAmount()-totalPrice);
+        walletService.save(wallet);
+        variantService.reduceVariantStock(cartItems);
+        userService.deleteCart(userCart);
+        cartService.deleteCart(userCart);
+        model.addAttribute("order",order);
+        model.addAttribute("expectedDeliveryDate",expectedDeliveryDate);
+
+    }
+
     private void handleCodPayment(Model model,
                                   Cart userCart,
                                   List<CartItems> cartItems,
                                   Order order,
                                   LocalDate expectedDeliveryDate) {
-        order.setStatus(Status.CONFIRMED);
+
         variantService.reduceVariantStock(cartItems);
         userService.deleteCart(userCart);
         cartService.deleteCart(userCart);
@@ -230,6 +264,10 @@ public class CartController {
 
     private  static  boolean isRazorpay(PaymentMode selectedPaymentMode){
         return selectedPaymentMode == PaymentMode.RAZORPAY;
+    }
+
+    private static  boolean isWalletPay(PaymentMode selectedPaymentMode){
+        return selectedPaymentMode == PaymentMode.WALLET;
     }
 
 

@@ -140,9 +140,25 @@
 
 
 <div class="single-product-area" style="margin-top:5rem;">
+    <div th:if="${error}" class="message-success">
+        <p th:text="${error}"></p>
+    </div>
+
+    <!-- Display the error message for address selection -->
+    <div th:if="${errorAddress}" class="alert alert-danger">
+        <p th:text="${errorAddress}"></p>
+    </div>
+
+    <!-- Display the error message for payment method selection -->
+    <div th:if="${errorPayment}" class="alert alert-danger">
+        <p th:text="${errorPayment}"></p>
+    </div>
     <form enctype="multipart/form-data" th:action="@{/cart/placeOrder}" class="checkout" method="post" name="checkout">
         <div class="container">
             <div class="row" id="checkout-container">
+                <!-- Display the success message -->
+
+
                 <div class="col-md-8 price-details ">
                     <h4 style="color:#FFD800">Select Address</h4>
                     <th:block th:if="${#lists.isEmpty(Addresses)}">
@@ -150,15 +166,6 @@
                         <a class="btn btn-warning" th:href="@{'/user/addAddress'+'?editSource=checkout'}">Add Address</a>
 
                     </th:block>
-                    <!-- Display the error message for address selection -->
-                    <div th:if="${errorAddress}" class="alert alert-danger">
-                        <p th:text="${errorAddress}"></p>
-                    </div>
-
-                    <!-- Display the error message for payment method selection -->
-                    <div th:if="${errorPayment}" class="alert alert-danger">
-                        <p th:text="${errorPayment}"></p>
-                    </div>
                     <!-- Display existing addresses -->
                     <th:block th:unless="${#lists.isEmpty(Addresses)}">
                         <ul th:if="${Addresses}" style="list-style:none;">
@@ -245,6 +252,11 @@
                             <input type="radio" data-order_button_text="Proceed to RazorPay" value="RAZORPAY"
                                    name="paymentMethod" class="input-radio" id="payment_method_razorpay">
                             <label for="payment_method_razorpay">RazorPay</label>
+                        </li>
+                        <li class="payment_method_wallet-pay">
+                            <input type="radio" data-order_button_text="Proceed to WalletPay" value="WALLET"
+                                   name="paymentMethod" class="input-radio" id="payment_method_wallet">
+                            <label for="payment_method_wallet">Wallet</label>
                         </li>
                     </ul>
                 </div>
