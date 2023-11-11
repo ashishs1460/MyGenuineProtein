@@ -213,7 +213,7 @@ public class CartController {
                             }
                         }
                         else {
-                            model.addAttribute("errorPayment", "payment method not selected");
+                            redirectAttributes.addFlashAttribute("error", "payment method not selected");
                             return "redirect:/cart/checkout";
                         }
                     } catch (Exception e) {
@@ -269,6 +269,8 @@ public class CartController {
     private static  boolean isWalletPay(PaymentMode selectedPaymentMode){
         return selectedPaymentMode == PaymentMode.WALLET;
     }
+
+
 
 
 

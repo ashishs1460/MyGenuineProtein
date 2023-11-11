@@ -1,8 +1,6 @@
 package com.ashish.MyGenuineProtein.service;
 
-import com.ashish.MyGenuineProtein.model.CartItems;
-import com.ashish.MyGenuineProtein.model.Product;
-import com.ashish.MyGenuineProtein.model.Variant;
+import com.ashish.MyGenuineProtein.model.*;
 import com.ashish.MyGenuineProtein.repository.VariantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,6 +76,20 @@ public class VariantServiceImp implements VariantService {
     @Override
     public void save(Variant existingVariant) {
         variantRepository.save(existingVariant);
+    }
+
+    @Override
+    public void increaseVariantStock(Order orderId) {
+       List<OrderItems> orderItems = orderId.getOrderItems();
+        for (OrderItems item: orderItems) {
+            Variant variant = item.getVariant();
+            int currentStock = variant.getStock();
+            int orderQuantity = item.getQuantity();
+            variant.setStock(currentStock+orderQuantity);
+            variantRepository.save(variant);
+            System.out.println("variant added to the stock");
+
+        }
     }
 
 

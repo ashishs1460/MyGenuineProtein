@@ -100,40 +100,43 @@
                 <div class="heading">
                     <h2 style="text-align: center;color:#FFD800">My Orders</h2>
                 </div>
-                <div th:each="order : ${userOrders}" class="order-table">
-                    <div class="card order-card">
-                        <div class="card-body pt-3">
-                            <div class="row d-flex order-row" th:each="orderItem : ${order.orderItems}">
-                                <div class="col-md-2">
-                                    <a>
-                                        <img width="80" height="80" alt="poster_1_up" class="shop_thumbnail"
-                                             th:src="@{/productImages/{fileName}(fileName=${orderItem.variant.product.productImages.get(0).imageName})}">
-                                    </a>
-                                </div>
-                                <div class="col-md-3 order_info">
-                                    <div>
-                                        <span style="color:white" th:text="${orderItem.variant.product.name}"></span>
-                                    </div>
-                                    <div>
-                                        <span style="color:grey" th:text="${orderItem.variant.variantName}"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 order_info">
-                                    <span style="color:green" th:text="${orderItem.variant.price}"></span>
-                                </div>
-                                <div class="col-md-2 order_info">
-                                    <span style="color:grey" th:text="${order.orderId}"></span>
-                                </div>
-                                <div class="col-md-2 order_info">
-                                    <span style="color:grey" th:text="${order.orderDate}"></span>
-                                </div>
-                                <div class="col-md-2 order_info">
-                                    <span style="color:grey" th:text="${order.status}"></span>
-                                </div>
-                            </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead style="color:white" >
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Total Price</th>
+                            <th>Order Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div th:each="order : ${userOrders}" class="order-table">
+
+                                    <tr>
+                                        <td>
+                                            <span style="color: grey" th:text="${order.orderId}"></span>
+                                        </td>
+                                        <td>
+                                            <span style="color: green" th:text="${order.totalPrice}"></span>
+                                        </td>
+                                        <td>
+                                            <span style="color: grey" th:text="${order.orderDate}"></span>
+                                        </td>
+                                        <td>
+                                            <span style="color: grey" th:text="${order.status}"></span>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-warning" th:href="@{/order/viewOrder/{id}(id=${order.id})}">View Order</a>
+                                        </td>
+                                    </tr>
+
                         </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
 
 

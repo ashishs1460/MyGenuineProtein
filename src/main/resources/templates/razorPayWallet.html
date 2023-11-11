@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment</title>
+</head>
+<body>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script th:inline="javascript">
+  window.onload = function(e){
+  var options = {
+      "key": "rzp_test_wSP8EmmFjEbRbD",
+      "amount": [[${amount}]],
+      "currency": "INR",
+      "name": "MYGenuineProtein",
+      "order_id": [[${orderId}]],
+      "handler": function (response){
+
+      var totalamount =[[${totalAmount}]]
+       window.location.href = '/user/razorPayWalletSuccess?totalAmount='+totalamount;
+
+      },
+      "prefill": {
+          "name": "Gaurav Kumar",
+          "email": "gaurav.kumar@example.com",
+          "contact": "9000090000"
+      },
+
+      "theme": {
+          "color": "#3399cc"
+      }
+  };
+  var rzp1 = new Razorpay(options);
+      rzp1.open();
+      e.preventDefault();
+  }
+</script>
+
+</body>
+</html>

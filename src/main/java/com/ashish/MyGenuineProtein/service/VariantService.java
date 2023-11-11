@@ -1,6 +1,7 @@
 package com.ashish.MyGenuineProtein.service;
 
 import com.ashish.MyGenuineProtein.model.CartItems;
+import com.ashish.MyGenuineProtein.model.Order;
 import com.ashish.MyGenuineProtein.model.Product;
 import com.ashish.MyGenuineProtein.model.Variant;
 
@@ -30,4 +31,5 @@ public interface VariantService {
     void save(Variant existingVariant);
 
 
+    void increaseVariantStock(Order orderId);
 }
