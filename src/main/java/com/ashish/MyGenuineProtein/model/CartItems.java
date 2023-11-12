@@ -26,4 +26,5 @@ public class CartItems {
     private Variant variant;
 
     private int Quantity;
+
 }

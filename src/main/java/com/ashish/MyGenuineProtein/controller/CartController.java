@@ -3,11 +3,13 @@ package com.ashish.MyGenuineProtein.controller;
 
 import com.ashish.MyGenuineProtein.enums.PaymentMode;
 import com.ashish.MyGenuineProtein.model.*;
+import com.ashish.MyGenuineProtein.repository.CartItemRepository;
 import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,12 @@ public class CartController {
     OrderService orderService;
     @Autowired
     WalletService walletService;
+
+    @Autowired
+    CouponService couponService;
+
+    @Autowired
+    CartItemRepository cartItemRepository;
 
     @GetMapping("/add/{id}")
     @ResponseBody
@@ -126,7 +134,10 @@ public class CartController {
     @GetMapping("/cart/checkout")
     public String showCheckOut(Model model,Principal principal,
                                RedirectAttributes redirectAttributes){
+
+
         Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
+
         if(optionalUser.isPresent()){
             User user =optionalUser.get();
             List<Address> addressList = addressService.findAllUserAddresses(user)
@@ -153,6 +164,87 @@ public class CartController {
 
         return "checkout";
 
+
+    }
+
+    @PostMapping("/checkout/applyCoupon")
+    public String applyCoupon(@ModelAttribute("couponCode") String couponCode, Model model, Principal principal) {
+
+        Optional<Coupon> couponOptional = couponService.getCouponByCouponCode(couponCode);
+
+        User user = userService.findUserByEmail(principal.getName()).get();
+        List<Address> addressList = addressService.findAllUserAddresses(user)
+                .stream()
+                .filter(address -> !address.isDelete())
+                .sorted(Comparator.comparing(Address::getCreatedAt).reversed()).toList();
+
+        Cart userCartEntity = user.getCart();
+        List<CartItems> cartItems = userCartEntity.getCartItems();
+
+        double totalPrice = cartItems.stream()
+                .mapToDouble(cartItem -> cartItem.getVariant().getPrice() * cartItem.getQuantity())
+                .sum();
+
+        if (couponOptional.isEmpty()) {
+            model.addAttribute("invalidCoupon", "Invalid coupon code");
+
+            model.addAttribute("cartItems", cartItems);
+
+            model.addAttribute("totalPrice", totalPrice);
+
+            model.addAttribute("Addresses", addressList);
+            model.addAttribute("user",user);
+
+            return "checkout";
+        }
+
+        if (totalPrice < couponOptional.get().getMinimumPurchase()) {
+            model.addAttribute("invalidCoupon", "This coupon is only valid for purchases of " + couponOptional.get().getMinimumPurchase() + " and above");
+
+            model.addAttribute("cartItems", cartItems);
+
+            model.addAttribute("totalPrice", totalPrice);
+
+            model.addAttribute("Addresses", addressList);
+            model.addAttribute("user",user);
+
+
+            return "checkout";
+        }
+
+        if (couponOptional.get().getDiscountType().equals("ABSOLUTE")) {
+            totalPrice = totalPrice - couponOptional.get().getDiscountValue();
+
+            model.addAttribute("discountApplied", "You get a discount of ₹" + couponOptional.get().getDiscountValue());
+            model.addAttribute("couponApplied", "Coupon applied");
+
+            model.addAttribute("cartItems", cartItems);
+
+            model.addAttribute("totalPrice", totalPrice);
+
+            model.addAttribute("Addresses", addressList);
+            model.addAttribute("user",user);
+
+            return "checkout";
+        }
+
+        if (couponOptional.get().getDiscountType().equals("PERCENTAGE")) {
+            totalPrice = totalPrice - (couponOptional.get().getDiscountValue()/100*totalPrice);
+
+            model.addAttribute("discountApplied", "You get a discount of " + couponOptional.get().getDiscountValue() + "%");
+            model.addAttribute("couponApplied", "Coupon applied");
+
+            model.addAttribute("cartItems", cartItems);
+
+            model.addAttribute("totalPrice", totalPrice);
+
+            model.addAttribute("Addresses", addressList);
+            model.addAttribute("user",user);
+
+            return "checkout";
+        }
+
+      return "404";
 
     }
 

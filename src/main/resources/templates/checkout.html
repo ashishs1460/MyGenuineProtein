@@ -153,13 +153,31 @@
     <div th:if="${errorPayment}" class="alert alert-danger">
         <p th:text="${errorPayment}"></p>
     </div>
+
+    <div style="text-align: right;" class="mr-5">
+        <form th:action="@{/checkout/applyCoupon}" method="post">
+            <!-- Inside the form tag in your checkout page -->
+            <div class="coupon">
+                <label for="couponCode">Coupon Code:</label>
+                <input type="text" id="couponCode" name="couponCode">
+                <button type="submit" class="btn btn-warning" name="applyCoupon">Apply Coupon</button>
+            </div>
+
+            <!-- Display the success or error message for coupon -->
+            <p class="text-center text-danger" th:text="${invalidCoupon}"></p>
+            <p class="text-center text-success" th:text="${discountApplied}"></p>
+
+
+        </form>
+    </div>
+
     <form enctype="multipart/form-data" th:action="@{/cart/placeOrder}" class="checkout" method="post" name="checkout">
         <div class="container">
             <div class="row" id="checkout-container">
                 <!-- Display the success message -->
 
 
-                <div class="col-md-8 price-details ">
+                <div class="col-md-6 price-details ">
                     <h4 style="color:#FFD800">Select Address</h4>
                     <th:block th:if="${#lists.isEmpty(Addresses)}">
                         <p style="color:grey">No addresses found. Please add a new address:</p>
@@ -203,39 +221,48 @@
                 <div th:if="${message}" class="alert alert-danger">
                     <p th:text="${message}"></p>
                 </div>
-                <div class="col-md-4 delivery admin-box ">
+                <div  style="background-color:#21446B" class="col-md-4 delivery admin-box mt-4">
                     <div class="head">
                         <h3>Price details</h3>
-                        <hr>
+                            <h6 class="text-success" th:text="${couponApplied}"></h6>
+
+                        <hr style="border-top: 1px solid grey;">
+
                     </div>
                     <div>
                         <ul class="product_details">
                             <th:block th:each="cartItems : ${cartItems}">
                                 <li class="list-details">
                                     <div class="price-quantity">
-                                        <span th:text="${cartItems.variant.product.name}"></span>(<span
-                                            th:text="${cartItems.quantity}"></span>
+                                        <span style="color:grey" th:text="${cartItems.variant.product.name}"></span>(<span
+                                           style="color:green"  th:text="${cartItems.quantity}"></span>
                                         )
                                     </div>
-                                    <span th:text="${cartItems.variant.price}"></span>
+                                    <span style="color:grey" th:text="${cartItems.variant.price}"></span>
                                 </li>
                             </th:block>
                         </ul>
                         <div class="total">
                             <div>
-                                <h4>Total Price : <strong th:text="${totalPrice}"></strong></h4>
+                                <h4 style="color:#FFD800">Total Price : <strong style="color:white" th:text="${totalPrice}"></strong></h4>
                             </div>
 
 
                         </div>
                         <div class="col-md-4" style="margin-top: 2rem">
-                            <input class="btn btn-warning" type="submit" data-value="Place order" value="Place order"
+                            <input style="color:black" class="btn btn-warning" type="submit" data-value="Place order" value="Place order"
                                    id="place_order" name="place_order">
                         </div>
                     </div>
+
+
                 </div>
+
             </div>
         </div>
+
+
+
 
         <!-------------------------------------Payments---------------------------------->
         <div class="container">
@@ -266,7 +293,11 @@
             </div>
         </div><!-------payment end------------>
     </form>
+
+
 </div>
+
+
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
