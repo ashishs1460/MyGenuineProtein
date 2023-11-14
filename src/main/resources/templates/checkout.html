@@ -239,12 +239,17 @@
                                         )
                                     </div>
                                     <span style="color:grey" th:text="${cartItems.variant.price}"></span>
+
                                 </li>
                             </th:block>
                         </ul>
                         <div class="total">
                             <div>
                                 <h4 style="color:#FFD800">Total Price : <strong style="color:white" th:text="${totalPrice}"></strong></h4>
+                            </div>
+                            <div th:if="${coupon}">
+                                <p th:text="'Applied coupon is '+${coupon}"></p>
+
                             </div>
 
 

@@ -130,6 +130,9 @@
       <a  th:if="${order.status.name()} == 'DELIVERED'"
          th:href="@{/order/selectReturnReason/{id}(id=${order.id})}"
          class="btn btn-warning ml-3">Initiate Return</a>
+      <a th:if="${order.status.name() == 'RETURN_CONFIRMED'}"
+         th:href="@{/order/refund/{id}(id=${order.id})}"
+         class="btn btn-success ml-3">Initiate Refund</a>
 
     </div>
     <!-- Display a form for returning the product with a reason -->

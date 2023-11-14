@@ -84,9 +84,7 @@ public class CartController {
                 int quantity = cartItems.stream()
                         .map(item -> item.getQuantity())
                         .reduce(0, (a, b) -> a + b);
-                long totalAmount = cartItems.stream()
-                        .mapToLong(item -> (long) (item.getQuantity() * item.getVariant().getPrice()))
-                        .sum();
+                double totalAmount = cart.getTotal()-cart.getDiscount();
                 model.addAttribute("cartItems", cartItems);
                 model.addAttribute("quantity", quantity);
                 model.addAttribute("total", totalAmount);
@@ -103,15 +101,28 @@ public class CartController {
 
 
     @GetMapping ("/cart/remove/{id}")
-    public String removeFromCart(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String removeFromCart(@PathVariable Long id,
+                                 RedirectAttributes redirectAttributes,
+                                 Principal principal) {
 
             // Remove the cart item from the list
+        Optional<User> userOptional = userService.findUserByEmail(principal.getName());
 
-                cartService.removeFromCart(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Cart cart = user.getCart();
 
-                redirectAttributes.addFlashAttribute("successMsg", "Item removed from cart");
+            cartService.removeFromCart(id, cart);
 
-                return "redirect:/cart/goToCart";
+            redirectAttributes.addFlashAttribute("successMsg", "Item removed from cart");
+
+            return "redirect:/cart/goToCart";
+        } else {
+            // Handle the case where the user is not found
+            // You might want to redirect to an error page or do some other error handling
+            return "redirect:/error";
+        }
+
 
     }
 
@@ -149,15 +160,19 @@ public class CartController {
             model.addAttribute("Addresses",addressList);
             model.addAttribute("user",user);
 
+
             Cart cart = user.getCart();
 
             List<CartItems> cartItems = cart.getCartItems();
             model.addAttribute("cartItems",cartItems);
 
-            double totalPrice = cartItems.stream()
-                    .mapToDouble(cartItem -> cartItem.getVariant().getPrice() * cartItem.getQuantity())
-                    .sum();
+//            double totalPrice = cartItems.stream()
+//                    .mapToDouble(cartItem -> cartItem.getVariant().getPrice() * cartItem.getQuantity())
+//                    .sum();
+            double totalPrice = cart.getTotal()-cart.getDiscount();
             model.addAttribute("totalPrice",totalPrice);
+            if(cart.getCouponCode() != null)
+                 model.addAttribute("coupon",cart.getCouponCode());
 
         }
        
@@ -168,7 +183,8 @@ public class CartController {
     }
 
     @PostMapping("/checkout/applyCoupon")
-    public String applyCoupon(@ModelAttribute("couponCode") String couponCode, Model model, Principal principal) {
+    public String applyCoupon(@ModelAttribute("couponCode") String couponCode, Principal principal,
+                              RedirectAttributes  redirectAttributes) {
 
         Optional<Coupon> couponOptional = couponService.getCouponByCouponCode(couponCode);
 
@@ -181,67 +197,50 @@ public class CartController {
         Cart userCartEntity = user.getCart();
         List<CartItems> cartItems = userCartEntity.getCartItems();
 
-        double totalPrice = cartItems.stream()
-                .mapToDouble(cartItem -> cartItem.getVariant().getPrice() * cartItem.getQuantity())
-                .sum();
+        double totalPrice = userCartEntity.getTotal();
+
+
 
         if (couponOptional.isEmpty()) {
-            model.addAttribute("invalidCoupon", "Invalid coupon code");
-
-            model.addAttribute("cartItems", cartItems);
-
-            model.addAttribute("totalPrice", totalPrice);
-
-            model.addAttribute("Addresses", addressList);
-            model.addAttribute("user",user);
-
-            return "checkout";
+            redirectAttributes.addFlashAttribute("invalidCoupon", "Invalid coupon code");
+            return "redirect:/cart/checkout";
         }
 
         if (totalPrice < couponOptional.get().getMinimumPurchase()) {
-            model.addAttribute("invalidCoupon", "This coupon is only valid for purchases of " + couponOptional.get().getMinimumPurchase() + " and above");
+            redirectAttributes.addFlashAttribute("invalidCoupon", "This coupon is only valid for purchases of " + couponOptional.get().getMinimumPurchase() + " and above");
 
-            model.addAttribute("cartItems", cartItems);
-
-            model.addAttribute("totalPrice", totalPrice);
-
-            model.addAttribute("Addresses", addressList);
-            model.addAttribute("user",user);
-
-
-            return "checkout";
+            return "redirect:/cart/checkout";
         }
+        userCartEntity.setDiscount(0);
+        cartService.save(userCartEntity);
 
         if (couponOptional.get().getDiscountType().equals("ABSOLUTE")) {
-            totalPrice = totalPrice - couponOptional.get().getDiscountValue();
 
-            model.addAttribute("discountApplied", "You get a discount of ₹" + couponOptional.get().getDiscountValue());
-            model.addAttribute("couponApplied", "Coupon applied");
+            userCartEntity.setDiscount(couponOptional.get().getDiscountValue());
+            userCartEntity.setCouponCode(couponOptional.get().getCouponCode());
+//            totalPrice = totalPrice - couponOptional.get().getDiscountValue();
+            cartService.save(userCartEntity);
 
-            model.addAttribute("cartItems", cartItems);
+            redirectAttributes.addFlashAttribute("discountApplied", "You get a discount of ₹" + couponOptional.get().getDiscountValue());
+            redirectAttributes.addFlashAttribute("couponApplied", "Coupon applied");
 
-            model.addAttribute("totalPrice", totalPrice);
+            return "redirect:/cart/checkout";
 
-            model.addAttribute("Addresses", addressList);
-            model.addAttribute("user",user);
-
-            return "checkout";
         }
 
         if (couponOptional.get().getDiscountType().equals("PERCENTAGE")) {
-            totalPrice = totalPrice - (couponOptional.get().getDiscountValue()/100*totalPrice);
 
-            model.addAttribute("discountApplied", "You get a discount of " + couponOptional.get().getDiscountValue() + "%");
-            model.addAttribute("couponApplied", "Coupon applied");
+            userCartEntity.setDiscount(couponOptional.get().getDiscountValue()/100*totalPrice);
+            userCartEntity.setCouponCode(couponOptional.get().getCouponCode());
+            cartService.save(userCartEntity);
+//            totalPrice = totalPrice - (couponOptional.get().getDiscountValue()/100*totalPrice);
 
-            model.addAttribute("cartItems", cartItems);
+            redirectAttributes.addFlashAttribute("discountApplied", "You get a discount of " + couponOptional.get().getDiscountValue() + "%");
+            redirectAttributes.addFlashAttribute("couponApplied", "Coupon applied");
 
-            model.addAttribute("totalPrice", totalPrice);
 
-            model.addAttribute("Addresses", addressList);
-            model.addAttribute("user",user);
+            return "redirect:/cart/checkout";
 
-            return "checkout";
         }
 
       return "404";
@@ -268,10 +267,10 @@ public class CartController {
                 List<CartItems> cartItems = userCart.getCartItems();
 
 
-                System.out.println( "CartItems"+cartItems);
+//                System.out.println( "CartItems"+cartItems);
 
 
-                double totalPrice = cartService.calculateTotalPrice(cartItems);
+                double totalPrice = userCart.getTotal()-userCart.getDiscount();
 
 
                 Optional<Address> optionalUserAddress = addressService.findById(addressId);
@@ -344,6 +343,7 @@ public class CartController {
         variantService.reduceVariantStock(cartItems);
         userService.deleteCart(userCart);
         cartService.deleteCart(userCart);
+
         model.addAttribute("order", order);
         model.addAttribute("expectedDeliveryDate", expectedDeliveryDate);
 

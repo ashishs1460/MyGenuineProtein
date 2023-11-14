@@ -34,7 +34,12 @@ public class Product {
     @JsonIgnore
      private List<Variant> variants;
 
-
+    @OneToOne(mappedBy = "product")
+    private Offer offer ;
+//    public List<Offer> getOffers() {
+//        return offer;
+//    }
+//    private  float discountedPrice = 0.0f;
 
     private String description;
 

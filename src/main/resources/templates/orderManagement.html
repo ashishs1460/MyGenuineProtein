@@ -67,6 +67,7 @@
             <th scope="col">SN</th>
             <th scope="col">Order ID</th>
             <th scope="col">User</th>
+            <th scope="col">Product</th>
             <th scope="col">Order Date</th>
             <th scope="col">Status</th>
             <th scope="col">Total Price</th>
@@ -78,6 +79,11 @@
             <th scope="row" th:text="${iStat.index + 1}"></th>
             <td th:text="${order.orderId}"></td>
             <td th:text="${order.user.firstName}"></td>
+            <td>
+                <div th:each="orderItem : ${order.orderItems}">
+                    <p th:text="${orderItem.variant.product.name}"></p>
+                </div>
+            </td>
             <td th:text="${order.orderDate}"></td>
             <td th:text="${order.status}"></td>
             <td style="color:green" th:text="${order.totalPrice}"></td>

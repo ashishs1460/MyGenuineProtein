@@ -134,7 +134,13 @@
                       <div>
                         <h3  style="color:white"  th:text="${cartItems.variant.product.name}">>Blue denim shirt</h3>
                         <h5 style="color:grey"  th:text="${cartItems.variant.variantName}"></h5>
-                        <p style="color:grey"   class="mb-0"><span><strong>₹<span th:text="${cartItems.variant.price * cartItems.quantity}"></span></strong></span></p>
+                        <p th:style="'color: grey; text-decoration: ' + (${cartItems.variant.discountedPrice > 0} ? 'line-through' : 'none') + '; color: ' + (${cartItems.variant.discountedPrice > 0} ? 'red' : 'green')"
+                           class="mb-0">
+                          <span><strong>₹<span th:text="${cartItems.variant.price * cartItems.quantity}"></span></strong></span>
+                        </p>
+                        <p id="variantDiscount" th:if="${cartItems.variant.discountedPrice != 0}" style="color:green">
+                          Discounted Price: ₹ <span th:text="${cartItems.variant.discountedPrice}"></span>
+                        </p>
                         <div class="mt-2 quantity-input">
                           <form th:action="@{/cart/update-cart}" method="post">
                             <input type="hidden" name="id" th:value="${cartItems.variant.id}">

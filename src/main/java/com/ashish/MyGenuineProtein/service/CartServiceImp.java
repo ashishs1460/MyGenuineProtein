@@ -1,9 +1,6 @@
 package com.ashish.MyGenuineProtein.service;
 
-import com.ashish.MyGenuineProtein.model.Cart;
-import com.ashish.MyGenuineProtein.model.CartItems;
-import com.ashish.MyGenuineProtein.model.User;
-import com.ashish.MyGenuineProtein.model.Variant;
+import com.ashish.MyGenuineProtein.model.*;
 import com.ashish.MyGenuineProtein.repository.CartItemRepository;
 import com.ashish.MyGenuineProtein.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,8 @@ public class CartServiceImp implements CartService{
 
     @Autowired
     UserService userService;
+    @Autowired
+    CouponService couponService;
 
 
 
@@ -42,6 +41,7 @@ public class CartServiceImp implements CartService{
 
 
         if (optionalCartItem.isPresent()) {
+
             CartItems existingCartItems = optionalCartItem.get();
             existingCartItems.setQuantity(existingCartItems.getQuantity() + 1);
             cartItemRepository.save(existingCartItems);
@@ -58,16 +58,60 @@ public class CartServiceImp implements CartService{
                 cart.setCartItems(cartItemsList);
             } else {
                 cart.getCartItems().add(cartItems);
+
             }
 
-            cartRepository.save(cart);
+
+
+
         }
+
+        double variantPrice = variant.getPrice();
+
+        double discountedVariantPrice = variant.getDiscountedPrice();
+
+        if (discountedVariantPrice >0){
+            cart.setTotal(cart.getTotal()+discountedVariantPrice);
+        }else {
+            cart.setTotal(cart.getTotal()+variantPrice);
+        }
+//        cart.setTotal(cart.getTotal()+variantPrice);
+
+
+
+       Optional<Coupon> optionalCoupon = couponService.getCouponByCouponCode(cart.getCouponCode());
+       if(optionalCoupon.isPresent()){
+           Coupon coupon =optionalCoupon.get();
+           if(coupon.getDiscountType().equals("PERCENTAGE")){
+               cart.setDiscount(coupon.getDiscountValue()/100*cart.getTotal());
+
+           }
+       }
+
+        cartRepository.save(cart);
 
 
     }
 
     @Override
-    public void removeFromCart(Long cartItemId) {
+    public void removeFromCart(Long cartItemId, Cart cart) {
+        CartItems cartItem = cartItemRepository.findById(cartItemId).get();
+        if(cartItem.getVariant().getDiscountedPrice()>0){
+            cart.setTotal(cart.getTotal()-cartItem.getQuantity()*cartItem.getVariant().getDiscountedPrice());
+        }else {
+            cart.setTotal(cart.getTotal()-cartItem.getQuantity()*cartItem.getVariant().getPrice());
+        }
+
+        Optional<Coupon> optionalCoupon = couponService.getCouponByCouponCode(cart.getCouponCode());
+        if (optionalCoupon.isPresent()){
+            Coupon coupon = optionalCoupon.get();
+            if (cart.getTotal()<coupon.getMinimumPurchase()){
+                cart.setDiscount(0);
+                cart.setCouponCode(null);
+            }
+        }
+
+        cartRepository.save(cart);
         cartItemRepository.deleteById(cartItemId);
     }
 
@@ -81,8 +125,16 @@ public class CartServiceImp implements CartService{
                 List<CartItems> cartItems =cart.getCartItems();
                 for (CartItems cartItem: cartItems) {
                     if(cartItem.getVariant().getId().equals(variantId)){
+
+                        cart.setTotal(cart.getTotal()+cartItem.getVariant().getPrice()*(newQuantity-cartItem.getQuantity()));
                         cartItem.setQuantity(newQuantity);
                         cartItemRepository.save(cartItem);
+                        Coupon coupon = couponService.getCouponByCouponCode(cart.getCouponCode()).get();
+                        if (cart.getTotal()<coupon.getMinimumPurchase()){
+                            cart.setDiscount(0);
+                            cart.setCouponCode(null);
+                        }
+                        cartRepository.save(cart);
 
                     }
 
@@ -104,7 +156,12 @@ public class CartServiceImp implements CartService{
         cartRepository.delete(cart);
     }
 
-    public Cart createCart(User user) {
+    @Override
+    public void save(Cart userCartEntity) {
+        cartRepository.save(userCartEntity);
+    }
+
+    public  Cart createCart(User user) {
         Cart cart =new Cart();
         cart.setUser(user);
         user.setCart(cart);

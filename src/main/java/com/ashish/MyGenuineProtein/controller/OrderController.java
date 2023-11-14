@@ -4,9 +4,11 @@ import com.ashish.MyGenuineProtein.enums.PaymentMode;
 import com.ashish.MyGenuineProtein.enums.Status;
 import com.ashish.MyGenuineProtein.model.Order;
 import com.ashish.MyGenuineProtein.model.User;
+import com.ashish.MyGenuineProtein.model.Wallet;
 import com.ashish.MyGenuineProtein.service.OrderService;
 import com.ashish.MyGenuineProtein.service.UserService;
 import com.ashish.MyGenuineProtein.service.VariantService;
+import com.ashish.MyGenuineProtein.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,8 @@ public class OrderController {
     UserService userService;
     @Autowired
     VariantService variantService;
+    @Autowired
+    WalletService walletService;
 
     @GetMapping("/order/viewOrder/{id}")
     public  String viewOrder(@PathVariable long id,
@@ -69,7 +73,9 @@ public class OrderController {
                 User user = userService.findUserByEmail(principal.getName()).get();
                 double refund = order.getTotalPrice();
             if (paymentMode != PaymentMode.COD){
-                user.getWallet().setAmount(user.getWallet().getAmount() + refund);
+                Wallet wallet = user.getWallet();
+                wallet.setAmount(wallet.getAmount()+refund);
+                walletService.save(wallet);
                 redirectAttributes.addFlashAttribute("moneyCredited", "Invoice amount of ₹" +refund + " has been credited back to your wallet");
             }else {
                 redirectAttributes.addFlashAttribute("moneyCredited", "Order Cancelled!");
@@ -77,7 +83,7 @@ public class OrderController {
 
                variantService.increaseVariantStock(order);
 
-                userService.saveUser(user);
+
 
 
         }
@@ -129,6 +135,35 @@ public class OrderController {
         }
 
         return "redirect:/order/viewOrder/" + orderId;
+    }
+
+    @GetMapping("/order/refund/{id}")
+    public String returnRefund(@PathVariable("id") long id,
+                               RedirectAttributes redirectAttributes,
+                               Principal principal){
+
+        if(userService.findUserByEmail(principal.getName()).isEmpty()){
+            return "redirect:/login";
+        }
+
+        Optional<Order> optionalOrder = orderService.findByOrderId(id);
+
+        if(optionalOrder.isPresent()){
+            Order order = optionalOrder.get();
+            order.setStatus(Status.REFUNDED);
+
+            orderService.save(order);
+            User user = userService.findUserByEmail(principal.getName()).get();
+            double refund = order.getTotalPrice();
+            Wallet wallet = user.getWallet();
+            wallet.setAmount(wallet.getAmount()+refund);
+            redirectAttributes.addFlashAttribute("moneyCredited", "Invoice amount of ₹" +refund + " has been credited back to your wallet");
+
+            variantService.increaseVariantStock(order);
+            walletService.save(wallet);
+        }
+
+        return "redirect:/order/viewOrder/"+id;
     }
 
 }

@@ -4,6 +4,7 @@ package com.ashish.MyGenuineProtein.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
@@ -28,6 +29,13 @@ public class Cart {
     @ToString.Exclude
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<CartItems> cartItems;
+
+    private double total;
+
+    private String couponCode;
+
+    private  double discount;
+
 
 
 

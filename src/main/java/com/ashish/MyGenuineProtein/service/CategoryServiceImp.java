@@ -42,5 +42,10 @@ public class CategoryServiceImp implements  CategoryService{
         return false;
     }
 
+    @Override
+    public Optional<Category> findCategoryById(UUID categoryId) {
+        return categoryRepository.findById(categoryId);
+    }
+
 
 }

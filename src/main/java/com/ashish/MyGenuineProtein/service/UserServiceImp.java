@@ -104,6 +104,13 @@ public class UserServiceImp implements UserService{
         userRepository.save(user);
 
     }
+//    public  Cart createCart(User user) {
+//        Cart cart =new Cart();
+//        cart.setUser(user);
+//        user.setCart(cart);
+//        cartRepository.save(cart);
+//        return cart;
+//    }
 
     public void  deleteCartItem(CartItems cartItems){
         Optional<CartItems> cartId=cartItemRepository.findById(cartItems.getId());

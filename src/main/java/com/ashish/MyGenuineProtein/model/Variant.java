@@ -26,6 +26,8 @@ public class Variant {
 
     private Float price;
 
+        private  float discountedPrice = 0.0f;
+
     private Integer stock;
 
     @ManyToOne(fetch = FetchType.LAZY)

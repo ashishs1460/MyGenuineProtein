@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -24,9 +25,16 @@ public class Category {
 
     private String name;
 
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
+
+    @OneToOne(mappedBy = "category")
+    private Offer offer;
+
 
 
 
 
 
 }
+

@@ -20,5 +20,5 @@ public interface CategoryService {
     boolean getCategoryByName(String name);
 
 
-
+    Optional<Category> findCategoryById(UUID categoryId);
 }

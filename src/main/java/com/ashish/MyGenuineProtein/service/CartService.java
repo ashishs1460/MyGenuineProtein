@@ -9,11 +9,13 @@ public interface CartService {
 
     void addToCart(Long id, String username);
 
-    void  removeFromCart(Long CartItemId);
+    void  removeFromCart(Long CartItemId, Cart cart);
 
     void updateCartItem(String user, Long variantId, int newQuantity);
 
     double calculateTotalPrice(List<CartItems> cartItems);
 
     void deleteCart(Cart userCart);
+
+    void save(Cart userCartEntity);
 }

@@ -10,5 +10,6 @@ public enum Status {
     CANCELLED,
     RETURNED,
     RETURN_PENDING,
-    RETURN_CONFIRMED
+    RETURN_CONFIRMED,
+    REFUNDED
 }

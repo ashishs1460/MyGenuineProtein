@@ -82,9 +82,17 @@
           <h2 class="card-title" style="color: #FFD800" th:text="${product.name}"></h2><br>
           <h3 class="card-subtitle" style="color: #D3D3D3" th:text="${product.category.name}"></h3>
           <h4 id="variantName" th:text="${variants[0].variantName}" style="color:white"></h4>
-          <h4 id="variantPrice" style="color:white">
+
+          <h4 id="variantPrice" th:style="'color: white; text-decoration: ' + (${variants[0].discountedPrice > 0} ? 'line-through' : 'none') + '; color: ' + (${variants[0].discountedPrice > 0} ? 'red' : 'green')">
             ₹ <span th:text="${variants[0].price}"></span>
           </h4>
+
+
+          <h4 id="variantDiscount" th:if="${variants[0].discountedPrice != 0}" style="color:green">
+            Discounted Price: ₹ <span th:text="${variants[0].discountedPrice}"></span>
+          </h4>
+
+
           <select id="variantSelect" class="form-control" name="variant" onchange="fetchVariantDetails()">
             <option value="0">Select</option>
             <option th:each="variant : ${variants}" th:value="${variant.id}" th:text="${variant.variantName}"></option>
@@ -168,6 +176,7 @@
 
     // Rest of your addToWishlist code
   }
+
 </script>
 
 <script>
@@ -182,6 +191,8 @@
         .then(data => {
           document.getElementById('variantName').innerText = data.variantName;
           document.getElementById('variantPrice').innerText = '₹ '+ data.price;
+          document.getElementById('variantDiscount').innerText = 'Discounted Price: ₹ '+ data.discountedPrice;
+
         })
         .catch(error => {
           console.error('Error fetching variant details:', error.message);
@@ -190,6 +201,7 @@
       alert("Select a variant");
     }
   }
+
 </script>
 <script>
   function showMessage(message, isSuccess) {

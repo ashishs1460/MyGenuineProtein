@@ -1,12 +1,11 @@
 package com.ashish.MyGenuineProtein.controller;
 
 
-import com.ashish.MyGenuineProtein.model.Order;
-import com.ashish.MyGenuineProtein.model.Product;
-import com.ashish.MyGenuineProtein.model.User;
+import com.ashish.MyGenuineProtein.model.*;
 import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,10 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -38,6 +34,8 @@ public class HomeController {
     UserService userService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    OfferService offerService;
 
     @GetMapping({"/","/home"})
     public String homePage(Model model ,Pageable pageable){
@@ -55,7 +53,7 @@ public class HomeController {
     }
 
     @GetMapping("/shop")
-    public String shopPage(Model model,@PageableDefault(size = 7) Pageable pageable) {
+    public String shopPage(Model model,@PageableDefault(size = 8) Pageable pageable) {
 
         model.addAttribute("categories", categoryService.getAllCategory());
         Page<Product> productsPage = productService.getProductsPage(pageable);
@@ -87,31 +85,91 @@ public class HomeController {
 
 
 
+
     @GetMapping("/shop/viewProduct/{id}")
-    public String viewProduct(@PathVariable UUID id ,Model model){
-       Product product = productService.findProductById(id).get();
+    public String viewProduct(@PathVariable UUID id, Model model) {
+        Product product = productService.findProductById(id).orElseThrow(); // Assuming you want to throw an exception if the product is not found
+        List<Variant> variants = variantService.getVariantForProduct(product);
+
+         Offer productOffers = product.getOffer();
+         Offer categoryOffers = offerService.getCategoryOffers(product.getCategory());
 
 
-        model.addAttribute("product",productService.findProductById(id).get());
-        model.addAttribute("variants",variantService.getVariantForProduct(product));
+        if (productOffers == null && categoryOffers == null) {
+            applyDefaultDiscountToVariants(variants);
+        } else {
+            applyMaxOfferToVariants(variants, productOffers, categoryOffers);
+        }
+
+        model.addAttribute("product", product);
+        model.addAttribute("variants", variants);
         return "viewProduct";
-
     }
 
-    @PostMapping("/shop")
+
+
+    private void applyDefaultDiscountToVariants(List<Variant> variants) {
+        variants.forEach(variant -> {
+            variant.setDiscountedPrice(0);
+            variantService.save(variant);
+        });
+    }
+
+    private void applyMaxOfferToVariants(List<Variant> variants, Offer productOffers, Offer categoryOffers) {
+        for (Variant variant : variants) {
+            float discountPrice;
+
+            if (productOffers == null && categoryOffers !=null) {
+                discountPrice = variant.getPrice() - (variant.getPrice() * categoryOffers.getCategoryOffPercentage() / 100);
+            } else if (categoryOffers == null && productOffers !=null) {
+                discountPrice = variant.getPrice() - (variant.getPrice() * productOffers.getCategoryOffPercentage() / 100);
+            } else if (productOffers.getCategoryOffPercentage() > categoryOffers.getCategoryOffPercentage()) {
+                System.out.println("Inside the product-wise offer");
+                discountPrice = variant.getPrice() - (variant.getPrice() * productOffers.getCategoryOffPercentage() / 100);
+            } else {
+                System.out.println("Inside the category-wise offer");
+                discountPrice = variant.getPrice() - (variant.getPrice() * categoryOffers.getCategoryOffPercentage() / 100);
+            }
+
+            variant.setDiscountedPrice(discountPrice);
+            variantService.save(variant);
+        }
+    }
+
+
+    private float getMaxOfferPercentage(List<Offer> offers) {
+        return offers.stream()
+                .map(Offer::getCategoryOffPercentage)
+                .max(Float::compare)
+                .orElse(0);
+    }
+
+    private float calculateDiscountedPrice(Variant variant, float percentage) {
+        return variant.getPrice() - (variant.getPrice() * percentage / 100);
+    }
+
+
+    @PostMapping("/shop/search")
     public String searchProducts(@ModelAttribute("keyword") String keyword,
+                                 @PageableDefault(size = 8) Pageable pageable,
                                  Model model) {
 
-
         List<Product> list = productService.getAllProducts();
-      List<Product> searchresult =  list.stream()
+        List<Product> searchResult = list.stream()
                 .filter(product -> product.getName().toLowerCase().contains(keyword.toLowerCase()))
-                .toList();
+                .collect(Collectors.toList());
+
+        Page<Product> productsPage = new PageImpl<>(searchResult, pageable, searchResult.size());
+
+        List<Product> filteredProducts = productsPage.getContent();
 
         model.addAttribute("categories", categoryService.getAllCategory());
-        model.addAttribute("products", searchresult);
+        model.addAttribute("productsPage", productsPage);
+        model.addAttribute("products", filteredProducts);
+
         return "shop";
     }
+
 
 
     @GetMapping("/user/userDashboard")
@@ -128,10 +186,12 @@ public class HomeController {
         if (optionalUser.isPresent()){
             User user = optionalUser.get();
             List<Order> orders = orderService.findByUser(user);
-            List<Order> userOrders = orders.stream()
-                    .sorted(Comparator.comparing(Order::getOrderDate).reversed())
-                    .collect(Collectors.toList());
-            model.addAttribute("userOrders",userOrders);
+//            List<Order> userOrders = orders.stream()
+//                    .sorted(Comparator.comparing(Order::getOrderDate).reversed())
+//                    .collect(Collectors.toList());
+             Collections.reverse(orders);
+
+            model.addAttribute("userOrders",orders);
         }
         return "order-list";
     }
