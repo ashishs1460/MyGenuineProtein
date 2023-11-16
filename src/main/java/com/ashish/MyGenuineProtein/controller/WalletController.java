@@ -38,7 +38,7 @@ public class WalletController {
         if (wallet == null){
             Wallet wallet1 = new Wallet();
             wallet1.setUser(user);
-            wallet1.setAmount(0);
+            wallet1.setAmount(1);
             walletRepository.save(wallet1);
             wallet = wallet1;
         }

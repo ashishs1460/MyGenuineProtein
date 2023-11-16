@@ -74,8 +74,18 @@ public class OrderController {
                 double refund = order.getTotalPrice();
             if (paymentMode != PaymentMode.COD){
                 Wallet wallet = user.getWallet();
-                wallet.setAmount(wallet.getAmount()+refund);
-                walletService.save(wallet);
+
+                if (wallet != null) {
+                    // Wallet exists, update the amount
+                    wallet.setAmount(wallet.getAmount() + refund);
+                    walletService.save(wallet);
+                } else {
+                    // Wallet is null, create a new wallet and set the amount
+                    Wallet newWallet = new Wallet();
+                    newWallet.setAmount(refund);
+                    newWallet.setUser(user);
+                    walletService.save(newWallet);
+                }
                 redirectAttributes.addFlashAttribute("moneyCredited", "Invoice amount of ₹" +refund + " has been credited back to your wallet");
             }else {
                 redirectAttributes.addFlashAttribute("moneyCredited", "Order Cancelled!");
@@ -147,10 +157,12 @@ public class OrderController {
         }
 
         Optional<Order> optionalOrder = orderService.findByOrderId(id);
+        System.out.println("It's here");
 
         if(optionalOrder.isPresent()){
             Order order = optionalOrder.get();
-            order.setStatus(Status.REFUNDED);
+            Status stat = Status.REFUNDED;
+            order.setStatus(stat);
 
             orderService.save(order);
             User user = userService.findUserByEmail(principal.getName()).get();

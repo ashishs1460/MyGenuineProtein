@@ -61,6 +61,9 @@ public class HomeController {
         List<Product> filteredProducts = productsPage.getContent().stream()
                 .filter(product -> !product.isDelete())
                 .collect(Collectors.toList());
+
+
+
         model.addAttribute("productsPage", productsPage);
         model.addAttribute("products", filteredProducts);
 

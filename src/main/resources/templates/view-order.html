@@ -125,7 +125,7 @@
 
   <div>
     <div class="btn-group mt-4" role="group">
-      <a th:if="${order.status.name()} != 'CANCELLED' and ${order.status.name()} !='DELIVERED' and ${order.status.name()}!='RETURN_PENDING' and ${order.status.name()}!='RETURN_CONFIRMED' and ${order.status.name()}!='RETURNED'" th:href="@{/order/cancelOrder/{id}(id=${order.id})}" onclick="if(!(confirm('Are you sure you want to cancel this order?'))) return false" class="btn btn-danger ml-3">Cancel Order</a>
+      <a th:if="${order.status.name()} != 'CANCELLED' and ${order.status.name()} !='DELIVERED' and ${order.status.name()}!='RETURN_PENDING' and ${order.status.name()}!='RETURN_CONFIRMED' and ${order.status.name()}!='RETURNED' and ${order.status.name()}!='REFUNDED'" th:href="@{/order/cancelOrder/{id}(id=${order.id})}" onclick="if(!(confirm('Are you sure you want to cancel this order?'))) return false" class="btn btn-danger ml-3">Cancel Order</a>
       <!-- Display a link to navigate to the page for selecting the return reason -->
       <a  th:if="${order.status.name()} == 'DELIVERED'"
          th:href="@{/order/selectReturnReason/{id}(id=${order.id})}"
