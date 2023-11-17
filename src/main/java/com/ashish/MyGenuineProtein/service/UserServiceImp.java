@@ -11,6 +11,8 @@ import com.ashish.MyGenuineProtein.repository.CartRepository;
 import com.ashish.MyGenuineProtein.repository.UserRepository;
 import com.ashish.MyGenuineProtein.otp.utils.OtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImp implements UserService{
@@ -42,6 +45,10 @@ public class UserServiceImp implements UserService{
 
     @Autowired
     CartItemRepository cartItemRepository;
+
+
+    @Autowired
+    JavaMailSender mailSender;
 
 
     @Override
@@ -104,13 +111,35 @@ public class UserServiceImp implements UserService{
         userRepository.save(user);
 
     }
-//    public  Cart createCart(User user) {
-//        Cart cart =new Cart();
-//        cart.setUser(user);
-//        user.setCart(cart);
-//        cartRepository.save(cart);
-//        return cart;
-//    }
+
+    @Override
+    public User findByReferralCode(String referralCode) {
+        return userRepository.findByUserReferralCode(referralCode);
+    }
+
+    @Override
+    public boolean validateEmail(String email) {
+        System.out.println(email);
+        String emailRegex =  "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+
+        System.out.println(emailRegex);
+
+        if (!Pattern.matches(emailRegex, email)) {
+
+            return false;
+        }
+        return true;
+    }
+
+    public void sendMail(String toEmail, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("ashishs24199@gmail.com");
+        message.setTo(toEmail);
+        message.setSubject(subject); // Set the subject of the email
+        message.setText(body);       // Set the email body content
+        mailSender.send(message);
+
+    }
 
     public void  deleteCartItem(CartItems cartItems){
         Optional<CartItems> cartId=cartItemRepository.findById(cartItems.getId());

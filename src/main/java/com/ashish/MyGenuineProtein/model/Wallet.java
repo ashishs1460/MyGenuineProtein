@@ -3,6 +3,8 @@ package com.ashish.MyGenuineProtein.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -18,4 +20,8 @@ public class Wallet {
    private User user;
 
     private double amount ;
+
+    private double referralAmount;
+
+
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -86,6 +87,13 @@ public class AdminController {
         }else {
             return "404";
         }
+    }
+
+    @GetMapping("/admin/getReferralCode")
+    public String referralCodePage(Model model){
+        List<User> userList = userService.findAllUsers();
+        model.addAttribute("users",userList);
+        return "referralPage";
     }
 
 

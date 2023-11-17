@@ -33,18 +33,27 @@ public class WalletController {
     @GetMapping("/user/myWallet")
     public String  getWalletPage(Model model,
                                  Principal principal){
-        User user = userService.findUserByEmail(principal.getName()).get();
-        Wallet wallet = user.getWallet();
-        if (wallet == null){
-            Wallet wallet1 = new Wallet();
-            wallet1.setUser(user);
-            wallet1.setAmount(1);
-            walletRepository.save(wallet1);
-            wallet = wallet1;
+        Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            Wallet wallet = user.getWallet();
+            String userReferralCode = user.getUserReferralCode();
+            if (wallet == null){
+                Wallet wallet1 = new Wallet();
+                wallet1.setUser(user);
+                wallet1.setAmount(1);
+                wallet1.setReferralAmount(0d);
+                walletRepository.save(wallet1);
+                wallet = wallet1;
+            }
+            model.addAttribute("userReferralCode",userReferralCode);
+            model.addAttribute("wallet",wallet);
+            model.addAttribute("user",user);
+            return "myWallet";
+        }else {
+            return "redirect:/login";
         }
 
-        model.addAttribute("wallet",wallet);
-        return "myWallet";
     }
 
     @PostMapping ("/user/addToWallet")
@@ -95,6 +104,40 @@ public class WalletController {
 
     }
 
+    @GetMapping("/referWithMail")
+    public String sendReferWithMail (@RequestParam("email") String email,
+                                    Principal principal,
+                                     Model model,
+                                     RedirectAttributes redirectAttributes) {
+
+
+        User user = userService.findUserByEmail(principal.getName()).get();
+        Wallet wallet=user.getWallet();
+        String userReferralCode =user.getUserReferralCode();
+
+
+
+        boolean validateEmail  =userService.validateEmail(email);
+        if (!validateEmail) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please enter a valid email address.");
+            model.addAttribute("successMessage", null);
+        } else {
+            Optional<User> users =userService.findUserByEmail(principal.getName());
+            User userEntity=users.get();
+            String referralCode  =  userEntity.getUserReferralCode();
+
+            String subject="If your register using this referral code you will get 50 rupees! ";
+
+            userService.sendMail(email, subject, referralCode);
+            redirectAttributes.addFlashAttribute("errorMessage", null);
+            redirectAttributes.addFlashAttribute("successMessage", "Referral code sent successfully.");
+        }
+//        model.addAttribute("userWallet",wallet);
+//        model.addAttribute("user",user);
+//        model.addAttribute("userReferralCode",userReferralCode);
+        return "redirect:/user/myWallet";
+//        return "redirect:/shop/referral-code";
+    }
 
 
 }

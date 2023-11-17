@@ -20,4 +20,11 @@ public interface UserService {
 
 
     void deleteCart(Cart userCart);
+
+    User findByReferralCode(String referralCode);
+
+
+    boolean validateEmail(String email);
+
+    void sendMail(String email, String subject, String referralCode);
 }

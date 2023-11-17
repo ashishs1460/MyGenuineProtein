@@ -45,6 +45,8 @@ public class User {
 
     private boolean isActive;
 
+    private String userReferralCode;
+
     private boolean verified;
     @OneToOne(cascade = CascadeType.ALL)
     private Otp otp;
@@ -76,6 +78,7 @@ public class User {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.roles = user.getRoles();
+        this.userReferralCode=user.getUserReferralCode();
     }
 
     public User(){

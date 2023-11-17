@@ -10,4 +10,6 @@ public interface WalletService {
     Optional<Wallet> findByUser(User user);
 
     void save(Wallet wallet);
+
+    String getReferralCode();
 }

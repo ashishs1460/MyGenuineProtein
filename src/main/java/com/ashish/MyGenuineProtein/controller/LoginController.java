@@ -2,11 +2,13 @@ package com.ashish.MyGenuineProtein.controller;
 
 import com.ashish.MyGenuineProtein.model.Role;
 import com.ashish.MyGenuineProtein.model.User;
+import com.ashish.MyGenuineProtein.model.Wallet;
 import com.ashish.MyGenuineProtein.otp.repository.OtpRepository;
 import com.ashish.MyGenuineProtein.repository.RoleRepository;
 import com.ashish.MyGenuineProtein.repository.UserRepository;
 import com.ashish.MyGenuineProtein.service.UserService;
 import com.ashish.MyGenuineProtein.service.UserServiceImp;
+import com.ashish.MyGenuineProtein.service.WalletService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -49,6 +52,8 @@ public class    LoginController {
 
     @Autowired
     OtpRepository otpRepository;
+    @Autowired
+    WalletService walletService;
 
     @GetMapping("/login")
     public String getLoginPage(){
@@ -80,11 +85,12 @@ public class    LoginController {
                                Model model,
                                RedirectAttributes redirectAttributes
                                ){
-
+        System.out.println("register .................>>>>>");
         if (bindingResult.hasErrors()){
             model.addAttribute("user", user);
             return "register";
         }
+        System.out.println("r-code   ......"+user.getUserReferralCode());
 
         if(userRepository.findUserByEmail(user.getEmail()).isPresent()){
             if(userRepository.findUserByEmail(user.getEmail()).get().isVerified()){
@@ -95,6 +101,7 @@ public class    LoginController {
                 userRepository.delete(userRepository.findUserByEmail(user.getEmail()).get());
             }
         }
+
         String password =user.getPassword();
         user.setPassword(bCryptPasswordEncoder.encode(password));
         List<Role> roles=new ArrayList<>();
@@ -102,6 +109,51 @@ public class    LoginController {
 //        roles.add(roleRepository.findById(UUID.fromString("4c3d830e-6f53-11ee-b70a-6f05ccf153cb")).get());
         user.setRoles(roles);
         user.setActive(true);
+
+//        Referral code
+
+        String referralCode = user.getUserReferralCode();
+        user.setUserReferralCode("e");
+        userRepository.save(user);
+
+        Wallet newUserWallet = new Wallet();
+        if(referralCode != null ){
+            User referredUser = userService.findByReferralCode(referralCode);
+
+            Optional<Wallet> optionalReferredUserWallet = walletService.findByUser(referredUser);
+            double referredMoney = 100;
+            if (optionalReferredUserWallet.isPresent()) {
+                Wallet referredUserWallet = optionalReferredUserWallet.get();
+                if (referredUserWallet.getReferralAmount() > 0) {
+                    referredUserWallet.setReferralAmount(referredUserWallet.getReferralAmount() + referredMoney);
+                } else {
+                    referredUserWallet.setReferralAmount(referredMoney);
+                }
+                referredUserWallet.setAmount(referredUserWallet.getAmount() + referredMoney);
+                walletService.save(referredUserWallet);
+
+
+
+                double referralCash = 50;
+                newUserWallet.setUser(user);
+                newUserWallet.setReferralAmount(referralCash);
+                newUserWallet.setAmount(referralCash);
+                walletService.save(newUserWallet);
+
+
+
+            }
+
+        }else {
+            newUserWallet.setUser(user);
+            newUserWallet.setReferralAmount(0);
+            newUserWallet.setAmount(0);
+            user.setWallet(newUserWallet );
+            walletService.save(newUserWallet );
+        }
+        System.out.println("if completed...");
+        String userReferralCode = walletService.getReferralCode();
+        user.setUserReferralCode(userReferralCode);
         userRepository.save(user);
         userService.otpManagement(user);
         model.addAttribute("user" ,user);
