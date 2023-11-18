@@ -110,6 +110,11 @@ a {
   </div>
 </nav>
 <div class="container">
+  <!-- Add this to your register page -->
+  <div th:if="${errorMessage}" class="alert alert-danger">
+    <p th:text="${errorMessage}"></p>
+  </div>
+
   <div class="col-sm-6 navbar-text">
     <h3 style="margin-top: 10px">Sign Up Now</h3>
     <p>Please fill out this to register</p>

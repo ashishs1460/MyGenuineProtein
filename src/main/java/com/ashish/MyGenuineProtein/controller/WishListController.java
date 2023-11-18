@@ -64,24 +64,28 @@ public class WishListController {
             return "redirect:/login";
         }
 
-
         User user = userService.findUserByEmail(principal.getName()).orElseThrow();
 
-        WishList wishList =wishListRepository.findByUser(user).get();
+        Optional<WishList> wishListOptional = wishListRepository.findByUser(user);
 
-        System.out.println(wishList);
-
-        if (wishList != null) {
+        if (wishListOptional.isPresent()) {
+            // Wishlist exists, retrieve and display its items
+            WishList wishList = wishListOptional.get();
             List<WishListItem> wishListItems = wishList.getWishListItems();
             model.addAttribute("wishListItems", wishListItems);
-            System.out.println(wishListItems);
         } else {
-            // Handle the case when the wish list is empty or not initialized
-            model.addAttribute("wishListItems", new ArrayList<>()); // Empty wish list
+            // Wishlist doesn't exist, create a new one
+            WishList newWishList = new WishList();
+            newWishList.setUser(user);
+            wishListRepository.save(newWishList);
+
+            // Return an empty wish list
+            model.addAttribute("wishListItems", new ArrayList<>());
         }
 
         return "wishListPage";
     }
+
 
 
     @GetMapping("/user/removeItem/{id}")

@@ -52,7 +52,7 @@ public class ReviewController {
         System.out.println("orderId"+orderId);
 
 
-        redirectAttributes.addFlashAttribute("successMsg","Review added successfuly!");
+        redirectAttributes.addFlashAttribute("successMsg","Review added successfully!");
         return "redirect:/order/viewOrder/"+orderId;
     }
 }
