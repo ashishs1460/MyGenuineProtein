@@ -36,6 +36,9 @@ public class Product {
 
     @OneToOne(mappedBy = "product")
     private Offer offer ;
+
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 //    public List<Offer> getOffers() {
 //        return offer;
 //    }

@@ -36,6 +36,8 @@ public class HomeController {
     OrderService orderService;
     @Autowired
     OfferService offerService;
+    @Autowired
+    ReviewService reviewService;
 
     @GetMapping({"/","/home"})
     public String homePage(Model model ,Pageable pageable){
@@ -93,22 +95,37 @@ public class HomeController {
     public String viewProduct(@PathVariable UUID id, Model model) {
         Product product = productService.findProductById(id).orElseThrow(); // Assuming you want to throw an exception if the product is not found
         List<Variant> variants = variantService.getVariantForProduct(product);
-
+        List<Review> reviews = reviewService.getProductReviews(id);
          Offer productOffers = product.getOffer();
          Offer categoryOffers = offerService.getCategoryOffers(product.getCategory());
-
+        double averageRating = calculateAverageRating(reviews);
 
         if (productOffers == null && categoryOffers == null) {
             applyDefaultDiscountToVariants(variants);
         } else {
             applyMaxOfferToVariants(variants, productOffers, categoryOffers);
         }
-
+        model.addAttribute("reviews",reviews);
         model.addAttribute("product", product);
         model.addAttribute("variants", variants);
+        model.addAttribute("averageRating", averageRating);
+
         return "viewProduct";
     }
 
+
+    private double calculateAverageRating(List<Review> reviews) {
+        if (reviews.isEmpty()) {
+            return 0.0; // Default to 0 if there are no reviews
+        }
+
+        double sum = 0.0;
+        for (Review review : reviews) {
+            sum += review.getRating();
+        }
+
+        return sum / reviews.size();
+    }
 
 
     private void applyDefaultDiscountToVariants(List<Variant> variants) {

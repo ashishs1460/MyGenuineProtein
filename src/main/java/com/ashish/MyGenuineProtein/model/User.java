@@ -27,6 +27,7 @@ public class User {
     @Column(name = "user_id")
     private UUID id;
 
+    @Getter
     @NotEmpty(message = "is required")
 //    @Column(nullable = false)
     private String firstName;
@@ -71,6 +72,12 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Wallet wallet ;
+
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private  List<Review> reviews = new ArrayList<>();
+
+
     public User(User user) {
 
         this.firstName = user.getFirstName();
@@ -84,4 +91,5 @@ public class User {
     public User(){
 
     }
+
 }

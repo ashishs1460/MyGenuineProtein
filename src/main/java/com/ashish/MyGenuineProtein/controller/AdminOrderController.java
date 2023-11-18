@@ -24,6 +24,7 @@ public class AdminOrderController {
         List<Order> orders = orderService.findAll();
         // You can sort the orders by date in descending order, for example
         orders.sort(Comparator.comparing(Order::getOrderDate).reversed());
+        System.out.println(orders.get(0).getUser().getFirstName());
         model.addAttribute("orders", orders);
         return "orderManagement";
     }

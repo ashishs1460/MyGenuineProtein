@@ -1,9 +1,11 @@
 package com.ashish.MyGenuineProtein.controller;
 
 import com.ashish.MyGenuineProtein.model.Category;
+import com.ashish.MyGenuineProtein.model.Review;
 import com.ashish.MyGenuineProtein.model.User;
 import com.ashish.MyGenuineProtein.service.CategoryService;
 import com.ashish.MyGenuineProtein.service.ProductService;
+import com.ashish.MyGenuineProtein.service.ReviewService;
 import com.ashish.MyGenuineProtein.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ public class AdminController {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    ReviewService reviewService;
 
     @GetMapping("/admin")
     public String getAdminHome(Model model, Principal principal){
@@ -78,6 +82,7 @@ public class AdminController {
 
     }
 
+
     @GetMapping("/admin/updateCategories/{id}")
     public String updateCategory(@PathVariable UUID id ,Model model){
         Optional<Category> category=categoryService.getCategoryById(id);
@@ -96,5 +101,18 @@ public class AdminController {
         return "referralPage";
     }
 
+    @GetMapping("/admin/getUserReviews")
+    public String getUserReviewPage(Model model){
+        List<Review> reviews = reviewService.findAll();
+        model.addAttribute("reviews",reviews);
+        return "userReviewPage";
+    }
 
+   @GetMapping("/admin/deleteReview/{id}")
+    public String deleteUserReview(@PathVariable(name = "id") int id,
+                                   RedirectAttributes redirectAttributes){
+        reviewService.deleteById(id);
+        redirectAttributes.addFlashAttribute("msg","Review deleted successfully!");
+        return "redirect:/admin/getUserReviews";
+   }
 }
