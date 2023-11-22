@@ -5,10 +5,7 @@ import com.ashish.MyGenuineProtein.enums.Status;
 import com.ashish.MyGenuineProtein.model.Order;
 import com.ashish.MyGenuineProtein.model.User;
 import com.ashish.MyGenuineProtein.model.Wallet;
-import com.ashish.MyGenuineProtein.service.OrderService;
-import com.ashish.MyGenuineProtein.service.UserService;
-import com.ashish.MyGenuineProtein.service.VariantService;
-import com.ashish.MyGenuineProtein.service.WalletService;
+import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -37,10 +34,14 @@ public class OrderController {
     @Autowired
     WalletService walletService;
 
+    @Autowired
+    ReviewService reviewService;
+
     @GetMapping("/order/viewOrder/{id}")
     public  String viewOrder(@PathVariable long id,
                              Model model,
                              Principal principal){
+
 
         Optional<Order> optionalOrder = orderService.findByOrderId(id);
         if(optionalOrder.isPresent()){

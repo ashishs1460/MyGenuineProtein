@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,5 +51,14 @@ public class Product {
 
     @OneToMany( mappedBy = "product", cascade = CascadeType.ALL)
     List<ProductImage> productImages = new ArrayList<>();
+
+    public boolean reviewExits() {
+        String str = SecurityContextHolder.getContext().getAuthentication().getName();
+        for (Review review : reviews){
+            if (review.getUser().getEmail().equals(str))
+                return true;
+        }
+        return false;
+    }
 
 }

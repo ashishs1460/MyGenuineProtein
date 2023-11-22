@@ -1,5 +1,6 @@
 package com.ashish.MyGenuineProtein.controller;
 
+import com.ashish.MyGenuineProtein.model.Order;
 import com.ashish.MyGenuineProtein.model.Product;
 import com.ashish.MyGenuineProtein.model.Review;
 import com.ashish.MyGenuineProtein.model.User;
@@ -8,12 +9,12 @@ import com.ashish.MyGenuineProtein.service.ReviewService;
 import com.ashish.MyGenuineProtein.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -26,33 +27,57 @@ public class ReviewController {
     ProductService productService;
 
 
+     @GetMapping("/review/{orderId}/{productId}")
+    public String getReviewPage(@PathVariable long orderId,
+                                @PathVariable(name = "productId") UUID id,
+                                Model model,
+                                Principal principal){
+         Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
+         if (optionalUser.isPresent()){
+             User user = optionalUser.get();
+             Product product = productService.findProductById(id).get();
+             Optional<Review> existingReview = reviewService.findReviewByUserAndProduct(user, product);
+             Review review = existingReview.orElseGet(Review::new);
+             model.addAttribute("review",review);
+             model.addAttribute("productId",id.toString());
+             model.addAttribute("orderId",orderId);
+             return "productReview";
+         }else {
+             return "redirect:/login";
+         }
 
 
-    @PostMapping("/review/{id}")
-    public String addReview(@PathVariable(name = "id")UUID id,
-                            @RequestParam(name = "comment")String comment,
-                            @RequestParam(name = "rating")int rating,
-                            @RequestParam(name = "orderId") long orderId,
-                            RedirectAttributes redirectAttributes,
-                            Principal principal
-                            ){
-        User user = userService.findUserByEmail(principal.getName()).get();
-        Product product = productService.findProductById(id).get();
-        Review review = new Review();
-        review.setUser(user);
-        review.setProduct(product);
-        review.setComment(comment);
-        review.setRating(rating);
-        reviewService.save(review);
+     }
+
+     @PostMapping("/review/submit")
+    public String postReviewPage(@ModelAttribute Review userReview,
+                                 @RequestParam(name = "productId") String id,
+                                 @RequestParam(name = "orderId") long orderId,
+                                 RedirectAttributes redirectAttributes,
+                                 Principal principal){
+        UUID productId = UUID.fromString(id);
+
+        Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
+
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            Product product = productService.findProductById(productId).get();
+
+            Review review = new Review();
+            review.setId(userReview.getId());
+            review.setHasReview(true);
+            review.setUser(user);
+            review.setComment(userReview.getComment());
+            review.setRating(userReview.getRating());
+            review.setProduct(product);
+            reviewService.save(review);
+            redirectAttributes.addFlashAttribute("successMsg","Review added Successfully");
+            return "redirect:/order/viewOrder/" + orderId;
+
+        }else {
+            return "redirect:/login";
+        }
 
 
-        System.out.println("productId"+id);
-        System.out.println("comment"+comment);
-        System.out.println("rating"+rating);
-        System.out.println("orderId"+orderId);
-
-
-        redirectAttributes.addFlashAttribute("successMsg","Review added successfully!");
-        return "redirect:/order/viewOrder/"+orderId;
-    }
+     }
 }

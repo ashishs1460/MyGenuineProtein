@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Product Review</title>
+    <style>
+        .card {
+            width: 100%;
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #21446B; /* Background color for all cards */
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg  navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="auto" height="80" class="d-inline-block align-top" alt=""/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active ">
+                    <a style="color:#FFD800"  class="nav-link" th:href="@{/}" href="#">home</a>
+                </li>
+                <li class="nav-item active ">
+                    <a style="color:#FFD800"  class="nav-link" th:href="@{/shop}" href="#">shop</a>
+                </li>
+                <li class="nav-item active ">
+                    <a style="color:#FFD800"  class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">login</a>
+                </li>
+                <li class="nav-item active ">
+                    <a style="color:#FFD800"  class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">logout</a>
+                </li>
+                <li class="nav-item active ">
+                    <a style="color:#FFD800"  class="nav-link" th:href="@{/cart}" href="#">cart</a>
+                </li>
+                <li class="nav-item active navbar-text">
+                    <strong class="nav-link" th:text="${quantity}">0</strong>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+
+
+<div class="container mt-5">
+    <h2 style="text-align:center; color:yellow;">Add Your Review</h2>
+   <div class="card">
+    <form th:action="@{/review/submit}" method="post" th:object="${review}">
+        <input type="hidden" id="reviewId" name="reviewId" th:field="*{id}">
+
+      <input type="hidden" id="productId" name="productId" th:value="${productId}">
+        <input type="hidden" id="orderId" name="orderId" th:value="${orderId}">
+        <div class="form-group">
+            <label for="comment">Your Comment:</label>
+            <textarea th:field="*{comment}"  id="comment" name="comment" rows="4" class="form-control" placeholder="Enter your comment"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="rating">Rating:</label>
+            <select th:field="*{rating}" id="rating" name="rating" class="form-control">
+                <option value="1">1 star</option>
+                <option value="2">2 stars</option>
+                <option value="3">3 stars</option>
+                <option value="4">4 stars</option>
+                <option value="5">5 stars</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit Review</button>
+    </form>
+   </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849xBLhDdRO5A11zpGSTU02dA/B58cpdIpi3j5I2psKbSSUnQlmh/jOYYD5" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+        integrity="sha384-gziJSIn1MGUzV8ytROePkA9E1yojmEjLE5hFeCQK3J/xqzeg4efmZOpvtd7f6Dh" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50YjXU2v5Iv65Sc5Idq2KQ2faNl18F+BFnbekfIsye8jzvp9p6zzlYUA2" crossorigin="anonymous"></script>
+
+</body>
+</html>

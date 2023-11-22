@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
@@ -10,22 +10,77 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
           integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>Document</title>
 
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #navbar {
+            background-color: #333;
+            padding: 15px;
+            color: white;
+            text-align: center;
+        }
+
+        #sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #111;
+            padding-top: 60px;
+            transition: 0.5s;
+        }
+
+        #sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color:#FFD800;
+            display: block;
+            transition: 0.3s;
+        }
+
+        #sidebar a:hover {
+            background-color: #555;
+        }
+
+        #toggle-btn {
+            position: relative;
+            left: 10px;
+            top: 10px;
+            cursor: pointer;
+            font-size: 40px;
+            color: white;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
 
+<nav class="navbar navbar-expand-lg navbar-custom">
 
-<nav class="navbar navbar-expand-lg  navbar-custom" >
+
     <div class="container-fluid">
+
+
+
         <a class="navbar-brand" href="#">
+            <span class=" mr-3 navbar-toggler-icon d-inline-block" id="toggle-btn" style="z-index:21; color:#FFD800;">&#9776;</span>
             <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="auto" height="80" class="d-inline-block align-top" alt=""/>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<!--        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto"></ul>
@@ -42,117 +97,53 @@
         </div>
     </div>
 </nav>
-<br>
 
-<div class="jumbotron text-center admin-box ">
-    <h1 class="display-4 admin-card">Welcome <span th:text="${username}" style="font-weight: bold; color: white;"></span></h1>
-
-    <p class="admin-card">Easily manage your profile </p>
+<!-- Sidebar -->
+<div id="sidebar" style="background:#0F2237; color:#FFD800; z-index:20;" >
+    <div class="mt-4 ml-3">
+    <a href="#" th:href="@{/admin/getCategories}">Categories</a>
+    <a href="#" th:href="@{/admin/getProducts}">Products</a>
+    <a href="#" th:href="@{/admin/getUsers}">Users</a>
+    <a href="#" th:href="@{/admin/getVariant}">Variants</a>
+    <a href="#" th:href="@{/admin/getOrders}">Orders</a>
+    <a href="#" th:href="@{/admin/getCoupon}">Coupons</a>
+    <a href="#" th:href="@{/admin/getOffers}">Offers</a>
+    <a href="#" th:href="@{/admin/getReferralCode}">Referral Code</a>
+    <a href="#" th:href="@{/admin/getUserReviews}">User Reviews</a>
+        </div>
 </div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card ">
-                    <h4 class="card-title">Categories</h4>
-                    <p class="card-text" style="color:white;">Manage the categories section here.</p>
-                    <a href="#" th:href="@{/admin/getCategories}" class="card-link btn btn-warning">Manage</a>
 
-                </div>
+<div class="container-fluid" >
+
+
+    <div class="row justify-content-center">
+
+        <!-- Content area -->
+        <div class="col-sm-9 col-md-10 pt-3">
+            <div class="jumbotron text-center admin-box">
+                <h1 class="display-4 admin-card">Welcome <span th:text="${username}" style="font-weight: bold; color: white;"></span></h1>
+
+                <p class="admin-card">Easily manage your profile </p>
             </div>
-        </div>
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card">
-                    <h4 class="card-title">Products</h4>
-                    <p class="card-text" style="color:white;">Manage all the products here.</p>
-                    <a href="#" th:href="@{/admin/getProducts}" class="card-link btn btn-warning">Manage</a>
+            <label for="chartType"></label><select id="chartType">
+                <option value="daily">Daily Chart</option>
+                <option value="monthly">Monthly Chart</option>
+                <option value="yearly">Yearly Chart</option>
+            </select>
 
-                </div>
+            <div class="center-container" >
+                <canvas id="myChart" style="   display: flex;
+                 justify-content: center;
+                   align-items: center; "></canvas>
             </div>
+
         </div>
-
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card">
-                    <h4 class="card-title">Users</h4>
-                    <p class="card-text" style="color:white;">Manage all the users here.</p>
-                    <a href="#" th:href="@{/admin/getUsers}" class="card-link btn btn-warning">Manage</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card">
-                    <h4 class="card-title">Variants</h4>
-                    <p class="card-text" style="color:white;">Manage variants of the products.</p>
-                    <a href="#" th:href="@{/admin/getVariant}" class="card-link btn btn-warning">Manage</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card">
-                    <h4 class="card-title">Orders</h4>
-                    <p class="card-text" style="color:white;">Manage orders.</p>
-                    <a href="#" th:href="@{/admin/getOrders}" class="card-link btn btn-warning">Manage</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card">
-                    <h4 class="card-title">Coupons</h4>
-                    <p class="card-text" style="color:white;">Manage Coupons Here.</p>
-                    <a href="#" th:href="@{/admin/getCoupon}" class="card-link btn btn-warning">Manage</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card">
-                    <h4 class="card-title">Offers</h4>
-                    <p class="card-text" style="color:white;">Manage offers Here.</p>
-                    <a href="#" th:href="@{/admin/getOffers}" class="card-link btn btn-warning">Manage</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card">
-                    <h4 class="card-title">Referral Code</h4>
-                    <p class="card-text" style="color:white;">Referral Code.</p>
-                    <a href="#" th:href="@{/admin/getReferralCode}" class="card-link btn btn-warning">Manage</a>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 pt-3" >
-            <div class="card admin-box" >
-                <div class="card-body admin-card">
-                    <h4 class="card-title">User Reviews</h4>
-                    <p class="card-text" style="color:white;">Manage user reviews here.</p>
-                    <a href="#" th:href="@{/admin/getUserReviews}" class="card-link btn btn-warning">Manage</a>
-
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
-<!-- Customized Footer -->
-<footer class="text-center  my-auto ">
-    <div class="container">
+
+<!-- Your existing footer -->
+<footer class="">
+    <div class="container text-center">
         <section class="mb-3">
             <!-- Social Media Links -->
             <a class="btn btn-outline-warning btn-floating m-1" href="#" role="button">
@@ -176,14 +167,91 @@
         </div>
     </div>
 </footer>
-<!-- Customized Footer Ends -->
+
+<script>
+    document.getElementById('toggle-btn').addEventListener('click', function() {
+        var sidebar = document.getElementById('sidebar');
+        if (sidebar.style.left === '-250px') {
+            sidebar.style.left = '0';
+        } else {
+            sidebar.style.left = '-250px';
+        }
+    });
+</script>
+
+<script th:inline="javascript">
+    const dailyXValues = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
+    const monthlyXValues = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+    const yearlyXValues = ["2020", "2021", "2022", "2023","2024"];
+    const dailyYValues = [[${dailyRevenue}]];
+    const monthlyYValues = [[${monthlyRevenue}]];
+    const yearlyYValues = [[${yearlyRevenue}]];
+    const barColors = ["red", "green", "blue", "orange", "brown"];
+
+var myChart = new Chart("myChart", {
+   type: "bar",
+   data: {
+       labels: dailyXValues,
+       datasets: [{
+          backgroundColor: "gold",
+           borderColor: '#FF6384',
+          data: dailyYValues
+       }]
+   },
+   options: {
+       scales: {
+           xAxes: [{
+               gridLines: {
+                  color: 'grey'
+               }
+           }],
+           yAxes: [{
+               gridLines: {
+                  color: 'grey'
+               }
+           }]
+       },
+       legend: {display: false},
+       title: {
+          display: true,
+          text: "Revenue chart"
+       }
+   }
+});
 
 
+    document.getElementById('chartType').addEventListener('change', function() {
+        var chartType = this.value;
+        var newYValues;
+        var newXValues;
+        switch (chartType) {
+            case 'daily':
+               newYValues = dailyYValues;
+               newXValues = dailyXValues;
+               break;
+            case 'monthly':
+               newYValues = monthlyYValues;
+               newXValues = monthlyXValues;
+               break;
+            case 'yearly':
+               newYValues = yearlyYValues;
+               newXValues = yearlyXValues;
+               break;
+        }
+        myChart.data.datasets[0].data = newYValues;
+        myChart.data.labels = newXValues;
+        myChart.update();
+    });
+</script>
 
-
-
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 </body>
 </html>

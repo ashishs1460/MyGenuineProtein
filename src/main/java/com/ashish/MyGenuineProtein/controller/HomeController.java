@@ -105,6 +105,7 @@ public class HomeController {
         } else {
             applyMaxOfferToVariants(variants, productOffers, categoryOffers);
         }
+
         model.addAttribute("reviews",reviews);
         model.addAttribute("product", product);
         model.addAttribute("variants", variants);

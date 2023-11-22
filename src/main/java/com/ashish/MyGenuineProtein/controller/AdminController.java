@@ -1,12 +1,10 @@
 package com.ashish.MyGenuineProtein.controller;
 
 import com.ashish.MyGenuineProtein.model.Category;
+import com.ashish.MyGenuineProtein.model.Order;
 import com.ashish.MyGenuineProtein.model.Review;
 import com.ashish.MyGenuineProtein.model.User;
-import com.ashish.MyGenuineProtein.service.CategoryService;
-import com.ashish.MyGenuineProtein.service.ProductService;
-import com.ashish.MyGenuineProtein.service.ReviewService;
-import com.ashish.MyGenuineProtein.service.UserService;
+import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.*;
 
 @Controller
 public class AdminController {
@@ -32,12 +30,30 @@ public class AdminController {
     @Autowired
     ReviewService reviewService;
 
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    ChartService chartService;
+
     @GetMapping("/admin")
     public String getAdminHome(Model model, Principal principal){
         User user = userService.findUserByEmail(principal.getName()).get();
         String username = user.getFirstName();
+        List<Order> orders = orderService.findAll();
 
-        model.addAttribute("username",username);
+        // Call the service methods to generate revenue data
+        List<Double> dailyRevenue = chartService.generateDailyRevenue(orders);
+        List<Double> monthlyRevenue = chartService.generateMonthlyRevenue(orders);
+        List<Double> yearlyRevenue = chartService.generateYearlyRevenue(orders);
+
+        model.addAttribute("dailyRevenue", dailyRevenue);
+        model.addAttribute("monthlyRevenue", monthlyRevenue);
+        model.addAttribute("yearlyRevenue", yearlyRevenue);
+        model.addAttribute("username", username);
+        System.out.println(dailyRevenue);
+        System.out.println("month"+monthlyRevenue);
+        System.out.println("year"+yearlyRevenue);
 
         return "getAdminHome";
     }

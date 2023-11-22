@@ -97,7 +97,7 @@
           <p th:text="${averageRating}" hidden></p>
           <div th:if="${averageRating > 0}" class="star-rating mb-2">
             <span th:each="i : ${#numbers.sequence(1, averageRating)}">&#9733;</span>
-            <span th:each="i : ${#numbers.sequence(averageRating + 0, 6)}">&#9734;</span>
+            <span th:each="i : ${#numbers.sequence(averageRating + 1, 5)}">&#9734;</span>
           </div>
 
 
