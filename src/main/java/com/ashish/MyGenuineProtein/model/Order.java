@@ -47,4 +47,7 @@ public class Order {
     private LocalDate shippingDate;
     private LocalDate packingDate;
     private LocalDate deliveryDate;
+    public int getTotalQuantity() {
+        return orderItems.stream().map(OrderItems::getQuantity).reduce(0, Integer::sum);
+    }
 }

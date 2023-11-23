@@ -6,6 +6,7 @@ import com.ashish.MyGenuineProtein.model.Review;
 import com.ashish.MyGenuineProtein.model.User;
 import com.ashish.MyGenuineProtein.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -130,5 +131,22 @@ public class AdminController {
         reviewService.deleteById(id);
         redirectAttributes.addFlashAttribute("msg","Review deleted successfully!");
         return "redirect:/admin/getUserReviews";
+   }
+
+   @GetMapping("/admin/getSalesReport")
+    public String getSalesReport(Model model){
+
+        List<Order> orders = orderService.findAll();
+        List<Order> filteredUserOrders = new ArrayList<>(orders
+                .stream()
+                .filter(order -> !order.getStatus().name().equals("CANCELLED")).toList());
+
+       Collections.reverse(filteredUserOrders);
+       model.addAttribute("orderFilter", "All orders");
+       model.addAttribute("ALL", "ALL");
+       model.addAttribute("userOrders",filteredUserOrders);
+       model.addAttribute("totalOrders",filteredUserOrders.size());
+       model.addAttribute("totalSales",filteredUserOrders.stream().map(Order::getTotalPrice).reduce(0.0, Double::sum));
+        return "salesReport";
    }
 }

@@ -83,7 +83,7 @@
               th:text="${order.paymentMode}"></span></p>
     </div>
   </div>
-
+    <a class="btn btn-success mt-4 ml-3" th:href="@{/invoice/{id}(id=${order.id})}">Download Invoice</a>
   <!-- Display order items -->
   <div class="card mt-4">
     <div class="card-body">

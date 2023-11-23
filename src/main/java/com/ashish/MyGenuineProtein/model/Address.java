@@ -31,4 +31,8 @@ public class Address {
     private User user;
     private LocalDate createdAt;
 
+    public String getFullAddress(){
+        return streetAddress+", "+city+", "+state+", "+pinCode+", "+landmark;
+    }
+
 }
