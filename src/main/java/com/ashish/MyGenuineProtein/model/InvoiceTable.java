@@ -17,7 +17,9 @@ public class InvoiceTable{
 
     private Double unitPrice;
 
-    private Double subTotal;
+    private Float subTotal;
+
+    private Float discount;
 
 
 

@@ -29,13 +29,25 @@ public class InvoiceController {
 
         List<InvoiceTable> invoiceTableList = new ArrayList<>();
 
+        float totalAmount = 0f;
+        float discountAmount =0f;
         for (OrderItems item: orders.getOrderItems()){
             InvoiceTable table = new InvoiceTable();
             table.setProductName(item.getVariant().getProduct().getName());
             table.setQuantity(item.getQuantity());
             table.setUnitPrice(item.getVariantPrice());
-            table.setSubTotal(item.getQuantity()*item.getVariantPrice());
+            table.setDiscount(item.getVariant().getDiscountedPrice());
+            discountAmount=item.getVariant().getDiscountedPrice();
+            if (item.getVariant().getDiscountedPrice()>0){
+                table.setSubTotal(item.getQuantity()*item.getVariant().getDiscountedPrice());
+                totalAmount = item.getQuantity()*item.getVariant().getDiscountedPrice();
+            }else {
+                table.setSubTotal((float) (item.getQuantity()*item.getVariantPrice()));
+                totalAmount = (float) (item.getQuantity()*item.getVariantPrice());
+            }
+
             invoiceTableList.add(table);
+
 
         }
 
@@ -48,6 +60,13 @@ public class InvoiceController {
         parameters.put("orderStatus",orders.getStatus().name());
         parameters.put("paymentMethod",orders.getPaymentMode().name());
         parameters.put("total",orders.getTotalPrice());
+
+        if (totalAmount != orders.getTotalPrice() && discountAmount == 0){
+            parameters.put("couponApplied", "YES");
+        }else {
+            parameters.put("couponApplied","NO");
+        }
+
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(invoiceTableList);
 
