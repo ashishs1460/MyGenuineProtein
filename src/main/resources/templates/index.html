@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Custom css file link -->
+    <link rel="icon" th:href="@{/images/logo.png}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/homeStyle.css}" />
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
     <!-- font awesome icons -->
@@ -16,8 +17,10 @@
             referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="https://cdn.fontawesome.com/light/6.0.0-beta2/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <title>Coffee Shop Website</title>
+
+    <title>MyGenuineProtein</title>
 </head>
 <body>
 <!-- header section starts -->
@@ -29,11 +32,12 @@
     <nav class="navbar ">
         <a class="nav-link navbar-text" th:href="@{/}" href="#">Home</a>
         <a class="nav-link navbar-text" th:href="@{/shop}" href="#">Shop</a>
-        <a class="nav-link navbar-text" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
-        <a class="nav-link navbar-text" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
         <a href="#contact">Contact</a>
         <a href="#contact" th:href="@{/user/userDashboard}"><i class="fa-solid fa-user" style="color: #ffd800;"></i></a>
         <a class="nav-link navbar-text" th:href="@{/cart/goToCart}" href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+        <a class="nav-link navbar-text" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
+        <a class="nav-link navbar-text" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
+
     </nav>
 
 </header>
@@ -137,8 +141,7 @@
             <div class="carousel-item active">
                 <img
                         class="rounded-circle shadow-1-strong mb-4"
-                        src="https://scontent-maa2-2.xx.fbcdn.net/v/t39.30808-6/306346343_5313480585436505_3124081372506679812_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=5f2048&_nc_ohc=r40yVE77L6sAX8irc7s&_nc_ht=scontent-maa2-2.xx&oh=00_AfD97o6Rk8SIpua62QN0RBZfyhtWIOPXY49dk-g8aiyt3A&oe=6536B986"
-                        alt="avatar"
+                        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(32).webp"                        alt="avatar"
                         style="width: 150px ; height: 150px;"
                 />
                 <div class="row d-flex justify-content-center">
@@ -256,25 +259,25 @@
                         <p class="card-text" >
                         <p style="color: #FFD800;">If you have any queries contact us  </p>
 
-                        <form>
+                        <form id="submit-form" action="">
                             <div class="form-group" style="margin-bottom: 20px; margin-top: 20px;">
                                 <label style="color: #FFD800;" >Email address</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                <input name="email" type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                                <small  class="form-text text-muted">We'll never share your email with anyone else.</small>
 
                             </div>
                             <div class="form-group " style="margin-bottom: 20px;">
                                 <label style="color: #FFD800;" for="exampleFormControlInput2">Phone</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput2" placeholder="phone number">
-                                <small id="emailHelp" class="form-text text-muted">Leave your phone number so that we can reach you in no time.</small>
+                                <input name="phone" type="number" class="form-control" id="exampleFormControlInput2" placeholder="phone number">
+                                <small  class="form-text text-muted">Leave your phone number so that we can reach you in no time.</small>
 
                             </div>
                             <div class="form-group" style="margin-bottom: 20px;">
                                 <label style="color: #FFD800;" for="exampleFormControlTextarea1">Enter your comment here</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea name="messsage" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
-                            <button class="btn btn-warning" style="text-align: center;" >
-                                <a style="color: #21446B;" href="#">Contact</a></button>
+                            <button type="submit" name="submit"  class="btn btn-warning" style="text-align: center;" >
+                                submit</button>
 
                         </form>
                         </p>
@@ -285,6 +288,7 @@
                     <img class="card-img-top h-100" th:src="@{/images/contactImage.jpeg}" alt="Card image cap">
                 </div>
             </div>
+
 
 </section>
 <!-- contact section ends -->
@@ -312,7 +316,7 @@
             ></a>
 
             <!-- Github -->
-            <a class="btn btn-outline-warning btn-floating m-1" href="https://github.com/RawanSayedd" target="_blank" role="button"
+            <a class="btn btn-outline-warning btn-floating m-1" href="#" target="_blank" role="button"
             ><i class="fab fa-github"></i
             ></a>
         </section>
@@ -329,6 +333,26 @@
 <!-- footer ends -->
 
 <!-- Custom javascript file links -->
+
+<script>
+    $("#submit-form").submit((e)=>{
+        e.preventDefault()
+        $.ajax({
+            url:"https://script.google.com/macros/s/AKfycbzM6tw5wmi1tWfq4-IG4fFXDH5y6P7N60axatSsidA67ZX8KEDrTOmlGznJviMri2UBPA/exec",
+            data:$("#submit-form").serialize(),
+            method:"post",
+            success:function (response){
+                alert("Form submitted successfully")
+                window.location.reload()
+                //window.location.href="https://google.com"
+            },
+            error:function (err){
+                alert("Something Error")
+
+            }
+        })
+    })
+</script>
 <script th:src="@{/js/code.jquery.com_jquery-3.7.0.min.js}"></script>
 <script th:src="@{/js/cdnjs.cloudflare.com_ajax_libs_popper.js_1.11.0_umd_popper.min.js}"></script>
 <script th:src="@{/js/bootstrap.js}"></script>

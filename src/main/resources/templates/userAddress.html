@@ -6,11 +6,12 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" th:href="@{/images/logo.png}" type="image/x-icon">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
   <link rel="stylesheet" th:href="@{/css/style.css}">
-  <title>Address Form</title>
+  <title>Address page</title>
   <style>
     .card {
         width: 100%;
@@ -46,22 +47,22 @@
       <ul class="navbar-nav mr-auto"></ul>
       <ul class="navbar-nav">
         <li class="nav-item active ">
-          <a class="nav-link" th:href="@{/}" href="#">home</a>
+          <a style="color:gold" class="nav-link" th:href="@{/}" href="#">home</a>
         </li>
         <li   class="nav-item active ">
-          <a class="nav-link" th:href="@{/shop}" href="#">shop</a>
+          <a style="color:gold" class="nav-link" th:href="@{/shop}" href="#">shop</a>
         </li>
         <li   class="nav-item active ">
-          <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">login</a>
+          <a style="color:gold" class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">login</a>
         </li>
         <li   class="nav-item active ">
-          <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">logout</a>
+          <a style="color:gold" class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">logout</a>
         </li>
         <li  class="nav-item active ">
-          <a class="nav-link" th:href="@{/cart}" href="#">cart</a>
+          <a style="color:gold" class="nav-link" th:href="@{/cart}" href="#">cart</a>
         </li>
         <li class="nav-item active navbar-text">
-          <strong class="nav-link" th:text="${quantity}">0</strong>
+          <strong style="color:gold" class="nav-link" th:text="${quantity}">0</strong>
         </li>
       </ul>
 
@@ -81,17 +82,23 @@
 
 
           <ul class="user-information pl-0">
-            <li class="card design">
+            <li class="card design-1">
               <a style=" color: #FFD800;text-decoration: none;" th:href="@{/user/userDashboard}">Profile</a>
             </li>
-            <li class="card design">
+            <li class="card design-2">
               <a  style=" color: #FFD800;text-decoration: none;"  th:href="@{/user/address}">Manage Address</a>
             </li>
-            <li class="card design">
+            <li class="card design-3">
               <a style=" color: #FFD800;text-decoration: none;"  th:href="@{/cart/goToCart}">My Cart</a>
             </li>
-            <li class="card design">
-              <a style=" color: #FFD800;text-decoration: none;"  th:href="@{/user/my-orders}">My Orders</a>
+            <li class="card design-4">
+              <a style=" color: #FFD800;text-decoration: none;"  th:href="@{/user/myOrders}">My Orders</a>
+            </li>
+            <li class="card design-4">
+              <a style=" color: #FFD800;text-decoration: none;"  th:href="@{/user/myWishList}">My WishList</a>
+            </li>
+            <li class="card design-4">
+              <a style=" color: #FFD800;text-decoration: none;"  th:href="@{/user/myWallet}">My Wallet</a>
             </li>
           </ul>
 
