@@ -4,43 +4,68 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Custom css file link -->
     <link rel="icon" th:href="@{/images/logo.png}" type="image/x-icon">
     <link rel="stylesheet" th:href="@{/css/homeStyle.css}" />
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
-    <!-- font awesome icons -->
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
     />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.fontawesome.com/light/6.0.0-beta2/css/all.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>MyGenuineProtein</title>
 </head>
 <body>
 <!-- header section starts -->
-<header class="header">
-    <a class="navbar-brand" href="#">
-        <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="80" class="d-inline-block align-top" alt=""/>
-    </a>
+<nav class="navbar navbar-expand-lg navbar-custom " style="font-size: 18px;">
+    <div class="container-fluid mr-5" >
+        <a class="navbar-brand mr-2" href="#">
+            <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="80" height="80"
+                 class="d-inline-block align-top img-fluid" alt="" />
+        </a>
+        <div >
 
-    <nav class="navbar ">
-        <a class="nav-link navbar-text" th:href="@{/}" href="#">Home</a>
-        <a class="nav-link navbar-text" th:href="@{/shop}" href="#">Shop</a>
-        <a href="#contact">Contact</a>
-        <a href="#contact" th:href="@{/user/userDashboard}"><i class="fa-solid fa-user" style="color: #ffd800;"></i></a>
-        <a class="nav-link navbar-text" th:href="@{/cart/goToCart}" href="#"><i class="fa-solid fa-cart-shopping"></i></a>
-        <a class="nav-link navbar-text" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
-        <a class="nav-link navbar-text" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
 
-    </nav>
+            <button class="navbar-toggler custom-toggler text-primary" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span style="font-size: 24px; color: gold;" class="navbar-toggler-icon">&#9776;</span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active mr-3">
+                        <a class="nav-link navbar-text" th:href="@{/}" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active mr-3">
+                        <a class="nav-link navbar-text" th:href="@{/shop}" href="#">Shop</a>
+                    </li>
 
-</header>
+                    <li class="nav-item active mr-3">
+                        <a class="nav-link navbar-text" th:href="@{/user/userDashboard}" href="#"><i class="fa-solid fa-user" style="color: #ffd800;"></i></a>
+                    </li>
+                    <li class="nav-item active mr-3">
+                        <a class="nav-link navbar-text" th:href="@{/cart/goToCart}" href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+                    </li>
+                    <li class="nav-item active mr-3">
+                        <span class="nav-link navbar-text" th:text="${cartCount}">0</span>
+                    </li>
+                    <li class="nav-item active mr-3">
+                        <a class="nav-link navbar-text" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
+                    </li>
+                    <li class="nav-item active mr-3">
+                        <a class="nav-link navbar-text" sec:authorize="isAuthenticated()" th:href="@{/logout}"
+                           href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
 <!-- header section ends -->
 <!-- home section starts -->
 <section class="home" id="home">
@@ -126,6 +151,7 @@
 
             </div>
         </div>
+
 </section>
 <!-- menu section ends -->
 <!-- review section starts -->
@@ -333,6 +359,16 @@
 <!-- footer ends -->
 
 <!-- Custom javascript file links -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 
 <script>
     $("#submit-form").submit((e)=>{
@@ -353,10 +389,10 @@
         })
     })
 </script>
-<script th:src="@{/js/code.jquery.com_jquery-3.7.0.min.js}"></script>
-<script th:src="@{/js/cdnjs.cloudflare.com_ajax_libs_popper.js_1.11.0_umd_popper.min.js}"></script>
-<script th:src="@{/js/bootstrap.js}"></script>
+<!-- Bootstrap and jQuery scripts -->
+
 
 <script th:src="@{/js/script.js}"></script>
+
 </body>
 </html>

@@ -5,13 +5,14 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" th:href="@{/images/logo.png}" type="image/x-icon">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
         integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <title>Document</title>
+  <title>Coupons</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg  navbar-custom" >
@@ -20,7 +21,7 @@
       <img th:src="@{/images/logo.png}" src="../../static/images/logo.png" width="auto" height="80" class="d-inline-block align-top" alt=""/>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <span style="color:gold" class="navbar-toggler-icon">&#9776;</span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -63,8 +64,8 @@
       <div >
         <div>
           <div class="table-responsive">
-            <table style="color:white" class="table "> <!-- Added table-dark for dark table styling -->
-              <thead style="background-color:#0F2237">
+            <table class="table "> <!-- Added table-dark for dark table styling -->
+              <thead style="background-color:#0F2237" class="text-warning">
               <tr>
                 <th>Coupon ID</th>
                 <th>Coupon Code</th>
@@ -82,8 +83,8 @@
                 <td th:text="${coupon.discountValue}"></td>
                 <td th:text="${coupon.minimumPurchase}"></td>
                 <td>
-                  <a th:href="@{'/admin/coupons/edit/' + ${coupon.id}}" class="btn btn-warning mr-2">Edit</a>
-                  <a th:href="@{'/admin/coupons/delete/' + ${coupon.id}}" class="btn btn-danger">Delete</a>
+                  <a th:href="@{'/admin/coupons/edit/' + ${coupon.id}}" class="btn btn-warning mr-2 mt-2">Edit</a>
+                  <a th:href="@{'/admin/coupons/delete/' + ${coupon.id}}" class="btn btn-danger mt-2">Delete</a>
                 </td>
               </tr>
               </tbody>

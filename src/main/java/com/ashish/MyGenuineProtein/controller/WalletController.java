@@ -56,24 +56,34 @@ public class WalletController {
 
     }
 
-    @PostMapping ("/user/addToWallet")
+    @PostMapping("/user/addToWallet")
     public String addToWallet(@RequestParam("amount") double totalAmount,
                               Principal principal,
-                              Model model) throws RazorpayException {
+                              Model model,
+                              RedirectAttributes redirectAttributes) throws RazorpayException {
 
         RazorpayClient razorpay = new RazorpayClient("rzp_test_wSP8EmmFjEbRbD", "wDhpCDheW2ZzApA89aD6hhAu");
+
+        // Check if the total amount exceeds the maximum allowed amount
+        if (totalAmount > 100000) {
+            // Handle the case where the amount exceeds the limit (e.g., display an error message)
+            redirectAttributes.addFlashAttribute("errorMessage", "Amount exceeds maximum allowed amount.");
+            return "redirect:/user/myWallet"; // You can create a custom error page
+        }
 
         JSONObject orderRequest = new JSONObject();
         orderRequest.put("amount", totalAmount * 100);
         orderRequest.put("currency", "INR");
+
         Order order = razorpay.orders.create(orderRequest);
+
         model.addAttribute("amount", totalAmount * 100);
         model.addAttribute("orderId", order.get("id"));
-        model.addAttribute("totalAmount",totalAmount);
+        model.addAttribute("totalAmount", totalAmount);
 
         return "razorPayWallet";
-
     }
+
 
     @GetMapping("/user/razorPayWalletSuccess")
     public  String  depositToWallet(Principal principal,

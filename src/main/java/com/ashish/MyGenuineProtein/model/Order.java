@@ -43,6 +43,7 @@ public class Order {
     Status status;
     Double totalPrice;
 
+    private String orderedAddress;
     private LocalDate orderDate;
     private LocalDate shippingDate;
     private LocalDate packingDate;

@@ -46,7 +46,7 @@ public class ChartServiceImp implements ChartService{
         }
 
         for (Order item : orders) {
-            if (item.getOrderDate().getMonthValue() == YearMonth.now().getMonthValue()) {
+            if (item.getOrderDate().getYear() == YearMonth.now().getYear()) {
                 map.put(Integer.toString(item.getOrderDate().getMonthValue()),
                         map.get(Integer.toString(item.getOrderDate().getMonthValue())) + item.getTotalPrice());
             }

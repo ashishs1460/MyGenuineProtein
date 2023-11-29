@@ -48,12 +48,14 @@ public class    LoginController {
 
     @Autowired
     UserService userService;
-
+    @Autowired
+    WalletService walletService;
 
     @Autowired
     OtpRepository otpRepository;
-    @Autowired
-    WalletService walletService;
+
+
+
 
     @GetMapping("/login")
     public String getLoginPage(){
@@ -79,6 +81,7 @@ public class    LoginController {
         return "redirect:/";
     }
 
+
     @PostMapping("/register")
     public String postRegister(@Valid @ModelAttribute("user") User user,
                                BindingResult bindingResult,
@@ -96,15 +99,32 @@ public class    LoginController {
                 redirectAttributes.addAttribute("userExist", "true");
                 return "redirect:/register";
             } else {
-                otpRepository.delete(otpRepository.findByUser(userRepository.findUserByEmail(user.getEmail()).get()).get());
-                userRepository.delete(userRepository.findUserByEmail(user.getEmail()).get());
+                userRepository.findUserByEmail(user.getEmail())
+                        .ifPresent(foundUser -> {
+                            otpRepository.findByUser(foundUser)
+                                    .ifPresent(otp -> otpRepository.delete(otp));
+                        });
+
+                userRepository.delete(userRepository.findUserByEmail(user.getEmail()).orElseThrow());
             }
         }
 
         String password = user.getPassword();
         user.setPassword(bCryptPasswordEncoder.encode(password));
         List<Role> roles = new ArrayList<>();
-        roles.add(roleRepository.findById(UUID.fromString("56d445f0-6f53-11ee-b70a-6f05ccf153cb")).get());
+
+        String uuidString = "56c39445-c3b0-6f53-11c3-aec2b70a6f05";
+        UUID id = UUID.fromString(uuidString);
+
+        Optional<Role> optionalRole = roleRepository.findById(id);
+
+        if (optionalRole.isPresent()) {
+            roles.add(optionalRole.get());
+        } else {
+
+            throw new RuntimeException("Role not found for the given ID");
+        }
+
         user.setRoles(roles);
         user.setActive(true);
 

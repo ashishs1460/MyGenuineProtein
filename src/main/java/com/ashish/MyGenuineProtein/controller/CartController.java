@@ -134,7 +134,7 @@ public class CartController {
         }
         String user = principal.getName();
         System.out.println(user);
-       if(newQuantity>=1){
+       if(newQuantity>=1 && newQuantity <= 5){
            cartService.updateCartItem(user, id, newQuantity);
        }
 

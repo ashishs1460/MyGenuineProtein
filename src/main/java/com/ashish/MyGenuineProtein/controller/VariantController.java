@@ -34,7 +34,7 @@ public class VariantController {
 
         model.addAttribute("variants",variantService.getAllVariants());
 //        redirectAttributes.addFlashAttribute("msg"," successful!");
-        return "/product/getVariant";
+        return "product/getVariant";
     }
 
     @GetMapping("/admin/addVariant")
@@ -42,7 +42,7 @@ public class VariantController {
         List<Product> productList = productService.findAllProducts();
         model.addAttribute("products",productList);
         model.addAttribute("variant" ,new Variant());
-        return "/product/addVariant";
+        return "product/addVariant";
 
     }
 

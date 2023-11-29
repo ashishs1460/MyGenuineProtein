@@ -39,24 +39,32 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String getAdminHome(Model model, Principal principal){
-        User user = userService.findUserByEmail(principal.getName()).get();
-        String username = user.getFirstName();
-        List<Order> orders = orderService.findAll();
+        Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
+        if(optionalUser.isPresent()){
 
-        // Call the service methods to generate revenue data
-        List<Double> dailyRevenue = chartService.generateDailyRevenue(orders);
-        List<Double> monthlyRevenue = chartService.generateMonthlyRevenue(orders);
-        List<Double> yearlyRevenue = chartService.generateYearlyRevenue(orders);
+            User user = optionalUser.get();
+            String username = user.getFirstName();
+            List<Order> orders = orderService.findAll();
 
-        model.addAttribute("dailyRevenue", dailyRevenue);
-        model.addAttribute("monthlyRevenue", monthlyRevenue);
-        model.addAttribute("yearlyRevenue", yearlyRevenue);
-        model.addAttribute("username", username);
-        System.out.println(dailyRevenue);
-        System.out.println("month"+monthlyRevenue);
-        System.out.println("year"+yearlyRevenue);
 
-        return "getAdminHome";
+
+            // Call the service methods to generate revenue data
+            List<Double> dailyRevenue = chartService.generateDailyRevenue(orders);
+            List<Double> monthlyRevenue = chartService.generateMonthlyRevenue(orders);
+            List<Double> yearlyRevenue = chartService.generateYearlyRevenue(orders);
+
+            model.addAttribute("dailyRevenue", dailyRevenue);
+            model.addAttribute("monthlyRevenue", monthlyRevenue);
+            model.addAttribute("yearlyRevenue", yearlyRevenue);
+            model.addAttribute("username", username);
+            System.out.println(dailyRevenue);
+            System.out.println("month"+monthlyRevenue);
+            System.out.println("year"+yearlyRevenue);
+
+            return "getAdminHome";
+        }else {
+            return "redirect:/login";
+        }
     }
 
     @GetMapping("/admin/getCategories")
@@ -64,13 +72,13 @@ public class AdminController {
         String successMessage = (String) model.getAttribute("successMessage");
         model.addAttribute("successMessage", successMessage);
         model.addAttribute("categories",categoryService.getAllCategory());
-        return "/category/getCategories";
+        return "category/getCategories";
     }
 
     @GetMapping("/admin/addCategories")
     public String addCategory(Model model){
         model.addAttribute("category",new Category());
-        return "/category/addCategories";
+        return "category/addCategories";
     }
 
     @PostMapping("/admin/addCategories")
@@ -105,7 +113,7 @@ public class AdminController {
         Optional<Category> category=categoryService.getCategoryById(id);
         if (category.isPresent()){
             model.addAttribute("category",category.get());
-            return "/category/addCategories";
+            return "category/addCategories";
         }else {
             return "404";
         }

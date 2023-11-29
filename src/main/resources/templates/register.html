@@ -103,7 +103,7 @@ a {
       <p class="alert">User already exists!</p>
     </div>
 
-    <form th:action="@{/register}" th:object="${user}" method="post">
+    <form th:action="@{/register}" th:object="${user}" method="post" onsubmit="return disableButton();">
 
       <div class="form-group">
         <label for="firstName">First Name</label>
@@ -158,7 +158,7 @@ a {
       </div>
 
 
-      <input type="submit" value="Register" class="btn btn-primary btn-block">
+      <input type="submit" value="Register" class="btn btn-primary btn-block" id="registerButton">
 
       <span style="margin-top: 10px">Already have an account ? <a class="linkControl" href="./login.html"
                                                                   th:href="@{/login}">Login here</a></span>
@@ -166,6 +166,11 @@ a {
     </form>
   </div>
 </div>
-
-</body>
+<script>
+  function disableButton() {
+    // Disable the submit button to prevent multiple submissions
+    document.getElementById('registerButton').disabled = true;
+    return true; // Allow the form submission to proceed
+  }
+</script></body>
 </html>

@@ -2,6 +2,7 @@ package com.ashish.MyGenuineProtein.service;
 
 import com.ashish.MyGenuineProtein.model.Cart;
 import com.ashish.MyGenuineProtein.model.User;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,6 @@ public interface UserService {
     boolean validateEmail(String email);
 
     void sendMail(String email, String subject, String referralCode);
+
+
 }

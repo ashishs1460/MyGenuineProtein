@@ -75,6 +75,7 @@ public class OrderServiceImp implements OrderService{
         order.setTotalPrice(totalPrice);
         order.setPaymentMode(selectedPaymentMode);
         order.setAddress(userAddress);
+        order.setOrderedAddress(userAddress.getFullAddress());
         return order;
     }
 

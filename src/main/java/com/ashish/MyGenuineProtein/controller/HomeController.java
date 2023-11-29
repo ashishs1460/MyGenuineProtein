@@ -195,9 +195,15 @@ public class HomeController {
 
     @GetMapping("/user/userDashboard")
     public String userDashboard (Model model, Principal principal){
-        User user = userService.findUserByEmail(principal.getName()).get();
-        model.addAttribute("userProfile",user);
-        return "userDashboard";
+        Optional<User> optionalUser = userService.findUserByEmail(principal.getName());
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            model.addAttribute("userProfile",user);
+            return "userDashboard";
+        }else {
+            return "redirect:/login";
+        }
+
     }
 
     @GetMapping("/user/myOrders")

@@ -129,7 +129,7 @@ public class CartServiceImp implements CartService{
                         cart.setTotal(cart.getTotal()+cartItem.getVariant().getPrice()*(newQuantity-cartItem.getQuantity()));
                         cartItem.setQuantity(newQuantity);
                         cartItemRepository.save(cartItem);
-                        Coupon coupon = couponService.getCouponByCouponCode(cart.getCouponCode()).get();
+                        Coupon coupon = couponService.getCouponByCouponCode(cart.getCouponCode()).orElseThrow();
                         if (cart.getTotal()<coupon.getMinimumPurchase()){
                             cart.setDiscount(0);
                             cart.setCouponCode(null);
