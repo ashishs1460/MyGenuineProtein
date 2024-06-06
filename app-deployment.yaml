@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mygenuineprotein-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mygenuineprotein-k8s-mariadb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mygenuineprotein-k8s-mariadb
+    spec:
+      containers:
+        - name: mygenuineprotein-k8s
+          image: ashish1460/mygenuineprotein:1.0
+          ports:
+            - containerPort: 8080
+          env:   # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              value: mariadb
+
+            - name: DB_NAME  # Setting Database name from configMap
+              value: webapp
+
+            - name: DB_USERNAME  # Setting Database username from Secret
+              value: root
+
+            - name: DB_PASSWORD # Setting Database password from Secret
+              value: root
+
+---
+
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: mygenuineprotein-svc
+spec:
+  selector:
+    app: mygenuineprotein-k8s-mariadb
+  ports:
+    - protocol: "TCP"
+      port: 8080 # The port that the service is running on in the cluster
+      targetPort: 8080 # The port exposed by the service
+  type: NodePort # type of the service.

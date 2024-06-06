@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:mysql://mysql-19372a1a-onemorerep24x7-bee5.c.aivencloud.com:24758/webapp?createDatabaseIfNotExist=true
+    username: avnadmin
+    password: AVNS_rflvDobFJTFAwmgbo8u
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true  # Set to true to see generated SQL queries
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ashishs24199@gmail.com
+    password: ttwybtiuupdkqqda
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  data:
+    web:
+      pageable:
+        default-page-size: 4
+
+devtools:
+  restart:
+    log-condition-evaluation-delta: false

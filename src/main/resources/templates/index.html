@@ -20,52 +20,86 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>MyGenuineProtein</title>
 </head>
+<style>
+    .navbar-custom {
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              z-index: 1000;
+              background-color: #21446B;
+              padding: 1rem 2rem;
+              border-bottom: 1px solid yellow;
+          }
+
+    .custom-toggler {
+      border: none;
+    }
+
+    .navbar-toggler-icon {
+      background-image: none; /* Remove default icon image */
+    }
+
+    @media (max-width: 992px) {
+      .navbar-collapse {
+        justify-content: center;
+      }
+    }
+
+
+</style>
 <body>
 <!-- header section starts -->
-<nav class="navbar navbar-expand-lg navbar-custom " style="font-size: 18px;">
-    <div class="container-fluid mr-5" >
-        <a class="navbar-brand mr-2" href="#">
-            <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="80" height="80"
-                 class="d-inline-block align-top img-fluid" alt="" />
+<nav class="navbar navbar-expand-lg navbar-custom ">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="@{/}">
+            <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="100" height="50" class="d-inline-block align-top img-fluid" alt="Logo" />
         </a>
-        <div >
+        <button class="navbar-toggler custom-toggler text-primary" type="button" data-toggle="collapse"
+                data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span style="font-size: 24px; color: gold;" class="navbar-toggler-icon">&#9776;</span>
+        </button>
 
-
-            <button class="navbar-toggler custom-toggler text-primary" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span style="font-size: 24px; color: gold;" class="navbar-toggler-icon">&#9776;</span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active mr-3">
-                        <a class="nav-link navbar-text" th:href="@{/}" href="#">Home</a>
-                    </li>
-                    <li class="nav-item active mr-3">
-                        <a class="nav-link navbar-text" th:href="@{/shop}" href="#">Shop</a>
-                    </li>
-
-                    <li class="nav-item active mr-3">
-                        <a class="nav-link navbar-text" th:href="@{/user/userDashboard}" href="#"><i class="fa-solid fa-user" style="color: #ffd800;"></i></a>
-                    </li>
-                    <li class="nav-item active mr-3">
-                        <a class="nav-link navbar-text" th:href="@{/cart/goToCart}" href="#"><i class="fa-solid fa-cart-shopping"></i></a>
-                    </li>
-                    <li class="nav-item active mr-3">
-                        <span class="nav-link navbar-text" th:text="${cartCount}">0</span>
-                    </li>
-                    <li class="nav-item active mr-3">
-                        <a class="nav-link navbar-text" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
-                    </li>
-                    <li class="nav-item active mr-3">
-                        <a class="nav-link navbar-text" sec:authorize="isAuthenticated()" th:href="@{/logout}"
-                           href="#">Logout</a>
-                    </li>
-                </ul>
-            </div>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-warning" style="font-size: 20px;" th:href="@{/}" href="#">
+                        <i class="fa-solid fa-house" style="color: #ffd800;"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-warning" style="font-size: 20px;" th:href="@{/shop}" href="#">
+                        <i class="fa-solid fa-store" style="color: #ffd800;"></i> Shop
+                    </a>
+                </li>
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-warning" style="font-size: 20px;" th:href="@{/user/userDashboard}" href="#">
+                        <i class="fa-solid fa-user" style="color: #ffd800;"></i> Profile
+                    </a>
+                </li>
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-warning" style="font-size: 20px;" th:href="@{/cart/goToCart}" href="#">
+                        <i class="fa-solid fa-cart-shopping" style="color: #ffd800;"></i> Cart
+                    </a>
+                </li>
+                <li class="nav-item active mx-3">
+                    <span class="nav-link" th:text="${cartCount}">0</span>
+                </li>
+                <li class="nav-item mx-3">
+                    <a class="nav-link text-white" style="font-size: 20px;" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">
+                        <i class="fa-solid fa-sign-out-alt" style="color: #ffd800;"></i> Logout
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
+
+
+
+
+
 <!-- header section ends -->
 <!-- home section starts -->
 <section class="home" id="home">
@@ -271,52 +305,45 @@
 </section>
 <!-- review section ends -->
 <!-- contact section starts -->
-<section  class="contact " id="contact">
-
+<section class="contact" id="contact">
     <div class="container">
         <div class="text-center m-5">
             <h1 class="heading-about"><span>contact </span>us</h1>
         </div>
-        <div class="card w-100 m-3 " style="background-color: #21446B; color: #FFD800; height: 100%; outline: none; border: none;">
+        <div class="card w-100 m-3" style="background-color: #21446B; color: #FFD800; height: 100%; outline: none; border: none;">
             <div class="row no-gutters">
-
                 <div class="col-md-6">
                     <div class="card-body another" style="font-size: 1.5rem;">
-                        <p class="card-text" >
-                        <p style="color: #FFD800;">If you have any queries contact us  </p>
-
-                        <form id="submit-form" action="">
+                        <p class="card-text">
+                        <p style="color: #FFD800;">If you have any queries contact us</p>
+                        <form id="submit-form" action="" onsubmit="return validateForm()">
                             <div class="form-group" style="margin-bottom: 20px; margin-top: 20px;">
-                                <label style="color: #FFD800;" >Email address</label>
-                                <input name="email" type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-                                <small  class="form-text text-muted">We'll never share your email with anyone else.</small>
-
-                            </div>
-                            <div class="form-group " style="margin-bottom: 20px;">
-                                <label style="color: #FFD800;" for="exampleFormControlInput2">Phone</label>
-                                <input name="phone" type="number" class="form-control" id="exampleFormControlInput2" placeholder="phone number">
-                                <small  class="form-text text-muted">Leave your phone number so that we can reach you in no time.</small>
-
+                                <label style="color: #FFD800;">Email address</label>
+                                <input name="email" type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                                <small class="form-text text-muted">We'll never share your email with anyone else.</small>
                             </div>
                             <div class="form-group" style="margin-bottom: 20px;">
-                                <label style="color: #FFD800;" for="exampleFormControlTextarea1">Enter your comment here</label>
-                                <textarea name="messsage" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <label style="color: #FFD800;" for="phone">Phone</label>
+                                <input name="phone" type="tel" class="form-control" id="phone" placeholder="phone number" required pattern="^\d{10}$">
+                                <small class="form-text text-muted">Leave your phone number so that we can reach you in no time.</small>
                             </div>
-                            <button type="submit" name="submit"  class="btn btn-warning" style="text-align: center;" >
-                                submit</button>
-
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label style="color: #FFD800;" for="comment">Enter your comment here</label>
+                                <textarea name="message" class="form-control" id="comment" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" name="submit" class="btn btn-warning" style="text-align: center;">Submit</button>
                         </form>
                         </p>
                     </div>
                 </div>
-
                 <div class="col-md-6">
-                    <img class="card-img-top h-100" th:src="@{/images/contactImage.jpeg}" alt="Card image cap">
+                    <img class="card-img-top h-100" src="images/contactImage.jpeg" alt="Card image cap">
                 </div>
             </div>
-
-
+        </div>
+    </div>
 </section>
+
 <!-- contact section ends -->
 
 <!-- footer starts -->
@@ -369,25 +396,71 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 
 <script>
     $("#submit-form").submit((e)=>{
-        e.preventDefault()
-        $.ajax({
-            url:"https://script.google.com/macros/s/AKfycbzM6tw5wmi1tWfq4-IG4fFXDH5y6P7N60axatSsidA67ZX8KEDrTOmlGznJviMri2UBPA/exec",
-            data:$("#submit-form").serialize(),
-            method:"post",
-            success:function (response){
-                alert("Form submitted successfully")
-                window.location.reload()
-                //window.location.href="https://google.com"
-            },
-            error:function (err){
-                alert("Something Error")
-
-            }
-        })
+      e.preventDefault()
+      $.ajax({
+        url:"https://script.google.com/macros/s/AKfycbzM6tw5wmi1tWfq4-IG4fFXDH5y6P7N60axatSsidA67ZX8KEDrTOmlGznJviMri2UBPA/exec",
+        data:$("#submit-form").serialize(),
+        method:"post",
+        success:function (response){
+            Swal.fire({
+                title: 'Success!',
+                text: 'Your form has been submitted successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Optional redirect after successful submission
+                    // window.location.reload(); // Reload the page
+                    // window.location.href="https://google.com"; // Redirect to a different page
+                }
+            })
+        },
+        error:function (err){
+            Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while submitting the form.',
+                icon: 'error',
+                confirmButtonText: 'Close'
+            })
+        }
+      })
     })
+
+    function validateForm() {
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const comment = document.getElementById('comment').value;
+
+    // Basic email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        alert('Please enter a valid email address.');
+        return false;
+    }
+
+    // Phone validation (example: must be 10 digits)
+    const phonePattern = /^\d{10}$/;
+    if (!phonePattern.test(phone)) {
+        alert('Please enter a valid 10-digit phone number.');
+        return false;
+    }
+
+    // Comment validation (example: not empty and max length 500)
+    if (comment.trim() === '' || comment.length > 500) {
+        alert('Please enter a comment (up to 500 characters).');
+        return false;
+    }
+
+    // If all validations pass
+    return true;
+}
 </script>
 <!-- Bootstrap and jQuery scripts -->
 

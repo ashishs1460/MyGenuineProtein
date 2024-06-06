@@ -253,8 +253,8 @@ public class CartController {
                              @RequestParam(value = "paymentMethod", required = false) PaymentMode selectedPaymentMode,
                              Principal principal, RedirectAttributes redirectAttributes) {
 
-        if (addressId == null) {
-            model.addAttribute("errorAddress", "Please select an address.");
+        if (addressId==null) {
+            redirectAttributes.addFlashAttribute("errorAddress", "Please select an address.");
             return "redirect:/cart/checkout";
         }
 

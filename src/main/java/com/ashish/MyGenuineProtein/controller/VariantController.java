@@ -29,13 +29,16 @@ public class VariantController {
     VariantRepository variantRepository;
 
     @GetMapping("/admin/getVariant")
-    public String getVariantPage(Model model
-            , RedirectAttributes redirectAttributes){
-
-        model.addAttribute("variants",variantService.getAllVariants());
-//        redirectAttributes.addFlashAttribute("msg"," successful!");
+    public String getVariantPage(Model model, RedirectAttributes redirectAttributes) {
+        List<Variant> variants = variantService.getAllVariants();
+        if (variants.isEmpty()) {
+            model.addAttribute("error", "No variants found."); // Add error message
+        } else {
+            model.addAttribute("variants", variants);
+        }
         return "product/getVariant";
     }
+
 
     @GetMapping("/admin/addVariant")
     public String getAddVariant(Model model){

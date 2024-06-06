@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Page</title>
     <link rel="icon" th:href="@{/images/logo.png}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -104,38 +109,48 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg  navbar-custom" >
+<nav class="navbar navbar-expand-lg navbar-custom ">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="80" class="d-inline-block align-top" alt=""/>
+        <a class="navbar-brand" th:href="@{/}">
+            <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="100" height="50" class="d-inline-block align-top img-fluid" alt="Logo" />
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler custom-toggler text-primary" type="button" data-toggle="collapse"
+                data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
             <span style="font-size: 24px; color: gold;" class="navbar-toggler-icon">&#9776;</span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto"></ul>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item active ">
-                    <a style="color:gold;" class="nav-link" th:href="@{/}" href="#">home</a>
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-warning" style="font-size: 20px;" th:href="@{/}" href="#">
+                        <i class="fa-solid fa-house" style="color: #ffd800;"></i> Home
+                    </a>
                 </li>
-                <li   class="nav-item active ">
-                    <a style="color:gold;" class="nav-link" th:href="@{/shop}" href="#">shop</a>
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-warning" style="font-size: 20px;" th:href="@{/shop}" href="#">
+                        <i class="fa-solid fa-store" style="color: #ffd800;"></i> Shop
+                    </a>
                 </li>
-                <li   class="nav-item active ">
-                    <a style="color:gold;" class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">login</a>
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-warning" style="font-size: 20px;" th:href="@{/user/userDashboard}" href="#">
+                        <i class="fa-solid fa-user" style="color: #ffd800;"></i> Profile
+                    </a>
                 </li>
-                <li   class="nav-item active ">
-                    <a style="color:gold;" class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">logout</a>
+                <li class="nav-item active mx-3">
+                    <a class="nav-link text-warning" style="font-size: 20px;" th:href="@{/cart/goToCart}" href="#">
+                        <i class="fa-solid fa-cart-shopping" style="color: #ffd800;"></i> Cart
+                    </a>
                 </li>
-                <li  class="nav-item active ">
-                    <a style="color:gold;" class="nav-link" th:href="@{/cart}" href="#">cart</a>
+                <li class="nav-item active mx-3">
+                    <span class="nav-link" th:text="${cartCount}">0</span>
                 </li>
-                <li class="nav-item active navbar-text">
-                    <strong style="color:gold;" class="nav-link" th:text="${quantity}">0</strong>
+                <li class="nav-item mx-3">
+                    <a class="nav-link text-white" style="font-size: 20px;" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">
+                        <i class="fa-solid fa-sign-out-alt" style="color: #ffd800;"></i> Logout
+                    </a>
                 </li>
             </ul>
-
         </div>
     </div>
 </nav>
@@ -147,9 +162,10 @@
     </div>
 
     <!-- Display the error message for address selection -->
-    <div th:if="${errorAddress}" class="alert alert-danger">
-        <p th:text="${errorAddress}"></p>
+    <div th:if="${errorAddress}" style="text-align: center; display: flex; align-items: center; justify-content: center;" class="alert alert-danger">
+        <p th:text="${errorAddress}" style="margin: 0;"></p>
     </div>
+
 
     <!-- Display the error message for payment method selection -->
     <div th:if="${errorPayment}" class="alert alert-danger">

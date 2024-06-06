@@ -125,6 +125,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>mygenuineprotein-k8s</finalName>
 	</build>
 
 </project>

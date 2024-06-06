@@ -55,7 +55,7 @@ public class AdminProductController {
         model.addAttribute("successMessage", successMessage);
         model.addAttribute("products",products);
         model.addAttribute("variants",variantService.getAllVariants());
-        return "/product/getProducts";
+        return "product/getProducts";
     }
 
     @GetMapping("/admin/addProducts")
@@ -63,7 +63,7 @@ public class AdminProductController {
         model.addAttribute("productDto",new ProductDto());
         model.addAttribute("categories",categoryService.getAllCategory());
 
-        return "/product/addProducts";
+        return "product/addProducts";
 
     }
 
@@ -138,7 +138,7 @@ public class AdminProductController {
         model.addAttribute("flavours", variantService.getAllVariants());
 
         model.addAttribute("productDto",productDto);
-        return "/product/addProducts";
+        return "product/addProducts";
 
     }
 

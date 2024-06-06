@@ -91,10 +91,11 @@ section {
   align-items: center;
   background: url('../images/headerImage.jpg');
   background-size: cover;
-  background-position: left;
+   background-position: left 30px; /* Adjusts image to bottom left */
   min-height: 70vh;
   color: #fff;
 }
+
 
 .home .content {
   max-width: 60rem;
