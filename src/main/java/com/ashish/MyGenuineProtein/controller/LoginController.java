@@ -114,9 +114,9 @@ public class    LoginController {
         List<Role> roles = new ArrayList<>();
 
 //        String uuidString = "56c39445-c3b0-6f53-11c3-aec2b70a6f05";
-//        UUID id = UUID.fromString(uuidString);
+//        UUID id = UUID.fromString(uuidString);56efbfbd45efbfbd6f5311efbfbd0a6f
 
-        Optional<Role> optionalRole = roleRepository.findById(UUID.fromString("56d445f0-6f53-11ee-b70a-6f05ccf153cb"));
+        Optional<Role> optionalRole = roleRepository.findByName("ROLE_USER");
 
         if (optionalRole.isPresent()) {
             roles.add(optionalRole.get());
